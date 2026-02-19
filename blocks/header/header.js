@@ -1,9 +1,18 @@
 import { getMetadata } from '../../scripts/aem.js';
-import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = window.matchMedia('(min-width: 1024px)');
+
+// SVG icons for toolbar
+const ICONS = {
+  cart: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+  search: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  user: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  phone: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+  help: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  globe: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+};
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -17,7 +26,7 @@ function closeOnEscape(e) {
     } else if (!isDesktop.matches) {
       // eslint-disable-next-line no-use-before-define
       toggleMenu(nav, navSections);
-      nav.querySelector('button').focus();
+      nav.querySelector('.nav-hamburger button').focus();
     }
   }
 }
@@ -94,9 +103,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 
   // enable menu collapse on escape keypress
   if (!expanded || isDesktop.matches) {
-    // collapse menu on escape press
     window.addEventListener('keydown', closeOnEscape);
-    // collapse menu on focus lost
     nav.addEventListener('focusout', closeOnFocusLost);
   } else {
     window.removeEventListener('keydown', closeOnEscape);
@@ -104,69 +111,89 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
-function getDirectTextContent(menuItem) {
-  const menuLink = menuItem.querySelector(':scope > :where(a,p)');
-  if (menuLink) {
-    return menuLink.textContent.trim();
-  }
-  return Array.from(menuItem.childNodes)
-    .filter((n) => n.nodeType === Node.TEXT_NODE)
-    .map((n) => n.textContent)
-    .join(' ');
-}
+/**
+ * Decorates the tools section with icon buttons
+ */
+function decorateTools(navTools) {
+  if (!navTools) return;
 
-async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
-  const crumbs = [];
+  const toolsUl = navTools.querySelector('ul');
+  if (!toolsUl) return;
 
-  const homeUrl = document.querySelector('.nav-brand a[href]').href;
+  // Add cart button
+  const cartLi = document.createElement('li');
+  cartLi.className = 'nav-tool-cart';
+  cartLi.innerHTML = `<button type="button" aria-label="Carrito">${ICONS.cart}</button>`;
+  toolsUl.prepend(cartLi);
 
-  let menuItem = Array.from(nav.querySelectorAll('a')).find((a) => a.href === currentUrl);
-  if (menuItem) {
-    do {
-      const link = menuItem.querySelector(':scope > a');
-      crumbs.unshift({ title: getDirectTextContent(menuItem), url: link ? link.href : null });
-      menuItem = menuItem.closest('ul')?.closest('li');
-    } while (menuItem);
-  } else if (currentUrl !== homeUrl) {
-    crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
-  }
+  // Add search button
+  const searchLi = document.createElement('li');
+  searchLi.className = 'nav-tool-search';
+  searchLi.innerHTML = `<button type="button" aria-label="Buscar">${ICONS.search}</button>`;
+  toolsUl.insertBefore(searchLi, cartLi.nextSibling);
 
-  const placeholders = await fetchPlaceholders();
-  const homePlaceholder = placeholders.breadcrumbsHomeLabel || 'Home';
-
-  crumbs.unshift({ title: homePlaceholder, url: homeUrl });
-
-  // last link is current page and should not be linked
-  if (crumbs.length > 1) {
-    crumbs[crumbs.length - 1].url = null;
-  }
-  crumbs[crumbs.length - 1]['aria-current'] = 'page';
-  return crumbs;
-}
-
-async function buildBreadcrumbs() {
-  const breadcrumbs = document.createElement('nav');
-  breadcrumbs.className = 'breadcrumbs';
-
-  const crumbs = await buildBreadcrumbsFromNavTree(document.querySelector('.nav-sections'), document.location.href);
-
-  const ol = document.createElement('ol');
-  ol.append(...crumbs.map((item) => {
-    const li = document.createElement('li');
-    if (item['aria-current']) li.setAttribute('aria-current', item['aria-current']);
-    if (item.url) {
-      const a = document.createElement('a');
-      a.href = item.url;
-      a.textContent = item.title;
-      li.append(a);
-    } else {
-      li.textContent = item.title;
+  // Style existing links
+  toolsUl.querySelectorAll('li').forEach((li) => {
+    const link = li.querySelector('a');
+    if (!link) return;
+    const text = link.textContent.trim();
+    if (text.includes('Soy cliente')) {
+      li.className = 'nav-tool-client';
+      link.innerHTML = `${ICONS.user}<span>${text}</span>`;
+    } else if (text.includes('llamamos')) {
+      li.className = 'nav-tool-cta';
+      // Remove strong wrapper if present
+      const strong = li.querySelector('strong');
+      if (strong) strong.replaceWith(...strong.childNodes);
+      link.innerHTML = `${ICONS.phone}<span>${text}</span>`;
     }
-    return li;
-  }));
+  });
 
-  breadcrumbs.append(ol);
-  return breadcrumbs;
+  // Remove any auto-applied button styling
+  navTools.querySelectorAll('.button-container').forEach((bc) => {
+    bc.classList.remove('button-container');
+    const btn = bc.querySelector('.button');
+    if (btn) btn.classList.remove('button');
+  });
+}
+
+/**
+ * Decorates the top bar utility section
+ */
+function decorateTopbar(navTopbar) {
+  if (!navTopbar) return;
+
+  const items = navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li');
+  items.forEach((item) => {
+    const link = item.querySelector('a');
+    const text = link ? link.textContent.trim() : item.textContent.trim();
+    if (text === 'Particulares') {
+      item.classList.add('nav-segment-active');
+    }
+    if (item.querySelector('ul')) {
+      item.classList.add('nav-topbar-drop');
+    }
+    if (text === 'Ayuda') {
+      item.classList.add('nav-topbar-right-start');
+      if (link) link.innerHTML = `${ICONS.help}<span>${text}</span>`;
+    }
+    if (text === 'Castellano' || item.classList.contains('nav-topbar-drop')) {
+      // Add globe icon to language selector (Castellano with dropdown)
+      if (text === 'Castellano' && link) {
+        link.innerHTML = `${ICONS.globe}<span>${text}</span>`;
+      }
+    }
+    if (item.textContent.includes('Llama gratis')) {
+      item.classList.add('nav-phone');
+    }
+  });
+
+  // Remove auto-applied button styling
+  navTopbar.querySelectorAll('.button-container').forEach((bc) => {
+    bc.classList.remove('button-container');
+    const btn = bc.querySelector('.button');
+    if (btn) btn.classList.remove('button');
+  });
 }
 
 /**
@@ -185,19 +212,24 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
+  // assign classes to the 4 nav sections: brand, sections, tools, topbar
+  const classes = ['brand', 'sections', 'tools', 'topbar'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
   });
 
+  // --- Brand setup ---
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
+  if (navBrand) {
+    const brandLink = navBrand.querySelector('.button');
+    if (brandLink) {
+      brandLink.className = '';
+      brandLink.closest('.button-container').className = '';
+    }
   }
 
+  // --- Sections setup ---
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
@@ -210,28 +242,58 @@ export default async function decorate(block) {
         }
       });
     });
-    navSections.querySelectorAll('.button-container').forEach((buttonContainer) => {
-      buttonContainer.classList.remove('button-container');
-      buttonContainer.querySelector('.button').classList.remove('button');
+    navSections.querySelectorAll('.button-container').forEach((bc) => {
+      bc.classList.remove('button-container');
+      const btn = bc.querySelector('.button');
+      if (btn) btn.classList.remove('button');
     });
   }
 
+  // --- Tools setup ---
   const navTools = nav.querySelector('.nav-tools');
-  if (navTools) {
-    const search = navTools.querySelector('a[href*="search"]');
-    if (search && search.textContent === '') {
-      search.setAttribute('aria-label', 'Search');
-    }
-  }
+  decorateTools(navTools);
 
-  // hamburger for mobile
+  // --- Topbar setup ---
+  const navTopbar = nav.querySelector('.nav-topbar');
+  decorateTopbar(navTopbar);
+
+  // --- Build dual-bar DOM ---
+  // Save references
+  const topbarEl = navTopbar;
+  const brandEl = navBrand;
+  const sectionsEl = navSections;
+  const toolsEl = navTools;
+
+  // Create hamburger
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
       <span class="nav-hamburger-icon"></span>
     </button>`;
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-  nav.prepend(hamburger);
+
+  // Clear nav and rebuild with dual-bar structure
+  nav.textContent = '';
+
+  // Top bar wrapper (dark utility bar)
+  const topBarWrapper = document.createElement('div');
+  topBarWrapper.className = 'nav-topbar-wrapper';
+  if (topbarEl) topBarWrapper.append(topbarEl);
+
+  // Main bar wrapper (white nav bar)
+  const mainBarWrapper = document.createElement('div');
+  mainBarWrapper.className = 'nav-mainbar-wrapper';
+  const mainBarInner = document.createElement('div');
+  mainBarInner.className = 'nav-mainbar-inner';
+  if (brandEl) mainBarInner.append(brandEl);
+  if (sectionsEl) mainBarInner.append(sectionsEl);
+  mainBarInner.append(hamburger);
+  if (toolsEl) mainBarInner.append(toolsEl);
+  mainBarWrapper.append(mainBarInner);
+
+  nav.append(topBarWrapper);
+  nav.append(mainBarWrapper);
+
   nav.setAttribute('aria-expanded', 'false');
   // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
@@ -241,8 +303,4 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
-
-  if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
-    navWrapper.append(await buildBreadcrumbs());
-  }
 }

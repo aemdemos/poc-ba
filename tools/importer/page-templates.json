@@ -1,0 +1,39 @@
+{
+    "templates": [
+        {
+            "name": "vodafone-es-homepage",
+            "urls": [
+                "https://www.vodafone.es/c/particulares/es/"
+            ],
+            "description": "Vodafone Spain homepage with hero carousel, pricing plans, product categories, promotional banners, and benefit cards",
+            "blocks": [
+                {
+                    "name": "carousel",
+                    "instances": [
+                        ".ws10-m-cards-discovery-standard-medium-price"
+                    ]
+                },
+                {
+                    "name": "columns",
+                    "instances": [
+                        ".ws10-m-banner-slim",
+                        ".ws10-m-header-section"
+                    ]
+                },
+                {
+                    "name": "cards",
+                    "instances": [
+                        ".ws10-m-carousel-secondary"
+                    ]
+                },
+                {
+                    "name": "cards-no-images",
+                    "instances": [
+                        ".ws10-m-card-rate-list",
+                        ".ws10-m-addons"
+                    ]
+                }
+            ]
+        }
+    ]
+}
