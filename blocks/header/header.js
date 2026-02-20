@@ -201,6 +201,8 @@ function decorateTopbar(navTopbar) {
     const btn = bc.querySelector('.button');
     if (btn) btn.classList.remove('button');
   });
+  // Also remove .button from links that were unwrapped from <p> tags
+  navTopbar.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
 }
 
 /**
@@ -268,6 +270,8 @@ export default async function decorate(block) {
       const btn = bc.querySelector('.button');
       if (btn) btn.classList.remove('button');
     });
+    // Also remove .button from links that were unwrapped from <p> tags
+    navSections.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
   }
 
   // --- Tools setup ---
