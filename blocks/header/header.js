@@ -297,10 +297,70 @@ export default async function decorate(block) {
     </button>`;
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
 
+  // --- Build mobile green CTA bar ---
+  const mobileCta = document.createElement('div');
+  mobileCta.className = 'nav-mobile-cta';
+  if (topbarEl) {
+    // Extract phone number from topbar into its own wrapper
+    const phoneItem = topbarEl.querySelector('.nav-phone');
+    if (phoneItem) {
+      const phoneWrap = document.createElement('div');
+      phoneWrap.className = 'nav-mobile-cta-phone';
+      const phoneClone = phoneItem.cloneNode(true);
+      phoneWrap.appendChild(phoneClone);
+      mobileCta.appendChild(phoneWrap);
+    }
+  }
+  if (toolsEl) {
+    // Extract "Te llamamos" link into its own wrapper
+    const ctaItem = toolsEl.querySelector('.nav-tool-cta a');
+    if (ctaItem) {
+      const ctaWrap = document.createElement('div');
+      ctaWrap.className = 'nav-mobile-cta-action';
+      const ctaClone = ctaItem.cloneNode(true);
+      ctaClone.className = 'nav-mobile-cta-link';
+      ctaWrap.appendChild(ctaClone);
+      mobileCta.appendChild(ctaWrap);
+    }
+  }
+
+  // --- Build mobile segment selector (Particulares dropdown) ---
+  const mobileSegment = document.createElement('div');
+  mobileSegment.className = 'nav-mobile-segment';
+  if (topbarEl) {
+    const segmentActive = topbarEl.querySelector('.nav-segment-active');
+    const segmentDrop = topbarEl.querySelector('.nav-topbar-drop');
+    if (segmentActive) {
+      const segLink = segmentActive.querySelector('a');
+      const segBtn = document.createElement('button');
+      segBtn.className = 'nav-mobile-segment-btn';
+      segBtn.textContent = segLink ? segLink.textContent : 'Particulares';
+      segBtn.setAttribute('aria-expanded', 'false');
+      mobileSegment.appendChild(segBtn);
+
+      // Build dropdown with business segment options
+      if (segmentDrop) {
+        const dropUl = segmentDrop.querySelector('ul');
+        if (dropUl) {
+          const dropClone = dropUl.cloneNode(true);
+          dropClone.className = 'nav-mobile-segment-menu';
+          mobileSegment.appendChild(dropClone);
+        }
+      }
+      segBtn.addEventListener('click', () => {
+        const expanded = segBtn.getAttribute('aria-expanded') === 'true';
+        segBtn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      });
+    }
+  }
+
   // Clear nav and rebuild with dual-bar structure
   nav.textContent = '';
 
-  // Top bar wrapper (dark utility bar)
+  // Mobile CTA bar (green bar - mobile only)
+  nav.append(mobileCta);
+
+  // Top bar wrapper (dark utility bar - desktop only)
   const topBarWrapper = document.createElement('div');
   topBarWrapper.className = 'nav-topbar-wrapper';
   if (topbarEl) topBarWrapper.append(topbarEl);
@@ -311,9 +371,10 @@ export default async function decorate(block) {
   const mainBarInner = document.createElement('div');
   mainBarInner.className = 'nav-mainbar-inner';
   if (brandEl) mainBarInner.append(brandEl);
+  mainBarInner.append(mobileSegment);
   if (sectionsEl) mainBarInner.append(sectionsEl);
-  mainBarInner.append(hamburger);
   if (toolsEl) mainBarInner.append(toolsEl);
+  mainBarInner.append(hamburger);
   mainBarWrapper.append(mainBarInner);
 
   nav.append(topBarWrapper);

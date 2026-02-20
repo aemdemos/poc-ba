@@ -354,8 +354,8 @@ header .nav-tools .nav-tool-search svg {
   height: 24px;
 }
 
-/* Soy cliente link */
-header .nav-tools .nav-tool-client {
+/* Soy cliente link - hidden on mobile by default */
+header .nav-tools .default-content-wrapper > ul > li.nav-tool-client {
   display: none;
 }
 
@@ -383,8 +383,8 @@ header .nav-tools .nav-tool-client svg {
   height: 24px;
 }
 
-/* Green CTA button */
-header .nav-tools .nav-tool-cta {
+/* Green CTA button - hidden on mobile by default */
+header .nav-tools .default-content-wrapper > ul > li.nav-tool-cta {
   display: none;
 }
 
@@ -420,14 +420,195 @@ header .nav-tools .nav-tool-cta svg {
   flex-shrink: 0;
 }
 
+/* ===== MOBILE GREEN CTA BAR ===== */
+header .nav-mobile-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #008a00;
+  color: #fff;
+  font-size: 14px;
+  width: 100%;
+  height: 40px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-mobile-cta li {
+  list-style: none;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-mobile-cta a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Phone number wrapper (left of separator) */
+header .nav-mobile-cta-phone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border-right: 1px solid #fff;
+}
+
+/* Te llamamos wrapper (right of separator) */
+header .nav-mobile-cta-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+header .nav-mobile-cta .nav-mobile-cta-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-mobile-cta .nav-mobile-cta-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== MOBILE SEGMENT SELECTOR (Particulares) ===== */
+header .nav-mobile-segment {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+header .nav-mobile-segment-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  cursor: pointer;
+  padding: 4px 8px;
+  white-space: nowrap;
+  margin: 0;
+  border-radius: 0;
+}
+
+header .nav-mobile-segment-btn::after {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border: 1.5px solid #333;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+header .nav-mobile-segment-btn[aria-expanded='true']::after {
+  transform: rotate(225deg);
+  margin-bottom: -2px;
+}
+
+header .nav-mobile-segment-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  z-index: 10;
+  min-width: 200px;
+}
+
+header .nav-mobile-segment-btn[aria-expanded='true'] + .nav-mobile-segment-menu {
+  display: block;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-mobile-segment-menu li {
+  padding: 0;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-mobile-segment-menu a {
+  display: block;
+  padding: 8px 16px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-mobile-segment-menu a:hover {
+  background-color: #f6f6f6;
+  color: var(--re-color-primary);
+}
+
 /* ===== MOBILE LAYOUT (< 1024px) ===== */
 @media (width < 1024px) {
   header .nav-topbar-wrapper {
     display: none;
   }
 
+  header .nav-mobile-cta {
+    display: flex;
+  }
+
+  header .nav-mobile-segment {
+    display: flex;
+  }
+
   header .nav-mainbar-inner {
     height: 64px;
+  }
+
+  /* Show "Soy cliente" icon only on mobile */
+  header .nav-tools .default-content-wrapper > ul > li.nav-tool-client {
+    display: flex;
+  }
+
+  header .nav-tools .nav-tool-client a span {
+    display: none;
+  }
+
+  header .nav-tools .nav-tool-client a {
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+  }
+
+  /* Hide green CTA on mobile (it's in the green bar now) */
+  header .nav-tools .default-content-wrapper > ul > li.nav-tool-cta {
+    display: none;
+  }
+
+  /* Hamburger at the end (right side) */
+  header nav .nav-hamburger {
+    order: 10;
+    margin-left: 0;
+  }
+
+  /* Tools section */
+  header .nav-tools {
+    margin-left: auto;
   }
 
   header .nav-sections .default-content-wrapper > ul {
@@ -468,18 +649,13 @@ header .nav-tools .nav-tool-cta svg {
   }
 
   header nav[aria-expanded='true'] .nav-sections {
-    order: 4;
+    order: 20;
     flex-basis: 100%;
     margin-top: 16px;
   }
 
   header nav[aria-expanded='true'] .nav-tools {
-    order: 2;
     margin-left: auto;
-  }
-
-  header nav[aria-expanded='true'] .nav-hamburger {
-    order: 3;
   }
 
   header nav[aria-expanded='true'] {
@@ -490,6 +666,14 @@ header .nav-tools .nav-tool-cta svg {
 
 /* ===== DESKTOP LAYOUT (>= 1024px) ===== */
 @media (width >= 1024px) {
+  header .nav-mobile-cta {
+    display: none;
+  }
+
+  header .nav-mobile-segment {
+    display: none;
+  }
+
   header .nav-topbar-wrapper {
     display: block;
   }
@@ -597,12 +781,12 @@ header .nav-tools .nav-tool-cta svg {
     visibility: hidden;
   }
 
-  /* Tools - show all items */
-  header .nav-tools .nav-tool-client {
+  /* Tools - show all items on desktop */
+  header .nav-tools .default-content-wrapper > ul > li.nav-tool-client {
     display: flex;
   }
 
-  header .nav-tools .nav-tool-cta {
+  header .nav-tools .default-content-wrapper > ul > li.nav-tool-cta {
     display: flex;
   }
 }
