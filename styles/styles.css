@@ -47,8 +47,8 @@
   --heading-font-size-s: 24px;
   --heading-font-size-xs: 22px;
 
-  /* nav heights */
-  --nav-height: 64px;
+  /* nav heights — mobile: 40px green CTA bar + 64px white bar */
+  --nav-height: 104px;
   --breadcrumbs-height: 34px;
   --header-height: var(--nav-height);
 

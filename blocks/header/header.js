@@ -73,6 +73,16 @@ function toggleAllNavSections(sections, expanded = false) {
 }
 
 /**
+ * Prevents background page scrolling while allowing the menu panel to scroll.
+ * Intercepts wheel/touch events so the browser scrollbar remains visible.
+ */
+function preventBgScroll(e) {
+  const menuPanel = document.querySelector('.nav-sections');
+  if (menuPanel && menuPanel.contains(e.target)) return;
+  e.preventDefault();
+}
+
+/**
  * Toggles the entire nav
  * @param {Element} nav The container element
  * @param {Element} navSections The nav sections within the container element
@@ -81,9 +91,17 @@ function toggleAllNavSections(sections, expanded = false) {
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  const menuOpening = !expanded && !isDesktop.matches;
+  if (menuOpening) {
+    document.addEventListener('wheel', preventBgScroll, { passive: false });
+    document.addEventListener('touchmove', preventBgScroll, { passive: false });
+  } else {
+    document.removeEventListener('wheel', preventBgScroll);
+    document.removeEventListener('touchmove', preventBgScroll);
+  }
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
+  // On desktop, expand all sections; on mobile, collapse all (accordion)
+  toggleAllNavSections(navSections, 'false');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -262,6 +280,10 @@ export default async function decorate(block) {
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
           navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        } else {
+          // Mobile accordion: toggle only the clicked section
+          const expanded = navSection.getAttribute('aria-expanded') === 'true';
+          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
         }
       });
     });
@@ -354,6 +376,57 @@ export default async function decorate(block) {
     }
   }
 
+  // --- Build mobile menu panel sections ---
+  // "Soy cliente" + separator flow right after menu items
+  const mobileClientSection = document.createElement('div');
+  mobileClientSection.className = 'nav-mobile-client-section';
+
+  if (toolsEl) {
+    const clientLink = toolsEl.querySelector('.nav-tool-client a');
+    if (clientLink) {
+      const clientClone = clientLink.cloneNode(true);
+      clientClone.className = 'nav-mobile-bottom-client';
+      const span = clientClone.querySelector('span');
+      if (span) span.style.display = '';
+      mobileClientSection.appendChild(clientClone);
+    }
+  }
+
+  const separator = document.createElement('hr');
+  separator.className = 'nav-mobile-bottom-separator';
+  mobileClientSection.appendChild(separator);
+
+  // "Ayuda" and "Castellano" pinned at bottom
+  const mobileMenuBottom = document.createElement('div');
+  mobileMenuBottom.className = 'nav-mobile-menu-bottom';
+
+  const bottomUtils = document.createElement('div');
+  bottomUtils.className = 'nav-mobile-bottom-utils';
+  if (topbarEl) {
+    const ayudaItem = topbarEl.querySelector('.nav-topbar-right-start');
+    if (ayudaItem) {
+      const ayudaLink = ayudaItem.querySelector('a');
+      if (ayudaLink) {
+        const ayudaClone = ayudaLink.cloneNode(true);
+        ayudaClone.className = 'nav-mobile-bottom-link';
+        bottomUtils.appendChild(ayudaClone);
+      }
+    }
+    // Castellano (language selector)
+    const allTopItems = topbarEl.querySelectorAll('.default-content-wrapper > ul > li');
+    allTopItems.forEach((item) => {
+      if (item.textContent.includes('Castellano') && item.classList.contains('nav-topbar-drop')) {
+        const langLink = item.querySelector('a');
+        if (langLink) {
+          const langClone = langLink.cloneNode(true);
+          langClone.className = 'nav-mobile-bottom-link';
+          bottomUtils.appendChild(langClone);
+        }
+      }
+    });
+  }
+  mobileMenuBottom.appendChild(bottomUtils);
+
   // Clear nav and rebuild with dual-bar structure
   nav.textContent = '';
 
@@ -372,7 +445,11 @@ export default async function decorate(block) {
   mainBarInner.className = 'nav-mainbar-inner';
   if (brandEl) mainBarInner.append(brandEl);
   mainBarInner.append(mobileSegment);
-  if (sectionsEl) mainBarInner.append(sectionsEl);
+  if (sectionsEl) {
+    sectionsEl.append(mobileClientSection);
+    sectionsEl.append(mobileMenuBottom);
+    mainBarInner.append(sectionsEl);
+  }
   if (toolsEl) mainBarInner.append(toolsEl);
   mainBarInner.append(hamburger);
   mainBarWrapper.append(mainBarInner);
