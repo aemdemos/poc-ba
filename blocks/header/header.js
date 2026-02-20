@@ -151,13 +151,29 @@ function decorateTools(navTools) {
   toolsUl.insertBefore(searchLi, cartLi.nextSibling);
 
   // Style existing links
-  toolsUl.querySelectorAll('li').forEach((li) => {
+  toolsUl.querySelectorAll(':scope > li').forEach((li) => {
     const link = li.querySelector('a');
     if (!link) return;
     const text = link.textContent.trim();
     if (text.includes('Soy cliente')) {
-      li.className = 'nav-tool-client';
+      li.className = 'nav-tool-client nav-drop';
       link.innerHTML = `${ICONS.user}<span>${text}</span>`;
+      // Build "Soy cliente" dropdown
+      const dropdownItems = [
+        { label: 'Mi Vodafone', href: 'https://m.vodafone.es/mves/login' },
+        { label: 'Móviles y dispositivos', href: 'https://www.vodafone.es/c/tienda-online/particulares/catalogo-moviles/' },
+        { label: 'Añadir línea adicional', href: 'https://www.vodafone.es/c/tienda-online/particulares/contratacion/' },
+        { label: 'Mis facturas', href: 'https://m.vodafone.es/mves/login' },
+        { label: 'Mis pedidos', href: 'https://m.vodafone.es/mves/login' },
+        { label: 'Recargas', href: 'https://www.vodafone.es/c/particulares/es/productos-y-servicios/movil/prepago-y-recargas/' },
+      ];
+      const dropUl = document.createElement('ul');
+      dropdownItems.forEach(({ label, href }) => {
+        const dropLi = document.createElement('li');
+        dropLi.innerHTML = `<a href="${href}">${label}</a>`;
+        dropUl.appendChild(dropLi);
+      });
+      li.appendChild(dropUl);
     } else if (text.includes('llamamos')) {
       li.className = 'nav-tool-cta';
       // Remove strong wrapper if present
@@ -495,7 +511,8 @@ export default async function decorate(block) {
   desktopOverlay.className = 'nav-desktop-overlay';
   document.body.appendChild(desktopOverlay);
 
-  navSections.querySelectorAll('.nav-drop').forEach((drop) => {
+  // Attach overlay to all nav-drop items (sections + tools)
+  nav.querySelectorAll('.nav-drop').forEach((drop) => {
     drop.addEventListener('mouseenter', () => {
       if (isDesktop.matches) desktopOverlay.classList.add('visible');
     });
