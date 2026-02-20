@@ -213,6 +213,31 @@ function decorateTopbar(navTopbar) {
     }
   });
 
+  // Set up click-based topbar dropdowns
+  navTopbar.querySelectorAll('.nav-topbar-drop').forEach((drop) => {
+    drop.setAttribute('aria-expanded', 'false');
+    drop.addEventListener('click', (e) => {
+      // Don't toggle if clicking a sub-menu link
+      if (e.target.closest('.nav-topbar-drop > ul')) return;
+      e.preventDefault();
+      const isOpen = drop.getAttribute('aria-expanded') === 'true';
+      // Close all other topbar dropdowns first
+      navTopbar.querySelectorAll('.nav-topbar-drop[aria-expanded="true"]').forEach((other) => {
+        if (other !== drop) other.setAttribute('aria-expanded', 'false');
+      });
+      drop.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    });
+  });
+
+  // Close topbar dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-topbar-drop')) {
+      navTopbar.querySelectorAll('.nav-topbar-drop[aria-expanded="true"]').forEach((drop) => {
+        drop.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
   // Remove auto-applied button styling
   navTopbar.querySelectorAll('.button-container').forEach((bc) => {
     bc.classList.remove('button-container');
@@ -277,9 +302,7 @@ export default async function decorate(block) {
           }
         }
         if (isDesktop.matches) {
-          const expanded = navSection.getAttribute('aria-expanded') === 'true';
-          toggleAllNavSections(navSections);
-          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+          // Desktop: dropdowns open on hover via CSS, no click toggle needed
         } else {
           // Mobile accordion: toggle only the clicked section
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
@@ -466,4 +489,18 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // --- Desktop dropdown overlay (appended to body to avoid stacking context issues) ---
+  const desktopOverlay = document.createElement('div');
+  desktopOverlay.className = 'nav-desktop-overlay';
+  document.body.appendChild(desktopOverlay);
+
+  navSections.querySelectorAll('.nav-drop').forEach((drop) => {
+    drop.addEventListener('mouseenter', () => {
+      if (isDesktop.matches) desktopOverlay.classList.add('visible');
+    });
+    drop.addEventListener('mouseleave', () => {
+      desktopOverlay.classList.remove('visible');
+    });
+  });
 }
