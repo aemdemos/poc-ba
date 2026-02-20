@@ -163,6 +163,13 @@ function decorateTools(navTools) {
 function decorateTopbar(navTopbar) {
   if (!navTopbar) return;
 
+  // Unwrap <p> tags that the EDS pipeline adds around topbar links
+  navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li > p').forEach((p) => {
+    const li = p.parentElement;
+    while (p.firstChild) li.insertBefore(p.firstChild, p);
+    p.remove();
+  });
+
   const items = navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li');
   items.forEach((item) => {
     const link = item.querySelector('a');
@@ -232,9 +239,23 @@ export default async function decorate(block) {
   // --- Sections setup ---
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
+    // Unwrap <p> tags that the EDS pipeline adds around nav links
+    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li > p').forEach((p) => {
+      const li = p.parentElement;
+      while (p.firstChild) li.insertBefore(p.firstChild, p);
+      p.remove();
+    });
+
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
+      navSection.addEventListener('click', (e) => {
+        // Prevent navigation on dropdown parent links (href="#" becomes "/" in pipeline)
+        if (navSection.classList.contains('nav-drop')) {
+          const link = navSection.querySelector(':scope > a');
+          if (link && (link.getAttribute('href') === '/' || link.getAttribute('href') === '#')) {
+            e.preventDefault();
+          }
+        }
         if (isDesktop.matches) {
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
