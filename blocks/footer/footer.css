@@ -1,20 +1,332 @@
+/* ============================================
+   Footer — dark theme matching vodafone.es
+   Sections (top → bottom):
+     1. Social bar  (social links + logo)
+     2. Link columns row 1  (4 cols)
+     3. Link columns row 2  (4 cols)
+     4. Legal bar  (legal links, copyright)
+   ============================================ */
+
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  font-size: 14px;
+  line-height: 1.5;
+  background: #000;
+  color: #fff;
 }
 
 footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+  margin: 0;
+  padding: 0;
+  max-width: none;
 }
 
 footer .footer p {
   margin: 0;
 }
 
-@media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+/* ---- Social bar ---- */
+footer .footer-social {
+  background: #000;
+  padding: 0;
+}
+
+footer .footer-social .default-content-wrapper {
+  max-width: var(--footer-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+footer .footer-social-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+}
+
+footer .footer-social-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+footer .footer-social-label {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+footer .footer-social-icons {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 16px;
+}
+
+footer .footer-social-icons li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid #fff;
+  color: #fff;
+  font-size: 0;
+  text-decoration: none;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+
+footer .footer-social-icons li a:hover {
+  background: rgb(255 255 255 / 20%);
+}
+
+/* Icon placeholder labels */
+footer .footer-social-icons li a::after {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+/* Per-icon labels */
+footer .footer-social-icons li:nth-child(1) a::after {
+  content: 'f';
+}
+
+footer .footer-social-icons li:nth-child(2) a::after {
+  content: '𝕏';
+  font-size: 13px;
+}
+
+footer .footer-social-icons li:nth-child(3) a::after {
+  content: '○';
+  font-size: 16px;
+}
+
+footer .footer-social-icons li:nth-child(4) a::after {
+  content: '☎';
+  font-size: 16px;
+}
+
+footer .footer-social-icons li:nth-child(5) a::after {
+  content: '▶';
+  font-size: 12px;
+}
+
+footer .footer-social-icons li:nth-child(6) a::after {
+  content: 'in';
+  font-size: 11px;
+}
+
+footer .footer-social-icons li:nth-child(7) a::after {
+  content: '✉';
+  font-size: 16px;
+}
+
+footer .footer-logo {
+  flex-shrink: 0;
+}
+
+footer .footer-logo img {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+/* ---- Link columns sections ---- */
+footer .footer-links {
+  background: #000;
+  padding: 0;
+}
+
+/* ---- Red separator between social and links ---- */
+footer .footer-links:first-of-type {
+  border-top: 3px solid var(--re-color-primary);
+}
+
+footer .footer-links .columns-wrapper {
+  max-width: var(--footer-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Override default columns block styling inside footer */
+footer .footer-links .columns > div {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0 32px;
+  align-items: start;
+  padding: 32px 0 0;
+}
+
+/* Second links row: less top padding */
+footer .footer-links:nth-of-type(3) .columns > div {
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+
+/* Column cells: EDS pipeline wraps inline content in <p> */
+footer .footer-links .columns > div > div > p {
+  margin: 0;
+}
+
+/* Column headings */
+footer .footer-links .columns > div > div strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgb(255 255 255 / 20%);
+}
+
+/* Column links */
+footer .footer-links .columns > div > div a {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 0;
+  line-height: 1.4;
+  background: none;
+  border: none;
+  margin: 0;
+  white-space: normal;
+}
+
+footer .footer-links .columns > div > div a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+/* Remove default EDS button styling on footer links */
+footer .footer-links .columns a.button {
+  all: unset;
+  display: block;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+footer .footer-links .columns a.button:hover {
+  text-decoration: underline;
+}
+
+/* ---- Legal bar ---- */
+footer .footer-legal {
+  background: #000;
+  padding: 0;
+}
+
+footer .footer-legal .default-content-wrapper {
+  max-width: var(--footer-width);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Legal links as horizontal list */
+footer .footer-legal-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  justify-content: center;
+}
+
+footer .footer-legal .default-content-wrapper .footer-legal-nav ul li a {
+  font-size: 12px;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+footer .footer-legal .default-content-wrapper .footer-legal-nav ul li a:hover {
+  text-decoration: underline;
+}
+
+footer .footer-legal-nav li {
+  padding: 0 12px;
+  border-right: 1px solid rgb(255 255 255 / 30%);
+  line-height: 1;
+}
+
+footer .footer-legal-nav li:last-child {
+  border-right: none;
+}
+
+footer .footer-legal-nav li:first-child {
+  padding-left: 0;
+}
+
+/* Copyright */
+footer .footer-copyright {
+  text-align: center;
+  font-size: 12px;
+  color: rgb(255 255 255 / 70%);
+  margin-top: 16px !important;
+}
+
+/* ---- Responsive: mobile ---- */
+@media (width < 768px) {
+  footer .footer-social-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  footer .footer-social-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  footer .footer-social-icons {
+    flex-wrap: wrap;
+  }
+
+  footer .footer-logo {
+    align-self: flex-end;
+    margin-top: -56px;
+  }
+
+  /* Stack columns vertically on mobile */
+  footer .footer-links .columns > div {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 16px 0;
+  }
+
+  footer .footer-links .columns > div > div {
+    padding: 12px 0;
+  }
+
+  footer .footer-links .columns > div > div strong {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+  }
+
+  footer .footer-legal-nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  footer .footer-legal-nav li {
+    border-right: none;
+    padding: 0;
+  }
+}
+
+@media (width >= 768px) and (width < 1024px) {
+  footer .footer-links .columns > div {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
