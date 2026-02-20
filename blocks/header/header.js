@@ -130,9 +130,11 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
- * Decorates the tools section with icon buttons
+ * Decorates the tools section with icon buttons.
+ * @param {Element} navTools The nav-tools element
+ * @param {Element|null} clientLi "Soy cliente" <li> extracted from topbar (with dropdown <ul>)
  */
-function decorateTools(navTools) {
+function decorateTools(navTools, clientLi) {
   if (!navTools) return;
 
   const toolsUl = navTools.querySelector('ul');
@@ -150,30 +152,33 @@ function decorateTools(navTools) {
   searchLi.innerHTML = `<button type="button" aria-label="Buscar">${ICONS.search}</button>`;
   toolsUl.insertBefore(searchLi, cartLi.nextSibling);
 
+  // Insert "Soy cliente" (moved from topbar) before the CTA item
+  if (clientLi) {
+    // Find the CTA ("¿Te llamamos?") to insert before it
+    const ctaLi = [...toolsUl.querySelectorAll(':scope > li')].find((li) => {
+      const a = li.querySelector('a');
+      return a && a.textContent.includes('llamamos');
+    });
+    if (ctaLi) {
+      toolsUl.insertBefore(clientLi, ctaLi);
+    } else {
+      toolsUl.appendChild(clientLi);
+    }
+  }
+
   // Style existing links
   toolsUl.querySelectorAll(':scope > li').forEach((li) => {
-    const link = li.querySelector('a');
+    // Find the primary link – may be direct child or wrapped in <strong>
+    const link = li.querySelector(':scope > a') || li.querySelector(':scope > strong > a');
     if (!link) return;
     const text = link.textContent.trim();
     if (text.includes('Soy cliente')) {
-      li.className = 'nav-tool-client nav-drop';
+      li.className = 'nav-tool-client';
+      link.classList.remove('button');
+      // Check for dropdown items authored in the nav content
+      const dropdownUl = li.querySelector('ul');
+      if (dropdownUl) li.classList.add('nav-drop');
       link.innerHTML = `${ICONS.user}<span>${text}</span>`;
-      // Build "Soy cliente" dropdown
-      const dropdownItems = [
-        { label: 'Mi Vodafone', href: 'https://m.vodafone.es/mves/login' },
-        { label: 'Móviles y dispositivos', href: 'https://www.vodafone.es/c/tienda-online/particulares/catalogo-moviles/' },
-        { label: 'Añadir línea adicional', href: 'https://www.vodafone.es/c/tienda-online/particulares/contratacion/' },
-        { label: 'Mis facturas', href: 'https://m.vodafone.es/mves/login' },
-        { label: 'Mis pedidos', href: 'https://m.vodafone.es/mves/login' },
-        { label: 'Recargas', href: 'https://www.vodafone.es/c/particulares/es/productos-y-servicios/movil/prepago-y-recargas/' },
-      ];
-      const dropUl = document.createElement('ul');
-      dropdownItems.forEach(({ label, href }) => {
-        const dropLi = document.createElement('li');
-        dropLi.innerHTML = `<a href="${href}">${label}</a>`;
-        dropUl.appendChild(dropLi);
-      });
-      li.appendChild(dropUl);
     } else if (text.includes('llamamos')) {
       li.className = 'nav-tool-cta';
       // Remove strong wrapper if present
@@ -192,10 +197,13 @@ function decorateTools(navTools) {
 }
 
 /**
- * Decorates the top bar utility section
+ * Decorates the top bar utility section.
+ * Extracts "Soy cliente" (with its dropdown) from topbar and returns it
+ * so it can be moved into the tools bar.
+ * @returns {Element|null} The "Soy cliente" <li> element, or null
  */
 function decorateTopbar(navTopbar) {
-  if (!navTopbar) return;
+  if (!navTopbar) return null;
 
   // Unwrap <p> tags that the EDS pipeline adds around topbar links
   navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li > p').forEach((p) => {
@@ -203,6 +211,17 @@ function decorateTopbar(navTopbar) {
     while (p.firstChild) li.insertBefore(p.firstChild, p);
     p.remove();
   });
+
+  // Extract "Soy cliente" from topbar – it will be moved to the tools bar
+  let clientLi = null;
+  const allItems = navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li');
+  allItems.forEach((item) => {
+    const a = item.querySelector(':scope > a');
+    if (a && a.textContent.trim().includes('Soy cliente')) {
+      clientLi = item;
+    }
+  });
+  if (clientLi) clientLi.remove();
 
   const items = navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li');
   items.forEach((item) => {
@@ -262,6 +281,8 @@ function decorateTopbar(navTopbar) {
   });
   // Also remove .button from links that were unwrapped from <p> tags
   navTopbar.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
+
+  return clientLi;
 }
 
 /**
@@ -335,13 +356,13 @@ export default async function decorate(block) {
     navSections.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
   }
 
+  // --- Topbar setup (must run first to extract "Soy cliente" for tools) ---
+  const navTopbar = nav.querySelector('.nav-topbar');
+  const clientLi = decorateTopbar(navTopbar);
+
   // --- Tools setup ---
   const navTools = nav.querySelector('.nav-tools');
-  decorateTools(navTools);
-
-  // --- Topbar setup ---
-  const navTopbar = nav.querySelector('.nav-topbar');
-  decorateTopbar(navTopbar);
+  decorateTools(navTools, clientLi);
 
   // --- Build dual-bar DOM ---
   // Save references
@@ -511,12 +532,12 @@ export default async function decorate(block) {
   desktopOverlay.className = 'nav-desktop-overlay';
   document.body.appendChild(desktopOverlay);
 
-  // Attach overlay to all nav-drop items (sections + tools)
-  nav.querySelectorAll('.nav-drop').forEach((drop) => {
-    drop.addEventListener('mouseenter', () => {
+  // Attach overlay to all nav section items and nav-drop tools
+  nav.querySelectorAll('.nav-sections .default-content-wrapper > ul > li, .nav-tools .nav-drop').forEach((item) => {
+    item.addEventListener('mouseenter', () => {
       if (isDesktop.matches) desktopOverlay.classList.add('visible');
     });
-    drop.addEventListener('mouseleave', () => {
+    item.addEventListener('mouseleave', () => {
       desktopOverlay.classList.remove('visible');
     });
   });

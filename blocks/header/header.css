@@ -892,19 +892,19 @@ header .nav-mobile-menu-bottom {
     text-align: center;
   }
 
-  /* Nav drop arrow */
-  header .nav-sections .nav-drop {
+  /* Nav items - position relative for bottom border */
+  header .nav-sections .default-content-wrapper > ul > li {
     position: relative;
     cursor: pointer;
   }
 
   /* Red text on hovered parent menu item */
-  header .nav-sections .default-content-wrapper > ul > li.nav-drop:hover > a {
+  header .nav-sections .default-content-wrapper > ul > li:hover > a {
     color: var(--re-color-primary);
   }
 
   /* Red bottom border indicator on hover */
-  header .nav-sections .default-content-wrapper > ul > li.nav-drop::after {
+  header .nav-sections .default-content-wrapper > ul > li::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -916,7 +916,7 @@ header .nav-mobile-menu-bottom {
     transition: opacity 0.2s ease;
   }
 
-  header .nav-sections .default-content-wrapper > ul > li.nav-drop:hover::after {
+  header .nav-sections .default-content-wrapper > ul > li:hover::after {
     opacity: 1;
   }
 
