@@ -132,13 +132,19 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 /**
  * Decorates the tools section with icon buttons.
  * @param {Element} navTools The nav-tools element
- * @param {Element|null} clientLi "Soy cliente" <li> extracted from topbar (with dropdown <ul>)
  */
-function decorateTools(navTools, clientLi) {
+function decorateTools(navTools) {
   if (!navTools) return;
 
   const toolsUl = navTools.querySelector('ul');
   if (!toolsUl) return;
+
+  // Unwrap <p> tags that the EDS pipeline adds around tool links
+  navTools.querySelectorAll(':scope .default-content-wrapper > ul > li > p').forEach((p) => {
+    const li = p.parentElement;
+    while (p.firstChild) li.insertBefore(p.firstChild, p);
+    p.remove();
+  });
 
   // Add cart button
   const cartLi = document.createElement('li');
@@ -151,20 +157,6 @@ function decorateTools(navTools, clientLi) {
   searchLi.className = 'nav-tool-search';
   searchLi.innerHTML = `<button type="button" aria-label="Buscar">${ICONS.search}</button>`;
   toolsUl.insertBefore(searchLi, cartLi.nextSibling);
-
-  // Insert "Soy cliente" (moved from topbar) before the CTA item
-  if (clientLi) {
-    // Find the CTA ("¿Te llamamos?") to insert before it
-    const ctaLi = [...toolsUl.querySelectorAll(':scope > li')].find((li) => {
-      const a = li.querySelector('a');
-      return a && a.textContent.includes('llamamos');
-    });
-    if (ctaLi) {
-      toolsUl.insertBefore(clientLi, ctaLi);
-    } else {
-      toolsUl.appendChild(clientLi);
-    }
-  }
 
   // Style existing links
   toolsUl.querySelectorAll(':scope > li').forEach((li) => {
@@ -194,16 +186,16 @@ function decorateTools(navTools, clientLi) {
     const btn = bc.querySelector('.button');
     if (btn) btn.classList.remove('button');
   });
+  // Also remove .button from links that were unwrapped from <p> tags
+  navTools.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
 }
 
 /**
- * Decorates the top bar utility section.
- * Extracts "Soy cliente" (with its dropdown) from topbar and returns it
- * so it can be moved into the tools bar.
- * @returns {Element|null} The "Soy cliente" <li> element, or null
+ * Decorates the top bar utility section (black bar).
+ * @param {Element} navTopbar The nav-topbar element
  */
 function decorateTopbar(navTopbar) {
-  if (!navTopbar) return null;
+  if (!navTopbar) return;
 
   // Unwrap <p> tags that the EDS pipeline adds around topbar links
   navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li > p').forEach((p) => {
@@ -211,17 +203,6 @@ function decorateTopbar(navTopbar) {
     while (p.firstChild) li.insertBefore(p.firstChild, p);
     p.remove();
   });
-
-  // Extract "Soy cliente" from topbar – it will be moved to the tools bar
-  let clientLi = null;
-  const allItems = navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li');
-  allItems.forEach((item) => {
-    const a = item.querySelector(':scope > a');
-    if (a && a.textContent.trim().includes('Soy cliente')) {
-      clientLi = item;
-    }
-  });
-  if (clientLi) clientLi.remove();
 
   const items = navTopbar.querySelectorAll(':scope .default-content-wrapper > ul > li');
   items.forEach((item) => {
@@ -281,8 +262,6 @@ function decorateTopbar(navTopbar) {
   });
   // Also remove .button from links that were unwrapped from <p> tags
   navTopbar.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
-
-  return clientLi;
 }
 
 /**
@@ -356,13 +335,13 @@ export default async function decorate(block) {
     navSections.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
   }
 
-  // --- Topbar setup (must run first to extract "Soy cliente" for tools) ---
+  // --- Topbar setup (black bar) ---
   const navTopbar = nav.querySelector('.nav-topbar');
-  const clientLi = decorateTopbar(navTopbar);
+  decorateTopbar(navTopbar);
 
-  // --- Tools setup ---
+  // --- Tools setup (Soy cliente + ¿Te llamamos?) ---
   const navTools = nav.querySelector('.nav-tools');
-  decorateTools(navTools, clientLi);
+  decorateTools(navTools);
 
   // --- Build dual-bar DOM ---
   // Save references
