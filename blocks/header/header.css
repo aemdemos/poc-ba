@@ -645,6 +645,13 @@ header nav .icon-recruit::before {
     color: #001871;
   }
 
+  /* Hover on top-level parent nav items (ご契約者さま, 個人向け保険, etc.) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
   /* Hide megamenu bottom / close in mobile */
   header nav .nav-sections .megamenu-close {
     display: none;
@@ -679,7 +686,7 @@ header nav .nav-mobile-cta {
   header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li {
     background: #fff;
     border: 1px solid #e6e6e6;
-    border-radius: 8px;
+    border-radius: 6px;
     margin: 0;
   }
 
@@ -714,35 +721,22 @@ header nav .nav-mobile-cta {
     padding: 0;
   }
 
-  /* CTA links list (second ul) */
+  /* CTA links list (second ul) - individual rounded pill items */
   header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) {
     list-style: none;
     padding: 0;
     margin: 0 0 16px;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 8px;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
   header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li {
     background: #fff;
     border: 1px solid #e6e6e6;
-    border-radius: 0;
+    border-radius: 6px;
     margin: 0;
-  }
-
-  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li:first-child {
-    border-radius: 8px 8px 0 0;
-  }
-
-  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li:last-child {
-    border-radius: 0 0 8px 8px;
-  }
-
-  /* stylelint-disable-next-line no-descending-specificity */
-  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li + li {
-    border-top: none;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
@@ -767,6 +761,20 @@ header nav .nav-mobile-cta {
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
     background-size: contain;
     flex-shrink: 0;
+  }
+
+  /* Hover on emergency CTA item (事故・病気・ケガ...) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Hover on resource CTA items (お近くのAIG損保, 個人の資料請求, etc.) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
   }
 
   /* Footer links row (採用情報 | ICA社員募集 | 不動産代理店募集) - 2-column grid */
