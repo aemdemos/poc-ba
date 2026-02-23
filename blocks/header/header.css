@@ -728,15 +728,18 @@ header nav .nav-tools a:any-link {
   text-decoration: none;
 }
 
-/* Search icon via SVG */
-header nav .nav-tools a::before {
-  content: '';
-  display: inline-block;
+/* Search icon via authored :search: icon span */
+header nav .nav-tools a .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+header nav .nav-tools a .icon img {
   width: 20px;
   height: 20px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat center;
-  background-size: contain;
-  vertical-align: middle;
+  filter: brightness(0) invert(1);
   margin-right: 4px;
 }
 
@@ -749,19 +752,25 @@ header nav .nav-tools a::before {
     height: 90px;
   }
 
-  header nav .nav-tools a::before {
-    font-size: var(--body-font-size-m);
+  header nav .nav-tools a .icon img {
     width: 22px;
     height: 22px;
     margin-right: 0;
   }
 }
 
-/* Search active state (X icon - larger than search icon) */
+/* Search active state (X icon) - hide icon, show X via pseudo-element */
+header nav .nav-tools a.search-active .icon {
+  display: none;
+}
+
 header nav .nav-tools a.search-active::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+  content: '';
+  display: inline-block;
   width: 36px;
   height: 36px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
 }
 
 /* =============================================
