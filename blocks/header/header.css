@@ -34,9 +34,9 @@ header nav {
 header nav[aria-expanded='true'] {
   grid-template:
     'brand tools hamburger' var(--nav-height)
-    'sections sections sections' 1fr
+    'sections sections sections' auto
     'mobile-cta mobile-cta mobile-cta' auto / 1fr auto auto;
-  align-items: stretch;
+  align-content: start;
   overflow-y: auto;
   min-height: 100dvh;
   scrollbar-width: thin;
@@ -406,6 +406,11 @@ header nav .icon-recruit::before {
 
 /* ===== Mobile menu styles (< 769px) ===== */
 @media (width < 769px) {
+  /* Override nav background when expanded so no navy shows between sections and CTA */
+  header nav[aria-expanded='true'] {
+    background-color: #eee;
+  }
+
   /* Mobile expanded menu background */
   header nav[aria-expanded='true'] .nav-sections {
     background-color: #eee;
