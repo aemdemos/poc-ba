@@ -759,23 +759,32 @@ header nav .nav-tools a.search-active::before {
    SEARCH OVERLAY PANEL
    ============================================= */
 header nav .nav-search-overlay {
-  display: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
   position: absolute;
   top: 90px;
   left: 0;
   width: 100%;
-  height: auto;
   background-color: var(--background-color);
   z-index: 10;
-  padding: 16px 32px;
+  padding: 0 32px;
   box-sizing: border-box;
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid transparent;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease-out, opacity 0.25s ease, padding-top 0.35s ease-out, padding-bottom 0.35s ease-out, border-color 0.35s ease-out;
+  pointer-events: none;
 }
 
 header nav .nav-search-overlay.active {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  max-height: 94px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-bottom-color: #e6e6e6;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 header nav .nav-search-overlay input[type="search"] {

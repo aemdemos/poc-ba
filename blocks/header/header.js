@@ -292,13 +292,27 @@ export default async function decorate(block) {
 
     // Find search link and wire up toggle
     const searchLink = navTools.querySelector('a');
+
+    const closeSearch = () => {
+      if (searchOverlay.classList.contains('active')) {
+        searchOverlay.classList.remove('active');
+        if (searchLink) searchLink.classList.remove('search-active');
+      }
+    };
+
+    const openSearch = () => {
+      searchOverlay.classList.add('active');
+      if (searchLink) searchLink.classList.add('search-active');
+      searchOverlay.querySelector('input').focus();
+    };
+
     const toggleSearch = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const isActive = searchLink.classList.toggle('search-active');
-      searchOverlay.classList.toggle('active', isActive);
-      if (isActive) {
-        searchOverlay.querySelector('input').focus();
+      if (searchOverlay.classList.contains('active')) {
+        closeSearch();
+      } else {
+        openSearch();
       }
     };
 
@@ -312,6 +326,20 @@ export default async function decorate(block) {
       if (!e.target.closest('.nav-search-overlay')) {
         toggleSearch(e);
       }
+    });
+
+    // Close search when clicking anywhere outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-search-overlay')
+        && !e.target.closest('.nav-tools')
+        && !e.target.closest('.sticky-search')) {
+        closeSearch();
+      }
+    });
+
+    // Close search on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
     });
 
     // Submit search
@@ -374,8 +402,10 @@ export default async function decorate(block) {
       e.stopPropagation();
       const overlay = nav.querySelector('.nav-search-overlay');
       if (overlay) {
-        overlay.classList.toggle('active');
         if (overlay.classList.contains('active')) {
+          overlay.classList.remove('active');
+        } else {
+          overlay.classList.add('active');
           overlay.querySelector('input')?.focus();
         }
       }
