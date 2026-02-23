@@ -205,6 +205,9 @@ export default async function decorate(block) {
     navSections.querySelectorAll('.default-content-wrapper li > p').forEach((p) => {
       p.replaceWith(...p.childNodes);
     });
+    // Strip .button/.button-container classes added by DA auto-decoration
+    navSections.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
+    navSections.querySelectorAll('.button-container').forEach((el) => el.classList.remove('button-container'));
 
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
@@ -267,10 +270,6 @@ export default async function decorate(block) {
           }
         }
       });
-    });
-    navSections.querySelectorAll('.button-container').forEach((buttonContainer) => {
-      buttonContainer.classList.remove('button-container');
-      buttonContainer.querySelector('.button').classList.remove('button');
     });
   }
 
