@@ -202,11 +202,63 @@ export default async function decorate(block) {
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
+
+      // Decorate megamenu: wrap category text nodes in <span>, mark bottom links
+      const dropdown = navSection.querySelector(':scope > ul');
+      if (dropdown) {
+        const dropItems = [...dropdown.children];
+        dropItems.forEach((li, idx) => {
+          // Skip first item (top link) and items that are purely links
+          if (idx > 0 && li.querySelector(':scope > ul')) {
+            // This is a category item with nested links
+            // Wrap direct text content in a <span> for styling as category header
+            const textNodes = [...li.childNodes].filter(
+              (n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim(),
+            );
+            textNodes.forEach((tn) => {
+              const span = document.createElement('span');
+              span.textContent = tn.textContent.trim();
+              tn.replaceWith(span);
+            });
+            // If the category has a direct <a> link (e.g. 損害サービス), wrap its text
+            const directLink = li.querySelector(':scope > a');
+            if (directLink) {
+              const span = document.createElement('span');
+              span.textContent = directLink.textContent.trim();
+              directLink.replaceWith(span);
+            }
+          } else if (idx > 0 && idx === dropItems.length - 1 && !li.querySelector(':scope > ul') && li.querySelector('a')) {
+            // Bottom link ONLY if it's the last item (e.g. よくあるご質問, 保険用語集)
+            li.classList.add('megamenu-bottom');
+          }
+        });
+
+        // Add close chevron
+        const closeDiv = document.createElement('div');
+        closeDiv.className = 'megamenu-close';
+        closeDiv.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navSection.setAttribute('aria-expanded', 'false');
+        });
+        dropdown.append(closeDiv);
+      }
+
+      navSection.addEventListener('click', (e) => {
         if (isDesktop.matches) {
+          // Prevent link navigation for items with dropdowns
+          if (navSection.classList.contains('nav-drop')) {
+            e.preventDefault();
+          }
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
           navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+
+          // Position dropdown to span full viewport width
+          if (!expanded && dropdown) {
+            const liRect = navSection.getBoundingClientRect();
+            dropdown.style.left = `${-liRect.left}px`;
+            dropdown.style.width = `${window.innerWidth}px`;
+          }
         }
       });
     });
@@ -218,10 +270,60 @@ export default async function decorate(block) {
 
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    const search = navTools.querySelector('a[href*="search"]');
-    if (search && search.textContent === '') {
-      search.setAttribute('aria-label', 'Search');
+    // Strip button classes from tools links
+    navTools.querySelectorAll('.button-container').forEach((bc) => {
+      bc.classList.remove('button-container');
+      const btn = bc.querySelector('.button');
+      if (btn) btn.classList.remove('button');
+    });
+
+    // Build search overlay panel
+    const searchOverlay = document.createElement('div');
+    searchOverlay.className = 'nav-search-overlay';
+    searchOverlay.innerHTML = `
+      <input type="search" placeholder="商品名やキーワードを入力" aria-label="商品名やキーワードを入力">
+      <button type="submit">検索</button>
+    `;
+
+    // Find search link and wire up toggle
+    const searchLink = navTools.querySelector('a');
+    const toggleSearch = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isActive = searchLink.classList.toggle('search-active');
+      searchOverlay.classList.toggle('active', isActive);
+      if (isActive) {
+        searchOverlay.querySelector('input').focus();
+      }
+    };
+
+    if (searchLink) {
+      searchLink.setAttribute('aria-label', 'サイト内を検索');
+      searchLink.addEventListener('click', toggleSearch);
     }
+
+    // Also allow clicking anywhere on the nav-tools container
+    navTools.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-search-overlay')) {
+        toggleSearch(e);
+      }
+    });
+
+    // Submit search
+    searchOverlay.querySelector('button').addEventListener('click', () => {
+      const query = searchOverlay.querySelector('input').value.trim();
+      if (query) {
+        window.location.href = `https://www.aig.co.jp/sonpo/search?kw=${encodeURIComponent(query)}`;
+      }
+    });
+
+    searchOverlay.querySelector('input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        searchOverlay.querySelector('button').click();
+      }
+    });
+
+    nav.append(searchOverlay);
   }
 
   // hamburger for mobile
@@ -241,6 +343,79 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // Build sticky header elements (logo + search) for compact mode on scroll
+  const navUl = navSections.querySelector('.default-content-wrapper > ul');
+  if (navUl) {
+    // Sticky logo (first item in UL, hidden by default via CSS)
+    const stickyLogoLi = document.createElement('li');
+    stickyLogoLi.className = 'sticky-logo';
+    const logoHref = navBrand.querySelector('a')?.getAttribute('href') || '/';
+    const logoLink = document.createElement('a');
+    logoLink.href = logoHref;
+    logoLink.textContent = 'AIG損保';
+    stickyLogoLi.append(logoLink);
+    navUl.prepend(stickyLogoLi);
+
+    // Sticky search icon (last item in UL, hidden by default via CSS)
+    const stickySearchLi = document.createElement('li');
+    stickySearchLi.className = 'sticky-search';
+    const searchBtn = document.createElement('a');
+    searchBtn.href = '#';
+    searchBtn.setAttribute('aria-label', '検索');
+    searchBtn.textContent = '検索';
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const overlay = nav.querySelector('.nav-search-overlay');
+      if (overlay) {
+        overlay.classList.toggle('active');
+        if (overlay.classList.contains('active')) {
+          overlay.querySelector('input')?.focus();
+        }
+      }
+    });
+    stickySearchLi.append(searchBtn);
+    navUl.append(stickySearchLi);
+  }
+
+  // Sticky compact header on scroll (desktop only)
+  let isSticky = false;
+  let ticking = false;
+  const onScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const headerEl = navWrapper.closest('header');
+        const threshold = headerEl ? headerEl.offsetHeight : 160;
+        if (window.scrollY > threshold && !isSticky) {
+          // Close any open megamenus before switching
+          toggleAllNavSections(navSections, false);
+          navWrapper.classList.add('sticky-compact');
+          isSticky = true;
+        } else if (window.scrollY <= threshold && isSticky) {
+          toggleAllNavSections(navSections, false);
+          navWrapper.classList.remove('sticky-compact');
+          isSticky = false;
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+
+  if (isDesktop.matches) {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+  isDesktop.addEventListener('change', () => {
+    if (isDesktop.matches) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    } else {
+      window.removeEventListener('scroll', onScroll);
+      navWrapper.classList.remove('sticky-compact');
+      isSticky = false;
+    }
+  });
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     navWrapper.append(await buildBreadcrumbs());

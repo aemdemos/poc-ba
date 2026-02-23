@@ -1,12 +1,70 @@
+/* Footer - AIG Japan styling */
 footer {
-  background-color: var(--light-color);
   font-size: var(--body-font-size-xs);
 }
 
 footer .footer > div {
   margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+  max-width: var(--content-max-width);
+  padding: var(--spacing-l) var(--spacing-s);
+}
+
+footer .footer > div:first-child {
+  background-color: var(--color-gray);
+  max-width: 100%;
+  padding: var(--spacing-l) var(--spacing-s);
+}
+
+footer .footer > div:first-child > * {
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer .footer > div:first-child ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-s) var(--spacing-m);
+  justify-content: center;
+}
+
+footer .footer > div:first-child ul li {
+  margin: 0;
+}
+
+footer .footer > div:first-child a:any-link {
+  color: var(--color-blue);
+  font-weight: 700;
+  font-size: var(--body-font-size-s);
+}
+
+footer .footer > div:nth-child(2) ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs) var(--spacing-s);
+  justify-content: center;
+}
+
+footer .footer > div:nth-child(2) ul li {
+  margin: 0;
+}
+
+footer .footer > div:nth-child(2) a:any-link {
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+}
+
+footer .footer > div:last-child {
+  text-align: center;
+  padding: var(--spacing-s);
+  font-size: var(--body-font-size-xs);
+  color: var(--color-gray-text);
 }
 
 footer .footer p {
@@ -15,6 +73,6 @@ footer .footer p {
 
 @media (width >= 900px) {
   footer .footer > div {
-    padding: 40px 32px 24px;
+    padding: var(--spacing-l) var(--spacing-s);
   }
 }

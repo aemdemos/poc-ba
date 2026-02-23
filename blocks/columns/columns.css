@@ -1,6 +1,8 @@
+/* Columns block - AIG Japan styling */
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-s);
 }
 
 .columns img {
@@ -19,11 +21,26 @@
   display: block;
 }
 
+/* AIG button links in columns */
+.columns a.button:any-link {
+  display: block;
+  white-space: normal;
+  text-align: left;
+  margin: 4px 0;
+}
+
+/* Stats display in columns */
+.columns strong {
+  color: var(--color-navy);
+  font-size: var(--heading-font-size-xl);
+  display: block;
+}
+
 @media (width >= 900px) {
   .columns > div {
     align-items: center;
     flex-direction: unset;
-    gap: 24px;
+    gap: var(--spacing-s);
   }
 
   .columns > div > div {

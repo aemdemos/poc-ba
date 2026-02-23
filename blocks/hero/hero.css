@@ -1,3 +1,4 @@
+/* Hero block - AIG Japan styling */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,15 +6,20 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: var(--spacing-xl) var(--spacing-s);
+  min-height: 400px;
+  display: flex;
+  align-items: center;
 }
 
-.hero h1 {
-  max-width: 1200px;
+.hero h2 {
+  max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
-  color: var(--background-color);
+  color: var(--color-white);
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.6;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 30%);
 }
 
 .hero picture {
@@ -32,6 +38,11 @@
 
 @media (width >= 900px) {
   .hero {
-    padding: 40px 32px;
+    padding: var(--spacing-xl) 32px;
+    min-height: 400px;
+  }
+
+  .hero h2 {
+    font-size: var(--heading-font-size-xxl);
   }
 }

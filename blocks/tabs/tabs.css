@@ -1,37 +1,28 @@
+/* Tabs block - AIG Japan styling */
 .tabs .tabs-list {
   display: flex;
-  gap: 0.5ch;
+  gap: 0;
   max-width: 100%;
-  font-size: var(--body-font-size-xs);
   overflow-x: auto;
 }
 
-@media (width >= 600px) {
-  .tabs .tabs-list {
-    font-size: var(--body-font-size-s);
-  }
-}
-
-@media (width >= 900px) {
-  .tabs .tabs-list {
-    font-size: var(--body-font-size-m);
-  }
-}
-
 .tabs .tabs-list button {
-  flex: 0 0 max-content;
+  flex: 1;
   margin: 0;
-  border: 1px solid #dadada;
+  border: 1px solid var(--color-border);
+  border-bottom: 3px solid var(--color-border);
   border-radius: 0;
-  padding: 0.5em;
-  background-color: var(--light-color);
-  color: initial;
-  font-weight: bold;
-  line-height: unset;
-  text-align: initial;
+  padding: var(--spacing-xs) var(--spacing-s);
+  background-color: var(--color-gray);
+  color: var(--color-black);
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  font-size: var(--heading-font-size-l);
+  line-height: 1.5;
+  text-align: center;
   text-overflow: unset;
   overflow: unset;
-  white-space: unset;
+  white-space: nowrap;
   transition: background-color 0.2s;
 }
 
@@ -39,20 +30,29 @@
   margin: 0;
 }
 
-
 .tabs .tabs-list button[aria-selected='true'] {
-  border-bottom: 1px solid var(--background-color);
+  border-bottom: 3px solid var(--color-navy);
   background-color: var(--background-color);
+  color: var(--color-navy);
   cursor: initial;
 }
 
 .tabs .tabs-panel {
   margin-top: -1px;
-  padding: 24px;
-  border: 1px solid #dadada;
+  padding: var(--spacing-s);
+  border: 1px solid var(--color-border);
+  border-top: none;
   overflow: auto;
 }
 
 .tabs .tabs-panel[aria-hidden='true'] {
   display: none;
+}
+
+/* Tab content buttons */
+.tabs .tabs-panel a.button:any-link {
+  white-space: normal;
+  text-align: left;
+  display: inline-block;
+  margin: 4px;
 }
