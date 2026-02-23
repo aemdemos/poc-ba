@@ -49,7 +49,7 @@
   --spacing-xl: 40px;
 
   /* nav heights */
-  --nav-height: 64px;
+  --nav-height: 44px;
   --breadcrumbs-height: 34px;
   --header-height: var(--nav-height);
   --nav-height-desktop: 160px;

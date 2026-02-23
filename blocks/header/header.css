@@ -19,8 +19,8 @@ header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools' var(--nav-height)
-    'sections sections sections' 1fr / auto 1fr auto;
+    'brand tools hamburger' var(--nav-height)
+    'sections sections sections' 1fr / 1fr auto auto;
   align-items: center;
   gap: 0;
   margin: auto;
@@ -33,13 +33,29 @@ header nav {
 
 header nav[aria-expanded='true'] {
   grid-template:
-    'hamburger brand tools' var(--nav-height)
-    'sections sections sections' 1fr / auto 1fr auto;
+    'brand tools hamburger' var(--nav-height)
+    'sections sections sections' auto
+    'mobile-cta mobile-cta mobile-cta' auto / 1fr auto auto;
   overflow-y: auto;
   min-height: 100dvh;
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 transparent;
 }
 
-@media (width >= 900px) {
+header nav[aria-expanded='true']::-webkit-scrollbar {
+  width: 4px;
+}
+
+header nav[aria-expanded='true']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+header nav[aria-expanded='true']::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border-radius: 2px;
+}
+
+@media (width >= 769px) {
   header .nav-wrapper {
     position: relative;
   }
@@ -79,10 +95,13 @@ header nav a:hover {
 /* hamburger */
 header nav .nav-hamburger {
   grid-area: hamburger;
-  height: 22px;
+  height: var(--nav-height);
+  width: 44px;
   display: flex;
   align-items: center;
-  padding-left: 16px;
+  justify-content: center;
+  padding: 0;
+  background-color: #5d738d;
   color: var(--color-white);
 }
 
@@ -152,7 +171,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   transform: rotate(-45deg);
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header nav .nav-hamburger {
     display: none;
     visibility: hidden;
@@ -174,7 +193,7 @@ header .nav-brand {
   line-height: 1;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header .nav-brand {
     height: 90px;
     padding: 0;
@@ -193,10 +212,10 @@ header .nav-brand {
 /* Brand logo */
 header nav .nav-brand img {
   width: auto;
-  height: 36px;
+  height: 26px;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header nav .nav-brand img {
     height: 48px;
   }
@@ -222,10 +241,10 @@ header .nav-brand ul {
   margin: 0;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header .nav-brand ul {
     display: flex;
-    gap: 32px;
+    gap: 16px;
     align-items: center;
   }
 
@@ -235,13 +254,83 @@ header .nav-brand ul {
 
   header .nav-brand ul a:any-link {
     color: var(--color-white);
-    font-size: var(--body-font-size-xs);
+    font-size: 9px;
     font-weight: 400;
     white-space: nowrap;
   }
 
   header .nav-brand ul a:hover {
     text-decoration: underline;
+  }
+}
+
+/* Mobile brand utility icons (between logo and hamburger) */
+@media (width < 769px) {
+  header .nav-brand {
+    padding: 0 0 0 16px;
+  }
+
+  header .nav-brand > .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+    align-items: center;
+  }
+
+  header .nav-brand ul li {
+    width: 44px;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
+
+  /* Hide third item (もっとAIG) on mobile */
+  header .nav-brand ul li:nth-child(3) {
+    display: none;
+  }
+
+  /* Style links as icon-only buttons */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul li a {
+    font-size: 0;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: var(--nav-height);
+    text-decoration: none;
+  }
+
+  /* Branch icon (お近くのAIG損保) */
+  header .nav-brand ul li:nth-child(1) a::before {
+    /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+    font-family: aig-icons;
+    content: '\e931';
+    font-size: 22px;
+    color: var(--color-white);
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  /* Contact icon (お問い合わせ) */
+  header .nav-brand ul li:nth-child(2) a::before {
+    /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+    font-family: aig-icons;
+    content: '\e92c';
+    font-size: 22px;
+    color: var(--color-white);
+    font-style: normal;
+    font-weight: normal;
   }
 }
 
@@ -282,7 +371,422 @@ header nav .nav-sections ul > li > ul > li {
   font-weight: 400;
 }
 
-@media (width >= 900px) {
+/* ===== Per-icon class content (global - used in both mobile & desktop) ===== */
+header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: aig-icons;
+  font-style: normal;
+  font-weight: normal;
+}
+
+header nav .icon-contractor::before {
+  content: '\e912';
+}
+
+header nav .icon-personal::before {
+  content: '\e923';
+}
+
+header nav .icon-business::before {
+  content: '\e90f';
+}
+
+header nav .icon-news::before {
+  content: '\e912';
+}
+
+header nav .icon-company::before {
+  content: '\e906';
+}
+
+header nav .icon-recruit::before {
+  content: '\e93d';
+}
+
+/* ===== Mobile menu styles (< 769px) ===== */
+@media (width < 769px) {
+  /* Mobile expanded menu background */
+  header nav[aria-expanded='true'] .nav-sections {
+    background-color: #eee;
+    padding: 0 32px;
+    animation: mobile-slide-down 0.3s ease-out;
+  }
+
+  /* Slide-down animation for mobile menu */
+  @keyframes mobile-slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Top-level list layout */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Top-level items */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li {
+    min-height: 61px;
+    border-bottom: 1px solid #c0c0c0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  /* Hide sticky elements in mobile menu */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > .sticky-logo,
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > .sticky-search {
+    display: none !important;
+    min-height: 0;
+    border: none;
+  }
+
+  /* Top-level links */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > a {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    padding: 0 8px;
+    height: 61px;
+    flex: 1;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  /* Icon display in mobile nav */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon img {
+    display: none;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 26px;
+    color: #001871;
+  }
+
+  /* Down chevron on expandable items */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li.nav-drop > a::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #5d738d;
+    border-bottom: 2px solid #5d738d;
+    transform: rotate(45deg);
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  /* Chevron rotates up when expanded */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'].nav-drop > a::after {
+    transform: rotate(-135deg);
+  }
+
+  /* Blue dotted border on expanded accordion item */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] {
+    border-top: 2px dotted #001871;
+    border-bottom: 2px dotted #001871;
+  }
+
+  /* Submenus hidden by default in mobile */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul {
+    display: none;
+  }
+
+  /* Submenu shown when item is expanded (accordion) */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
+    display: block;
+    width: 100%;
+    background-color: #eee;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* All submenu list items - consistent height and border */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
+    min-height: 61px;
+    border-bottom: 1px solid #c0c0c0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0 0 0 32px;
+  }
+
+  /* Submenu link items - flex layout with right-arrow */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > a {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    padding: 0 16px 0 0;
+    min-height: 61px;
+    flex: 1;
+    position: relative;
+  }
+
+  /* Blue circle right-arrow on submenu link items */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  /* Category headers (text in span - no link) */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > span {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    min-height: 61px;
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  /* Nested list (level 3) under categories - show all items flat */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li {
+    min-height: 61px;
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 16px;
+  }
+
+  /* Level 3 items have no border - inherits clean look from reference */
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    min-height: 61px;
+    flex: 1;
+    padding: 0 16px 0 0;
+  }
+
+  /* Blue circle right-arrow on nested link items */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  /* Hover effect on submenu items - darker gray */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li:hover {
+    background-color: #e0e0e0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li:hover {
+    background-color: #e0e0e0;
+  }
+
+  /* Hide megamenu bottom / close in mobile */
+  header nav .nav-sections .megamenu-close {
+    display: none;
+  }
+
+}
+
+/* =============================================
+   MOBILE CTA = Bottom section of mobile menu
+   ============================================= */
+header nav .nav-mobile-cta {
+  grid-area: mobile-cta;
+  display: none;
+}
+
+@media (width < 769px) {
+  header nav[aria-expanded='true'] .nav-mobile-cta {
+    display: block;
+    background-color: #eee;
+    padding: 16px 32px 24px;
+    animation: mobile-slide-down 0.3s ease-out;
+  }
+
+  /* Emergency CTA button (first ul > li) */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    margin: 0;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+    padding: 8px 16px;
+    min-height: 40px;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  /* Section title (p tag: 資料のご請求...) */
+  header nav .nav-mobile-cta .default-content-wrapper > p:first-of-type {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+
+  /* CTA links list (second ul) */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li:last-child {
+    border-radius: 0 0 8px 8px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li + li {
+    border-top: none;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+    padding: 8px 16px;
+    min-height: 40px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  /* Footer links row (採用情報 | ICA社員募集 | 不動産代理店募集) - 2-column grid */
+  header nav .nav-mobile-cta .default-content-wrapper > p:last-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    font-size: 0;
+    color: transparent;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > p:last-child a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > p:last-child a::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+}
+
+@media (width >= 769px) {
   header nav .nav-sections {
     display: block;
     visibility: visible;
@@ -379,14 +883,14 @@ header nav .nav-sections ul > li > ul > li {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 12px;
+    padding: 0 9px;
     color: var(--text-color);
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 400;
     text-decoration: none;
     width: 100%;
     height: 100%;
-    gap: 6px;
+    gap: 4px;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > a:hover {
@@ -405,28 +909,24 @@ header nav .nav-sections ul > li > ul > li {
     display: none;
   }
 
-  /* Icon font glyph via ::before on the icon span */
+  /* Icon font glyph size/color override for desktop */
   header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
-    /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
-    font-family: aig-icons;
-    font-size: 26px;
+    font-size: 18px;
     color: var(--color-navy);
-    font-style: normal;
-    font-weight: normal;
   }
 
   /* Chevron arrow after text */
   header nav .nav-sections .default-content-wrapper > ul > li > a::after {
     content: '';
     display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 5px;
+    height: 5px;
     border-right: 1.5px solid #5d738d;
     border-bottom: 1.5px solid #5d738d;
     transform: rotate(45deg);
     flex-shrink: 0;
-    margin-left: 4px;
-    margin-bottom: 3px;
+    margin-left: 2px;
+    margin-bottom: 2px;
     transition: transform 0.3s ease;
   }
 
@@ -434,38 +934,6 @@ header nav .nav-sections ul > li > ul > li {
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > a::after {
     transform: rotate(-135deg);
     margin-bottom: -3px;
-  }
-
-  /* ===== Per-icon class content (authored via :icon-name: in nav document) ===== */
-
-  /* ご契約者さま - document-and-pen */
-  header nav .icon-contractor::before {
-    content: '\e912';
-  }
-
-  /* 個人向け保険 - user */
-  header nav .icon-personal::before {
-    content: '\e923';
-  }
-
-  /* 法人向け保険 - corporation */
-  header nav .icon-business::before {
-    content: '\e90f';
-  }
-
-  /* ニュース - document-and-pen */
-  header nav .icon-news::before {
-    content: '\e912';
-  }
-
-  /* 企業情報 - buildings */
-  header nav .icon-company::before {
-    content: '\e906';
-  }
-
-  /* 採用情報 - collaboration */
-  header nav .icon-recruit::before {
-    content: '\e93d';
   }
 
   /* ===== Megamenu dropdown ===== */
@@ -679,6 +1147,63 @@ header nav .nav-sections ul > li > ul > li {
   }
 }
 
+/* ===== Responsive scaling for narrow desktop (769px–1080px) ===== */
+@media (width >= 921px) {
+  header nav .nav-sections .default-content-wrapper > ul > li > a {
+    font-size: 14px;
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 22px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a::after {
+    width: 6px;
+    height: 6px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+  }
+
+  header .nav-brand ul {
+    gap: 24px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul a:any-link {
+    font-size: 12px;
+  }
+}
+
+@media (width >= 1081px) {
+  header nav .nav-sections .default-content-wrapper > ul > li > a {
+    font-size: 16px;
+    padding: 0 12px;
+    gap: 6px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 26px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a::after {
+    width: 7px;
+    height: 7px;
+    margin-left: 4px;
+    margin-bottom: 3px;
+  }
+
+  header .nav-brand ul {
+    gap: 32px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul a:any-link {
+    font-size: var(--body-font-size-xs);
+  }
+}
+
 /* =============================================
    TOOLS = Search button (navy bar, far right)
    ============================================= */
@@ -689,7 +1214,7 @@ header nav .nav-tools {
   padding-right: 16px;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header nav .nav-tools {
     position: absolute;
     top: 0;
@@ -707,7 +1232,7 @@ header nav .nav-tools {
 }
 
 /* Ensure inner wrappers fill the entire tools area */
-@media (width >= 900px) {
+@media (width >= 769px) {
   header nav .nav-tools .default-content-wrapper,
   header nav .nav-tools .default-content-wrapper p {
     margin: 0;
@@ -743,7 +1268,7 @@ header nav .nav-tools a .icon img {
   margin-right: 4px;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header nav .nav-tools a {
     font-size: 0;
     color: transparent;
@@ -755,6 +1280,44 @@ header nav .nav-tools a .icon img {
   header nav .nav-tools a .icon img {
     width: 22px;
     height: 22px;
+    margin-right: 0;
+  }
+}
+
+/* Mobile search icon - compact 44x44 button */
+@media (width < 769px) {
+  header nav .nav-tools {
+    padding: 0;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header nav .nav-tools .default-content-wrapper,
+  header nav .nav-tools .default-content-wrapper p {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-tools a:any-link {
+    font-size: 0;
+    color: transparent;
+    width: 44px;
+    height: var(--nav-height);
+    overflow: hidden;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-tools a .icon img {
+    width: 18px;
+    height: 18px;
     margin-right: 0;
   }
 }
@@ -853,7 +1416,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
   display: none;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   /* Sticky compact mode - activated by JS on scroll */
   header .nav-wrapper.sticky-compact {
     position: fixed;
@@ -1049,7 +1612,7 @@ header .breadcrumbs ol li[aria-current] {
   color: var(--text-color);
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header .breadcrumbs {
     display: block;
     max-width: 1200px;

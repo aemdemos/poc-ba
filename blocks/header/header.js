@@ -3,7 +3,7 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = window.matchMedia('(min-width: 769px)');
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -72,9 +72,17 @@ function toggleAllNavSections(sections, expanded = false) {
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  // Lock body scroll when mobile menu opens (prevents background scrolling)
+  if (!expanded && !isDesktop.matches) {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
+  // On mobile, keep all sections collapsed (accordion); on desktop, expand/collapse all
+  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'false');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -185,7 +193,7 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
+  const classes = ['brand', 'sections', 'mobile-cta', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
@@ -268,9 +276,29 @@ export default async function decorate(block) {
             dropdown.style.left = `${-liRect.left}px`;
             dropdown.style.width = `${window.innerWidth}px`;
           }
+        } else if (navSection.classList.contains('nav-drop')) {
+          // Mobile accordion: toggle submenu visibility
+          e.preventDefault();
+          const sectionExpanded = navSection.getAttribute('aria-expanded') === 'true';
+          toggleAllNavSections(navSections);
+          navSection.setAttribute('aria-expanded', sectionExpanded ? 'false' : 'true');
         }
       });
     });
+  }
+
+  // Mobile CTA section - strip button classes and clean up pipe separators
+  const navMobileCta = nav.querySelector('.nav-mobile-cta');
+  if (navMobileCta) {
+    navMobileCta.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
+    navMobileCta.querySelectorAll('.button-container').forEach((el) => el.classList.remove('button-container'));
+    // Remove pipe separator text nodes from footer links paragraph
+    const footerP = navMobileCta.querySelector('.default-content-wrapper > p:last-child');
+    if (footerP) {
+      [...footerP.childNodes]
+        .filter((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim() === '|')
+        .forEach((n) => n.remove());
+    }
   }
 
   const navTools = nav.querySelector('.nav-tools');
