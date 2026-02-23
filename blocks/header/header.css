@@ -34,8 +34,9 @@ header nav {
 header nav[aria-expanded='true'] {
   grid-template:
     'brand tools hamburger' var(--nav-height)
-    'sections sections sections' auto
+    'sections sections sections' 1fr
     'mobile-cta mobile-cta mobile-cta' auto / 1fr auto auto;
+  align-items: stretch;
   overflow-y: auto;
   min-height: 100dvh;
   scrollbar-width: thin;
@@ -572,6 +573,7 @@ header nav .icon-recruit::before {
     padding: 0 0 0 32px;
     border-bottom: none;
     margin-bottom: 0;
+    flex: 1;
   }
 
   /* Nested list (level 3) under categories - show all items flat */
@@ -622,7 +624,13 @@ header nav .icon-recruit::before {
   header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > a:hover {
     background-color: #e6e6e6;
     color: #001871;
-    text-decoration: underline;
+  }
+
+  /* Hover on category headers (span text, no link) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > span:hover {
+    background-color: #e6e6e6;
+    color: #001871;
   }
 
   /* Hover on level 3 child links */
@@ -630,7 +638,6 @@ header nav .icon-recruit::before {
   header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a:hover {
     background-color: #e6e6e6;
     color: #001871;
-    text-decoration: underline;
   }
 
   /* Hide megamenu bottom / close in mobile */
