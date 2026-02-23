@@ -522,15 +522,15 @@ header nav .icon-recruit::before {
     margin: 0;
   }
 
-  /* All submenu list items - consistent height and border */
+  /* All submenu list items - consistent height and border-top (full width) */
   /* stylelint-disable-next-line no-descending-specificity */
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
     min-height: 61px;
-    border-bottom: 1px solid #c0c0c0;
+    border-top: 1px solid #c0c0c0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 0 0 0 32px;
+    padding: 0;
   }
 
   /* Submenu link items - flex layout with right-arrow */
@@ -542,7 +542,7 @@ header nav .icon-recruit::before {
     font-weight: 700;
     color: #000;
     text-decoration: none;
-    padding: 0 16px 0 0;
+    padding: 0 16px 0 32px;
     min-height: 61px;
     flex: 1;
     position: relative;
@@ -569,7 +569,7 @@ header nav .icon-recruit::before {
     font-weight: 700;
     color: #000;
     min-height: 61px;
-    padding: 0;
+    padding: 0 0 0 32px;
     border-bottom: none;
     margin-bottom: 0;
   }
@@ -585,12 +585,11 @@ header nav .icon-recruit::before {
   /* stylelint-disable-next-line no-descending-specificity */
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li {
     min-height: 61px;
+    border-top: 1px solid #c0c0c0;
     display: flex;
     align-items: center;
-    padding: 0 0 0 16px;
+    padding: 0;
   }
-
-  /* Level 3 items have no border - inherits clean look from reference */
 
   /* stylelint-disable-next-line no-descending-specificity */
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a {
@@ -602,7 +601,7 @@ header nav .icon-recruit::before {
     text-decoration: none;
     min-height: 61px;
     flex: 1;
-    padding: 0 16px 0 0;
+    padding: 0 16px 0 48px;
   }
 
   /* Blue circle right-arrow on nested link items */
@@ -618,15 +617,20 @@ header nav .icon-recruit::before {
     margin-left: auto;
   }
 
-  /* Hover effect on submenu items - darker gray */
+  /* Hover effect on submenu link items - background + dark blue text */
   /* stylelint-disable-next-line no-descending-specificity */
-  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li:hover {
-    background-color: #e0e0e0;
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+    text-decoration: underline;
   }
 
+  /* Hover on level 3 child links */
   /* stylelint-disable-next-line no-descending-specificity */
-  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li:hover {
-    background-color: #e0e0e0;
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+    text-decoration: underline;
   }
 
   /* Hide megamenu bottom / close in mobile */

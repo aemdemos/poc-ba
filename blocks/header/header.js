@@ -30,10 +30,9 @@ function closeOnFocusLost(e) {
     if (navSectionExpanded && isDesktop.matches) {
       // eslint-disable-next-line no-use-before-define
       toggleAllNavSections(navSections, false);
-    } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleMenu(nav, navSections, false);
     }
+    // Mobile menu should only close via hamburger button or Escape key,
+    // not on focusout (clicking non-focusable elements triggers focusout)
   }
 }
 
@@ -227,7 +226,8 @@ export default async function decorate(block) {
         dropItems.forEach((li, idx) => {
           // Skip first item (top link) and items that are purely links
           if (idx > 0 && li.querySelector(':scope > ul')) {
-            // This is a category item with nested links
+            // This is a category item with nested links - mark for CSS hover exclusion
+            li.classList.add('nav-category');
             // Wrap direct text content in a <span> for styling as category header
             const textNodes = [...li.childNodes].filter(
               (n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim(),
@@ -261,6 +261,10 @@ export default async function decorate(block) {
       }
 
       navSection.addEventListener('click', (e) => {
+        // Ignore clicks that originated inside the dropdown submenu
+        // (category headers, submenu links, etc. should not toggle the accordion)
+        if (dropdown && dropdown.contains(e.target)) return;
+
         if (isDesktop.matches) {
           // Prevent link navigation for items with dropdowns
           if (navSection.classList.contains('nav-drop')) {
