@@ -393,17 +393,26 @@ header nav .nav-sections ul > li > ul > li {
     text-decoration: none;
   }
 
-  /* Icon before text - aig-icons font */
-  header nav .nav-sections .default-content-wrapper > ul > li > a::before {
+  /* Nav icon spans (authored via :icon-name: in nav document) */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon {
+    flex-shrink: 0;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hide the <img> appended by decorateIcons (we use icon font, not SVGs) */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon img {
+    display: none;
+  }
+
+  /* Icon font glyph via ::before on the icon span */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
     /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
     font-family: aig-icons;
     font-size: 26px;
     color: var(--color-navy);
-    flex-shrink: 0;
     font-style: normal;
     font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
   }
 
   /* Chevron arrow after text */
@@ -427,35 +436,35 @@ header nav .nav-sections ul > li > ul > li {
     margin-bottom: -3px;
   }
 
-  /* ===== Per-item icons (aig-icons font) ===== */
+  /* ===== Per-icon class content (authored via :icon-name: in nav document) ===== */
 
   /* ご契約者さま - document-and-pen */
-  header nav .nav-sections .default-content-wrapper > ul > li:nth-child(1) > a::before {
+  header nav .icon-contractor::before {
     content: '\e912';
   }
 
   /* 個人向け保険 - user */
-  header nav .nav-sections .default-content-wrapper > ul > li:nth-child(2) > a::before {
+  header nav .icon-personal::before {
     content: '\e923';
   }
 
   /* 法人向け保険 - corporation */
-  header nav .nav-sections .default-content-wrapper > ul > li:nth-child(3) > a::before {
+  header nav .icon-business::before {
     content: '\e90f';
   }
 
   /* ニュース - document-and-pen */
-  header nav .nav-sections .default-content-wrapper > ul > li:nth-child(4) > a::before {
+  header nav .icon-news::before {
     content: '\e912';
   }
 
   /* 企業情報 - buildings */
-  header nav .nav-sections .default-content-wrapper > ul > li:nth-child(5) > a::before {
+  header nav .icon-company::before {
     content: '\e906';
   }
 
   /* 採用情報 - collaboration */
-  header nav .nav-sections .default-content-wrapper > ul > li:nth-child(6) > a::before {
+  header nav .icon-recruit::before {
     content: '\e93d';
   }
 
@@ -905,7 +914,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
 
   /* Hide icons and chevrons in sticky mode */
   /* stylelint-disable-next-line no-descending-specificity */
-  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a::before,
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a > .icon,
   header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a::after {
     display: none;
   }
