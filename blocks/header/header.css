@@ -882,13 +882,8 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     margin: 0 auto;
   }
 
-  /* Remove vertical separators in sticky mode */
+  /* Hide left-edge separator in sticky mode (logo takes its place) */
   header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul::before {
-    display: none;
-  }
-
-  /* stylelint-disable-next-line no-descending-specificity */
-  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li::after {
     display: none;
   }
 
@@ -932,9 +927,8 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     cursor: default;
   }
 
-  /* Remove pseudo-elements from sticky-logo */
-  header .nav-wrapper.sticky-compact .sticky-logo::before,
-  header .nav-wrapper.sticky-compact .sticky-logo::after {
+  /* Hide underline animation from sticky-logo, keep separator */
+  header .nav-wrapper.sticky-compact .sticky-logo::before {
     display: none;
   }
 
