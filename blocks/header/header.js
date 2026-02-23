@@ -200,6 +200,12 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
+    // Normalize DA output: unwrap <p> wrappers from nav list items
+    // DA wraps links in <p> tags (li > p > a) but CSS expects (li > a)
+    navSections.querySelectorAll('.default-content-wrapper li > p').forEach((p) => {
+      p.replaceWith(...p.childNodes);
+    });
+
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
 
