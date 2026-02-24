@@ -9,36 +9,69 @@
 }
 
 .cards > ul > li {
+  position: relative;
   border: none;
-  background-color: var(--background-color);
+  background-color: var(--color-white);
   box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
   overflow: hidden;
-  transition: box-shadow 0.2s ease;
-}
-
-.cards > ul > li:hover {
-  box-shadow: 0 6px 12px rgb(0 0 0 / 15%);
-}
-
-.cards .cards-card-body {
-  margin: 0;
-  padding: var(--spacing-s);
-}
-
-.cards .cards-card-body a {
-  color: var(--color-navy);
-  font-weight: 700;
-  font-size: var(--body-font-size-s);
+  cursor: pointer;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  overflow: hidden;
 }
 
 .cards > ul > li img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.cards .cards-card-body {
+  margin: 0;
+  padding: 27px var(--spacing-s);
+}
+
+/* Override button decoration inside cards */
+.cards .cards-card-body .button-container {
+  margin: 0;
+}
+
+.cards .cards-card-body a.button {
+  background: none;
+  border: none;
+  color: var(--color-navy);
+  font-weight: 700;
+  font-size: var(--body-font-size-m);
+  line-height: normal;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  white-space: normal;
+  text-decoration: none;
+  display: inline;
+}
+
+.cards .cards-card-body a.button::after {
+  display: none;
+}
+
+/* Make the entire card clickable via the link */
+.cards .cards-card-body a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Hover: image fades, title underlines */
+.cards > ul > li:hover img {
+  opacity: 0.6;
+}
+
+.cards > ul > li:hover .cards-card-body a {
+  text-decoration: underline;
 }
 
 @media (width >= 900px) {
