@@ -289,6 +289,44 @@ main > .section:first-of-type {
   }
 }
 
+/* Default section heading — centered with navy-blue accent bar */
+main .section .default-content-wrapper > h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: var(--spacing-l);
+}
+
+main .section .default-content-wrapper > h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background-color: var(--color-navy);
+  margin: var(--spacing-s) auto 0;
+}
+
+/* Underline-heading variant — left-aligned with gray rule + navy accent */
+main .section.underline-heading .default-content-wrapper > h2 {
+  text-align: left;
+  font-size: var(--heading-font-size-xl);
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: var(--spacing-l);
+  position: relative;
+}
+
+main .section.underline-heading .default-content-wrapper > h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background-color: var(--color-navy);
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  margin: 0;
+}
+
 /* section metadata styles */
 main .section.light,
 main .section.highlight {
@@ -318,9 +356,14 @@ main .section.news-list {
   padding: 0 var(--spacing-s);
 }
 
-main .section.news-list h2 {
+main .section.news-list .default-content-wrapper > h2 {
+  text-align: left;
   font-size: var(--heading-font-size-l);
   margin-bottom: var(--spacing-s);
+}
+
+main .section.news-list .default-content-wrapper > h2::after {
+  display: none;
 }
 
 /* News items list */
@@ -514,6 +557,7 @@ main .section.navy-background a:any-link {
   color: var(--color-white);
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 main .section.navy-background h2,
 main .section.navy-background h3 {
   color: var(--color-white);
