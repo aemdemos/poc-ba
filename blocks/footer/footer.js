@@ -1,16 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
-/* Map category URLs to icon font names */
-const NAV_ICON_MAP = [
-  { path: '/sonpo/contractor', icon: 'contractor' },
-  { path: '/sonpo/personal', icon: 'personal' },
-  { path: '/sonpo/business', icon: 'business' },
-  { path: '/sonpo/news', icon: 'news' },
-  { path: '/sonpo/company', icon: 'company' },
-  { path: '/sonpo/recruit', icon: 'recruit' },
-];
-
 /**
  * Decorates the back-to-top section with arrow icon and scroll behavior.
  * @param {Element} section The section element
@@ -32,29 +22,24 @@ function decorateBackToTop(section) {
 }
 
 /**
- * Decorates category navigation links with icon font glyphs.
+ * Decorates category navigation links.
+ * Icons come from the content via :icon: syntax (e.g. :contractor:).
+ * This restructures each link to show icon above text label.
  * @param {Element} section The section element
  */
 function decorateCategoryNav(section) {
   section.classList.add('footer-nav-categories');
   const links = section.querySelectorAll('a');
   links.forEach((link) => {
-    try {
-      const url = new URL(link.href, window.location);
-      const match = NAV_ICON_MAP.find((m) => url.pathname.endsWith(m.path));
-      if (match) {
-        const text = link.textContent.trim();
-        link.textContent = '';
-        const iconSpan = document.createElement('span');
-        iconSpan.className = `footer-icon footer-icon-${match.icon}`;
-        link.appendChild(iconSpan);
-        const textSpan = document.createElement('span');
-        textSpan.className = 'footer-nav-label';
-        textSpan.textContent = text;
-        link.appendChild(textSpan);
-      }
-    } catch (e) {
-      // keep link as-is if URL parsing fails
+    const iconSpan = link.querySelector('.icon');
+    if (iconSpan) {
+      const text = link.textContent.trim();
+      link.textContent = '';
+      link.appendChild(iconSpan);
+      const textSpan = document.createElement('span');
+      textSpan.className = 'footer-nav-label';
+      textSpan.textContent = text;
+      link.appendChild(textSpan);
     }
   });
 }
