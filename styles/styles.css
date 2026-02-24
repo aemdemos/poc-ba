@@ -110,7 +110,7 @@ footer .footer[data-block-status="loaded"] {
   visibility: visible;
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   :root {
     --nav-height: var(--nav-height-desktop);
   }

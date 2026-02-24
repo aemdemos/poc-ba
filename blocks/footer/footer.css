@@ -415,6 +415,7 @@ footer .footer .footer-copyright p {
     gap: 0;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   footer .footer .footer-sns li {
     margin: 8px 16px;
   }
@@ -436,6 +437,7 @@ footer .footer .footer-copyright p {
     justify-content: flex-start;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   footer .footer .footer-policy-links li {
     margin: 0 16px 8px;
   }
@@ -465,6 +467,7 @@ footer .footer .footer-copyright p {
     padding-left: 0;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   footer .footer .footer-aig-group li {
     margin: 0 16px 8px;
   }
