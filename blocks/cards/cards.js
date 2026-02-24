@@ -12,6 +12,21 @@ export default function decorate(block) {
       if (div.children.length === 1 && div.querySelector('picture')) div.className = 'cards-card-image';
       else div.className = 'cards-card-body';
     });
+
+    /* Eyebrow tag: move <em> from card body to card image as overlay */
+    const body = li.querySelector('.cards-card-body');
+    const em = body?.querySelector('em');
+    if (em) {
+      const imageDiv = li.querySelector('.cards-card-image');
+      if (imageDiv) {
+        const tag = document.createElement('span');
+        tag.className = 'cards-card-tag';
+        tag.textContent = em.textContent;
+        imageDiv.appendChild(tag);
+      }
+      em.remove();
+    }
+
     ul.append(li);
   });
   ul.querySelectorAll('picture > img').forEach((img) => {
