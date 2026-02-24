@@ -23,11 +23,12 @@
   position: relative;
   line-height: 0;
   overflow: hidden;
+  height: 200px;
 }
 
 .cards > ul > li img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
   transition: opacity 0.3s ease;
 }
@@ -52,7 +53,7 @@
   padding: 0;
   margin: 0;
   text-align: left;
-  white-space: normal;
+  white-space: pre-line;
   text-decoration: none;
   display: inline;
 }
