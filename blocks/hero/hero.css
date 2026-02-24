@@ -1,4 +1,8 @@
 /* Hero block - AIG Japan styling */
+main > .section.hero-container {
+  margin-bottom: 0;
+}
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;

@@ -301,7 +301,7 @@ main .section.highlight {
 main .section.blue-background {
   background-color: var(--color-light-blue);
   margin: 0;
-  padding: var(--spacing-xl) 0;
+  padding: 54px 0;
 }
 
 /* AIG section: light-gray-background */

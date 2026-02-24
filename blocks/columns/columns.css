@@ -48,3 +48,98 @@
     order: unset;
   }
 }
+
+/* ===== Contact section in blue-background ===== */
+.section.blue-background .columns > div {
+  align-items: stretch;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section.blue-background .columns > div > div {
+  text-align: center;
+}
+
+/* Contact buttons — full-width navy with arrow */
+.section.blue-background .columns a:any-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  margin: 0;
+  padding: 18px 27px 18px 9px;
+  background-color: var(--color-navy);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-white);
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  transition: opacity 0.3s;
+}
+
+.section.blue-background .columns a:hover {
+  color: var(--color-white);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+/* Arrow icon via aig-icons font */
+.section.blue-background .columns a::after {
+  content: '\e902';
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: aig-icons;
+  font-style: normal;
+  font-weight: normal;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  margin-top: -8px;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 16px;
+  color: var(--color-white);
+  text-align: center;
+}
+
+/* Description text below buttons */
+.section.blue-background .columns strong {
+  display: block;
+  color: var(--color-black);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  text-align: center;
+  margin-top: var(--spacing-s);
+}
+
+@media (width >= 900px) {
+  .section.blue-background .columns > div {
+    flex-direction: row;
+    gap: var(--spacing-l);
+    align-items: flex-start;
+  }
+
+  .section.blue-background .columns > div > div {
+    flex: 1;
+  }
+}
+
+@media (width <= 768px) {
+  .section.blue-background .columns a:any-link {
+    font-size: var(--body-font-size-xs);
+    padding: 16px 27px 16px 9px;
+  }
+
+  .section.blue-background .columns strong {
+    font-size: var(--body-font-size-s);
+  }
+}
