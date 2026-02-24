@@ -372,6 +372,7 @@ main .section.news-list .news-tag {
 
 main .section.news-list .news-tag span {
   display: inline-block;
+  min-width: 160px;
   padding: 6px 9px;
   border: 1px solid var(--color-navy);
   border-radius: 18px;
@@ -381,6 +382,7 @@ main .section.news-list .news-tag span {
   font-weight: 700;
   text-align: center;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -391,17 +393,15 @@ main .section.news-list .news-title {
   transition: opacity 0.2s;
 }
 
-/* Arrow icon on news items */
+/* Arrow icon on news items — matches reference arrow-circle-next.svg */
 main .section.news-list ul li a::after {
   content: '';
-  display: inline-block;
+  display: block;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   margin-left: var(--spacing-s);
-  border: 2px solid var(--color-navy);
-  border-radius: 50%;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 6l6 6-6 6' fill='none' stroke='%23001871' stroke-width='2'/%3E%3C/svg%3E") center/14px no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center/contain;
 }
 
 /* Bottom links (災害に関するお知らせ | お知らせ一覧) */
@@ -427,9 +427,7 @@ main .section.news-list > div > p a::before {
   display: inline-block;
   width: 18px;
   height: 18px;
-  border: 2px solid var(--color-navy);
-  border-radius: 50%;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 6l6 6-6 6' fill='none' stroke='%23001871' stroke-width='2'/%3E%3C/svg%3E") center/10px no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center/contain;
   flex-shrink: 0;
 }
 
@@ -485,11 +483,9 @@ main .section.bordered ul li a {
 main .section.bordered ul li a::before {
   content: '';
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--color-navy);
-  border-radius: 50%;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 6l6 6-6 6' fill='none' stroke='%23001871' stroke-width='2'/%3E%3C/svg%3E") center/12px no-repeat;
+  width: 18px;
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center/contain;
   flex-shrink: 0;
 }
 
