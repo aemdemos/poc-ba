@@ -10,11 +10,11 @@
   flex: 1;
   margin: 0;
   border: 1px solid var(--color-border);
-  border-bottom: 3px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   border-radius: 0;
-  padding: var(--spacing-xs) var(--spacing-s);
-  background-color: var(--color-gray);
-  color: var(--color-black);
+  padding: var(--spacing-s) var(--spacing-s);
+  background-color: transparent;
+  color: var(--color-navy);
   font-family: var(--heading-font-family);
   font-weight: 700;
   font-size: var(--heading-font-size-l);
@@ -26,20 +26,27 @@
   transition: background-color 0.2s;
 }
 
+/* Hide arrow on tab header buttons */
+.tabs .tabs-list button::after {
+  display: none;
+}
+
 .tabs .tabs-list button p {
   margin: 0;
 }
 
 .tabs .tabs-list button[aria-selected='true'] {
-  border-bottom: 3px solid var(--color-navy);
-  background-color: var(--background-color);
-  color: var(--color-navy);
+  border-top: 4px solid var(--color-navy);
+  border-bottom: 1px solid transparent;
+  background-color: var(--color-gray);
+  color: var(--color-black);
   cursor: initial;
 }
 
+/* Tab panels */
 .tabs .tabs-panel {
   margin-top: -1px;
-  padding: var(--spacing-s);
+  padding: var(--spacing-l) var(--spacing-s);
   border: 1px solid var(--color-border);
   border-top: none;
   overflow: auto;
@@ -49,10 +56,92 @@
   display: none;
 }
 
-/* Tab content buttons */
-.tabs .tabs-panel a.button:any-link {
+/* Tab description text */
+.tabs .tabs-panel .tabs-description {
+  text-align: center;
+  margin: 0 0 var(--spacing-l);
+  font-size: var(--body-font-size-m);
+  line-height: 1.6;
+}
+
+/* Tab sub-headings (法人向け保険商品, etc.) */
+.tabs .tabs-panel .tabs-subheading {
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--color-border);
+  margin: var(--spacing-l) 0 var(--spacing-s);
+  position: relative;
+}
+
+.tabs .tabs-panel .tabs-subheading::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background-color: var(--color-navy);
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+}
+
+/* Button grid within tabs */
+.tabs .tabs-panel .tabs-button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-s);
+  margin: var(--spacing-s) 0;
+}
+
+.tabs .tabs-panel .tabs-button-grid .button-container {
+  margin: 0;
+}
+
+/* Tab panel buttons — white/outline style, full-width within grid cell */
+.tabs .tabs-panel .tabs-button-grid a.button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  margin: 0;
+  padding: 18px 48px 18px 18px;
   white-space: normal;
-  text-align: left;
-  display: inline-block;
-  margin: 4px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+/* CTA button (資料請求) — navy, centered, wider */
+.tabs .tabs-panel .cta-container {
+  text-align: center;
+  margin: var(--spacing-l) auto 0;
+  max-width: 550px;
+}
+
+.tabs .tabs-panel .cta-container a.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+  margin: 0;
+  padding: 18px 48px;
+  white-space: normal;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+/* Responsive: 2 columns on tablet, 1 on mobile */
+@media (width <= 900px) {
+  .tabs .tabs-panel .tabs-button-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 600px) {
+  .tabs .tabs-panel .tabs-button-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs .tabs-list button {
+    font-size: var(--body-font-size-s);
+    padding: var(--spacing-xs) var(--spacing-xs);
+  }
 }
