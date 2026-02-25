@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script src="/scripts/aem.js" type="module"></script>
+<script src="/scripts/scripts.js" type="module"></script>
+<link rel="stylesheet" href="/styles/styles.css"/>
+</head>
+<body>
+<header></header>
+<main>
+<div><h1 id="aig-japan-navigation-header-block">AIG Japan Navigation (Header Block)</h1>
+<p>This document explains how the navigation is authored and how the header block works for the AIG Japan (aig.co.jp/sonpo) Edge Delivery Services site.</p>
+<h2 id="file-structure">File Structure</h2>
+<pre><code>blocks/header/
+  header.js       # Block JavaScript (decoration, accordion, megamenu, sticky, search)
+  header.css      # Block CSS (mobile, desktop, sticky, search overlay)
+
+content/
+  nav.md          # Navigation content (authored in Markdown)
+
+fonts/
+  aig-icons.ttf   # Custom icon font for nav icons
+</code></pre>
+<h2 id="authoring-the-navigation-navmd">Authoring the Navigation (<code>nav.md</code>)</h2>
+<p>The navigation is authored in <code>content/nav.md</code>. It is divided into <strong>4 sections</strong> separated by horizontal rules (<code>---</code>). Each section maps to a specific area of the header.</p>
+<h3 id="section-1-brand-navy-bar">Section 1: Brand (Navy Bar)</h3>
+<p>The first section contains the logo and utility links displayed in the navy blue top bar.</p>
+<pre><code class="language-markdown">[![AIG損保](https://www.aig.co.jp/.../aig-logo-full-white.svg)](/)
+
+- [お近くのAIG損保](https://www.aig.co.jp/sonpo/company/branch)
+- [お問い合わせ](https://www.aig.co.jp/sonpo/contact)
+- [もっとAIG](https://www.aig.co.jp/sonpo/more-aig)
+</code></pre>
+<p><strong>How it renders:</strong></p>
+<ul>
+<li>The image/link becomes the site logo (white SVG on navy background)</li>
+<li>The unordered list items become utility links</li>
+<li>On <strong>mobile</strong>: The first two items show as icon-only buttons (using the <code>aig-icons</code> font); the third item is hidden</li>
+<li>On <strong>desktop</strong>: All three items show as text links to the right of the logo</li>
+</ul>
+<h3 id="section-2-main-navigation-white-bar">Section 2: Main Navigation (White Bar)</h3>
+<p>The second section is the main nav bar with 7 top-level items, each having a megamenu dropdown with up to 3 levels of nesting.</p>
+<pre><code class="language-markdown">- [:contractor: ご契約者さま](https://www.aig.co.jp/sonpo/contractor)
+  - [ご契約者さまトップ](https://www.aig.co.jp/sonpo/contractor)
+  - 事故のご連絡について
+    - [事故のご連絡](https://www.aig.co.jp/sonpo/service/contact)
+    - [耳や言葉の不自由なお客さま専用のご連絡](https://www.aig.co.jp/sonpo/service/handicap)
+  - [よくあるご質問](https://www.aig.co.jp/sonpo/faq)
+</code></pre>
+<p><strong>Navigation hierarchy (3 levels):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="level"><div><div>1 - Top item</div><div><code>- [:icon: Label](url)</code></div><div><code>:contractor: ご契約者さま</code></div><div>Nav bar item with icon + chevron</div></div><div><div>2 - Submenu link</div><div><code>  - [Label](url)</code></div><div><code>ご契約者さまトップ</code></div><div>Clickable link in dropdown</div></div><div><div>2 - Category header</div><div><code>  - Plain text</code></div><div><code>事故のご連絡について</code></div><div>Bold text header (not a link)</div></div><div><div>3 - Child link</div><div><code>    - [Label](url)</code></div><div><code>事故のご連絡</code></div><div>Indented link under category</div></div></div>
+<p><strong>Icons:</strong> Each top-level item has an icon using the <code>:iconname:</code> syntax. Available icons:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="icon-syntax"><div><div><code>:contractor:</code></div><div>ご契約者さま</div><div><code>\e912</code></div></div><div><div><code>:personal:</code></div><div>個人向け保険</div><div><code>\e923</code></div></div><div><div><code>:business:</code></div><div>法人向け保険</div><div><code>\e90f</code></div></div><div><div><code>:news:</code></div><div>ニュース</div><div><code>\e912</code></div></div><div><div><code>:company:</code></div><div>企業情報</div><div><code>\e906</code></div></div><div><div><code>:recruit:</code></div><div>採用情報</div><div><code>\e93d</code></div></div></div>
+<p><strong>Special item types in the dropdown:</strong></p>
+<ul>
+<li><strong>First item</strong> (e.g., <code>ご契約者さまトップ</code>): Renders as a top link with a circle-arrow icon. It spans the full width of the megamenu.</li>
+<li><strong>Category headers</strong> (plain text with nested list): Render as bold text headers with a border-bottom, followed by their child links in a column.</li>
+<li><strong>Last standalone link</strong> (e.g., <code>よくあるご質問</code>): Renders as a "bottom link" spanning the full width, with a circle-arrow icon.</li>
+<li><strong>Standalone links</strong> in the middle (e.g., <code>個人向け商品一覧</code>): Render with a circle-arrow icon in their own column.</li>
+</ul>
+<h3 id="section-3-mobile-cta">Section 3: Mobile CTA</h3>
+<p>The third section only appears in the mobile hamburger menu, below the main navigation accordion. It contains quick-access links and footer links.</p>
+<pre><code class="language-markdown">- [事故・病気・ケガ・災害時のご連絡](https://www.aig.co.jp/sonpo/service/contact)
+
+資料のご請求、ご相談・お申込み
+
+- [お近くのAIG損保](https://www.aig.co.jp/sonpo/company/branch)
+- [個人の資料請求](https://www.aig.co.jp/sonpo/forms/brochure/personal)
+- [法人の資料請求](https://www.aig.co.jp/sonpo/forms/brochure/business)
+- [よくある質問](https://www.aig.co.jp/sonpo/faq)
+
+[採用情報](https://www.aig.co.jp/sonpo/recruit) | [ICA社員募集](https://www.aig.co.jp/sonpo/recruit/ica) | [不動産代理店募集](https://www.aig.co.jp/sonpo/recruit/agency)
+</code></pre>
+<p><strong>How it renders:</strong></p>
+<ul>
+<li><strong>First list</strong> (<code>ul:first-child</code>): Emergency CTA button - white rounded pill with circle-arrow icon</li>
+<li><strong>Paragraph text</strong>: Section title ("資料のご請求、ご相談・お申込み") rendered as bold heading</li>
+<li><strong>Second list</strong> (<code>ul:nth-of-type(2)</code>): Resource links - each item is an individual white rounded pill with <code>border-radius: 6px</code> and 8px gap between them</li>
+<li><strong>Last paragraph</strong>: Footer links in a 2-column grid layout. Pipe characters (<code>|</code>) are stripped by JavaScript.</li>
+</ul>
+<h3 id="section-4-search">Section 4: Search</h3>
+<p>The fourth section contains the search trigger.</p>
+<pre><code class="language-markdown">[:search: 検索](#)
+</code></pre>
+<p>This renders as a search icon button. On mobile it appears in the top bar; on desktop it appears as a 90x90px button in the navy bar. Clicking it opens a search overlay with a text input and submit button.</p>
+<h2 id="how-the-header-block-works">How the Header Block Works</h2>
+<h3 id="css-class-mapping">CSS Class Mapping</h3>
+<p>The JavaScript assigns CSS classes to each <code>&#x3C;div></code> section from the nav fragment:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-index"><div><div>0</div><div><code>.nav-brand</code></div><div><code>brand</code></div><div>Logo + utility links</div></div><div><div>1</div><div><code>.nav-sections</code></div><div><code>sections</code></div><div>Main navigation</div></div><div><div>2</div><div><code>.nav-mobile-cta</code></div><div><code>mobile-cta</code></div><div>Mobile-only CTA links</div></div><div><div>3</div><div><code>.nav-tools</code></div><div><code>tools</code></div><div>Search button</div></div></div>
+<h3 id="mobile-behavior--769px">Mobile Behavior (&#x3C; 769px)</h3>
+<ul>
+<li><strong>Layout</strong>: CSS Grid with named areas (<code>brand</code>, <code>tools</code>, <code>hamburger</code>, <code>sections</code>, <code>mobile-cta</code>)</li>
+<li><strong>Hamburger menu</strong>: Tapping the hamburger button toggles <code>aria-expanded</code> on the <code>&#x3C;nav></code> element</li>
+<li><strong>Accordion</strong>: Top-level nav items expand/collapse as accordions (one at a time). Clicking a top-level item collapses all others.</li>
+<li><strong>Body scroll lock</strong>: When the mobile menu is open, <code>document.body</code> and <code>document.documentElement</code> overflow is set to <code>hidden</code></li>
+<li><strong>Full-height menu</strong>: <code>min-height: 100dvh</code> with <code>align-content: start</code> to pack content at the top</li>
+<li><strong>Slide-down animation</strong>: The sections and CTA slide in with a 0.3s ease-out animation</li>
+<li><strong>Hover effect</strong>: All interactive items (parent items, submenu links, category headers, child links, CTA pills) have a hover state of <code>background: #e6e6e6</code> and <code>color: #001871</code></li>
+</ul>
+<h3 id="desktop-behavior--769px">Desktop Behavior (>= 769px)</h3>
+<ul>
+<li><strong>Two-tier layout</strong>: Flexbox column - navy brand bar (90px) on top, white nav bar (70px) below</li>
+<li><strong>Megamenu</strong>: Clicking a top-level item opens a full-width dropdown positioned absolutely below the nav bar. The dropdown uses <code>flex-wrap: wrap</code> to lay out categories in columns.</li>
+<li><strong>Close chevron</strong>: Each megamenu has a close button at the bottom (up-pointing chevron)</li>
+<li><strong>Blue underline</strong>: Top-level items have a blue underline animation on hover (<code>transform: scaleX</code> transition)</li>
+<li><strong>Vertical separators</strong>: Thin gray lines between nav items (including a left-edge separator via <code>::before</code> on the <code>&#x3C;ul></code>)</li>
+<li><strong>Responsive scaling</strong>: Font sizes and icon sizes scale across three breakpoints:
+<ul>
+<li>769px–920px: 12px text, 18px icons</li>
+<li>921px–1080px: 14px text, 22px icons</li>
+<li>1081px+: 16px text, 26px icons</li>
+</ul>
+</li>
+</ul>
+<h3 id="sticky-compact-header-desktop-only">Sticky Compact Header (Desktop Only)</h3>
+<p>When the user scrolls past the header height, the nav bar becomes a fixed compact header:</p>
+<ul>
+<li><strong>Brand bar and tools hidden</strong>: Only the nav items bar is visible</li>
+<li><strong>Sticky logo</strong>: An <code>AIG損保</code> text link with the blue SVG logo is prepended to the nav <code>&#x3C;ul></code> (hidden by default, shown in sticky mode via <code>.sticky-logo</code>)</li>
+<li><strong>Sticky search</strong>: A search icon is appended to the nav <code>&#x3C;ul></code> (hidden by default, shown in sticky mode via <code>.sticky-search</code>)</li>
+<li><strong>Slide-in animation</strong>: 0.5s ease slide-down from top</li>
+<li><strong>Icons and chevrons hidden</strong>: Only text labels are shown in sticky mode</li>
+<li><strong>Height</strong>: 77px (vs 70px normal)</li>
+</ul>
+<h3 id="search-overlay">Search Overlay</h3>
+<ul>
+<li>Positioned absolutely below the nav bar (<code>top: 90px</code> normal, <code>top: 77px</code> sticky)</li>
+<li>Animated open/close with <code>max-height</code> and <code>opacity</code> transitions</li>
+<li>Contains a text input and submit button</li>
+<li>Submits to <code>https://www.aig.co.jp/sonpo/search?kw={query}</code></li>
+<li>Closes on: clicking outside, pressing Escape, or clicking the search icon again</li>
+<li>When active, the search icon switches to an X icon via the <code>.search-active</code> class</li>
+</ul>
+<h3 id="javascript-decoration-details">JavaScript Decoration Details</h3>
+<p>The <code>header.js</code> file performs these key decorations:</p>
+<ol>
+<li><strong>Section assignment</strong>: Assigns <code>.nav-brand</code>, <code>.nav-sections</code>, <code>.nav-mobile-cta</code>, <code>.nav-tools</code> to the four <code>&#x3C;div></code> sections</li>
+<li><strong>P-tag unwrapping</strong>: Strips <code>&#x3C;p></code> wrappers from nav list items (DA compatibility)</li>
+<li><strong>Button class removal</strong>: Removes <code>.button</code> and <code>.button-container</code> classes added by auto-decoration</li>
+<li><strong>Category detection</strong>: Items at level 2 that have a nested <code>&#x3C;ul></code> get:
+<ul>
+<li><code>.nav-category</code> class on the <code>&#x3C;li></code></li>
+<li>Direct text nodes wrapped in <code>&#x3C;span></code> for styling</li>
+<li>Direct <code>&#x3C;a></code> links converted to <code>&#x3C;span></code> (category headers are not clickable)</li>
+</ul>
+</li>
+<li><strong>Bottom link detection</strong>: The last item in a dropdown that has no nested <code>&#x3C;ul></code> gets <code>.megamenu-bottom</code></li>
+<li><strong>Close chevron</strong>: A <code>.megamenu-close</code> div is appended to each dropdown</li>
+<li><strong>Pipe removal</strong>: Pipe characters (<code>|</code>) between footer links in the mobile CTA are removed</li>
+<li><strong>Sticky elements</strong>: <code>.sticky-logo</code> and <code>.sticky-search</code> list items are created and injected into the nav <code>&#x3C;ul></code></li>
+</ol>
+<h3 id="breadcrumbs">Breadcrumbs</h3>
+<p>If a page has <code>breadcrumbs: true</code> in its metadata, a breadcrumb trail is generated by traversing the nav tree to find the current URL. The breadcrumb bar appears below the nav on desktop only (32px height).</p>
+<h2 id="key-css-variables-used">Key CSS Variables Used</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="variable"><div><div><code>--nav-height</code></div><div>Mobile nav bar height (44px)</div></div><div><div><code>--nav-height-desktop</code></div><div>Desktop brand bar height (defined elsewhere)</div></div><div><div><code>--color-navy</code></div><div>Navy blue (<code>#001871</code>) for brand bar</div></div><div><div><code>--color-white</code></div><div>White text</div></div><div><div><code>--color-blue</code></div><div>Search button background</div></div><div><div><code>--background-color</code></div><div>White background for nav bar</div></div><div><div><code>--body-font-family</code></div><div>Primary font family</div></div><div><div><code>--heading-font-family</code></div><div>Heading font (used for brand link)</div></div><div><div><code>--text-color</code></div><div>Default text color</div></div></div>
+<h2 id="adding-a-new-top-level-nav-item">Adding a New Top-Level Nav Item</h2>
+<ol>
+<li>
+<p>In <code>nav.md</code>, add a new level-1 list item in Section 2:</p>
+<pre><code class="language-markdown">- [:iconname: New Item](https://www.aig.co.jp/sonpo/new-page)
+  - [New Item Top](https://www.aig.co.jp/sonpo/new-page)
+  - Category Name
+    - [Child Link](https://www.aig.co.jp/sonpo/new-page/child)
+</code></pre>
+</li>
+<li>
+<p>If using a new icon, add the icon font mapping in <code>header.css</code>:</p>
+<pre><code class="language-css">header nav .icon-iconname::before {
+  content: '\eXXX';  /* codepoint from the aig-icons font */
+}
+</code></pre>
+</li>
+</ol>
+<h2 id="adding-a-new-mobile-cta-item">Adding a New Mobile CTA Item</h2>
+<p>In <code>nav.md</code> Section 3, add an item to the second unordered list:</p>
+<pre><code class="language-markdown">- [New CTA Link](https://www.aig.co.jp/sonpo/new-cta)
+</code></pre>
+<p>Each item renders as an individual white pill button with a circle-arrow icon.</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><strong>Original site</strong>: https://www.aig.co.jp/sonpo</li>
+<li><strong>Breakpoint</strong>: 769px (mobile/desktop boundary)</li>
+<li><strong>Icon font</strong>: <code>/fonts/aig-icons.ttf</code> (custom TrueType font)</li>
+<li><strong>Hover color</strong>: <code>#e6e6e6</code> background, <code>#001871</code> text (consistent across all interactive items)</li>
+<li><strong>Circle-arrow SVG</strong>: Inline data URI used throughout for link indicators</li>
+</ul></div>
+</main>
+<footer></footer>
+</body>
+</html>

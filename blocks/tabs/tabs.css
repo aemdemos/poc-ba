@@ -49,6 +49,7 @@
   padding: var(--spacing-l) var(--spacing-s);
   border: 1px solid var(--color-border);
   border-top: none;
+  background-color: var(--color-gray);
   overflow: auto;
 }
 
@@ -107,6 +108,18 @@
   padding: 18px 48px 18px 18px;
   white-space: normal;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+/* Icons in tab panel grid buttons — gray-blue */
+.tabs .tabs-panel .tabs-button-grid a.button .icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.tabs .tabs-panel .tabs-button-grid a.button.outline .icon img {
+  filter: invert(44%) sepia(9%) saturate(1200%) hue-rotate(178deg) brightness(90%) contrast(88%);
 }
 
 /* CTA button (資料請求) — navy, centered, wider */
