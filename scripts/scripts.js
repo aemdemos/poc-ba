@@ -96,6 +96,42 @@ function a11yLinks(main) {
 }
 
 /**
+ * Decorates news-list section items: splits "DATE - CATEGORY - TITLE"
+ * into separate styled spans for date, category pill, and title.
+ * @param {Element} main The main element
+ */
+function decorateNewsList(main) {
+  main.querySelectorAll('.section.news-list ul li a').forEach((link) => {
+    const text = link.textContent.trim();
+    const parts = text.split(' - ');
+    if (parts.length >= 3) {
+      const date = parts[0];
+      const category = parts[1];
+      const title = parts.slice(2).join(' - ');
+      link.textContent = '';
+
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'news-date';
+      dateSpan.textContent = date;
+
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'news-tag';
+      const tagInner = document.createElement('span');
+      tagInner.textContent = category;
+      tagSpan.appendChild(tagInner);
+
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'news-title';
+      titleSpan.textContent = title;
+
+      link.appendChild(dateSpan);
+      link.appendChild(tagSpan);
+      link.appendChild(titleSpan);
+    }
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -107,6 +143,7 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  decorateNewsList(main);
   // add aria-label to links
   a11yLinks(main);
 }

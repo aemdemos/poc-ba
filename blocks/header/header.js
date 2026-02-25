@@ -3,7 +3,7 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = window.matchMedia('(min-width: 769px)');
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -30,10 +30,9 @@ function closeOnFocusLost(e) {
     if (navSectionExpanded && isDesktop.matches) {
       // eslint-disable-next-line no-use-before-define
       toggleAllNavSections(navSections, false);
-    } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleMenu(nav, navSections, false);
     }
+    // Mobile menu should only close via hamburger button or Escape key,
+    // not on focusout (clicking non-focusable elements triggers focusout)
   }
 }
 
@@ -72,9 +71,17 @@ function toggleAllNavSections(sections, expanded = false) {
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  // Lock body scroll when mobile menu opens (prevents background scrolling)
+  if (!expanded && !isDesktop.matches) {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
+  // On mobile, keep all sections collapsed (accordion); on desktop, expand/collapse all
+  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'false');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -185,7 +192,7 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
+  const classes = ['brand', 'sections', 'mobile-cta', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
@@ -200,28 +207,188 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
+    // Normalize DA output: unwrap <p> wrappers from nav list items
+    // DA wraps links in <p> tags (li > p > a) but CSS expects (li > a)
+    navSections.querySelectorAll('.default-content-wrapper li > p').forEach((p) => {
+      p.replaceWith(...p.childNodes);
+    });
+    // Strip .button/.button-container classes added by DA auto-decoration
+    navSections.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
+    navSections.querySelectorAll('.button-container').forEach((el) => el.classList.remove('button-container'));
+
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
+
+      // Decorate megamenu: wrap category text nodes in <span>, mark bottom links
+      const dropdown = navSection.querySelector(':scope > ul');
+      if (dropdown) {
+        const dropItems = [...dropdown.children];
+        dropItems.forEach((li, idx) => {
+          // Skip first item (top link) and items that are purely links
+          if (idx > 0 && li.querySelector(':scope > ul')) {
+            // This is a category item with nested links - mark for CSS hover exclusion
+            li.classList.add('nav-category');
+            // Wrap direct text content in a <span> for styling as category header
+            const textNodes = [...li.childNodes].filter(
+              (n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim(),
+            );
+            textNodes.forEach((tn) => {
+              const span = document.createElement('span');
+              span.textContent = tn.textContent.trim();
+              tn.replaceWith(span);
+            });
+            // If the category has a direct <a> link (e.g. 損害サービス), wrap its text
+            const directLink = li.querySelector(':scope > a');
+            if (directLink) {
+              const span = document.createElement('span');
+              span.textContent = directLink.textContent.trim();
+              directLink.replaceWith(span);
+            }
+          } else if (idx > 0 && idx === dropItems.length - 1 && !li.querySelector(':scope > ul') && li.querySelector('a')) {
+            // Bottom link ONLY if it's the last item (e.g. よくあるご質問, 保険用語集)
+            li.classList.add('megamenu-bottom');
+          }
+        });
+
+        // Add close chevron
+        const closeDiv = document.createElement('div');
+        closeDiv.className = 'megamenu-close';
+        closeDiv.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navSection.setAttribute('aria-expanded', 'false');
+        });
+        dropdown.append(closeDiv);
+      }
+
+      navSection.addEventListener('click', (e) => {
+        // Ignore clicks that originated inside the dropdown submenu
+        // (category headers, submenu links, etc. should not toggle the accordion)
+        if (dropdown && dropdown.contains(e.target)) return;
+
         if (isDesktop.matches) {
+          // Prevent link navigation for items with dropdowns
+          if (navSection.classList.contains('nav-drop')) {
+            e.preventDefault();
+          }
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
           navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+
+          // Position dropdown to span full viewport width
+          if (!expanded && dropdown) {
+            const liRect = navSection.getBoundingClientRect();
+            dropdown.style.left = `${-liRect.left}px`;
+            dropdown.style.width = `${window.innerWidth}px`;
+          }
+        } else if (navSection.classList.contains('nav-drop')) {
+          // Mobile accordion: toggle submenu visibility
+          e.preventDefault();
+          const sectionExpanded = navSection.getAttribute('aria-expanded') === 'true';
+          toggleAllNavSections(navSections);
+          navSection.setAttribute('aria-expanded', sectionExpanded ? 'false' : 'true');
         }
       });
     });
-    navSections.querySelectorAll('.button-container').forEach((buttonContainer) => {
-      buttonContainer.classList.remove('button-container');
-      buttonContainer.querySelector('.button').classList.remove('button');
-    });
+  }
+
+  // Mobile CTA section - strip button classes and clean up pipe separators
+  const navMobileCta = nav.querySelector('.nav-mobile-cta');
+  if (navMobileCta) {
+    navMobileCta.querySelectorAll('a.button').forEach((a) => a.classList.remove('button'));
+    navMobileCta.querySelectorAll('.button-container').forEach((el) => el.classList.remove('button-container'));
+    // Remove pipe separator text nodes from footer links paragraph
+    const footerP = navMobileCta.querySelector('.default-content-wrapper > p:last-child');
+    if (footerP) {
+      [...footerP.childNodes]
+        .filter((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim() === '|')
+        .forEach((n) => n.remove());
+    }
   }
 
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    const search = navTools.querySelector('a[href*="search"]');
-    if (search && search.textContent === '') {
-      search.setAttribute('aria-label', 'Search');
+    // Strip button classes from tools links
+    navTools.querySelectorAll('.button-container').forEach((bc) => {
+      bc.classList.remove('button-container');
+      const btn = bc.querySelector('.button');
+      if (btn) btn.classList.remove('button');
+    });
+
+    // Build search overlay panel
+    const searchOverlay = document.createElement('div');
+    searchOverlay.className = 'nav-search-overlay';
+    searchOverlay.innerHTML = `
+      <input type="search" placeholder="商品名やキーワードを入力" aria-label="商品名やキーワードを入力">
+      <button type="submit">検索</button>
+    `;
+
+    // Find search link and wire up toggle
+    const searchLink = navTools.querySelector('a');
+
+    const closeSearch = () => {
+      if (searchOverlay.classList.contains('active')) {
+        searchOverlay.classList.remove('active');
+        if (searchLink) searchLink.classList.remove('search-active');
+      }
+    };
+
+    const openSearch = () => {
+      searchOverlay.classList.add('active');
+      if (searchLink) searchLink.classList.add('search-active');
+      searchOverlay.querySelector('input').focus();
+    };
+
+    const toggleSearch = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (searchOverlay.classList.contains('active')) {
+        closeSearch();
+      } else {
+        openSearch();
+      }
+    };
+
+    if (searchLink) {
+      searchLink.setAttribute('aria-label', 'サイト内を検索');
+      searchLink.addEventListener('click', toggleSearch);
     }
+
+    // Also allow clicking anywhere on the nav-tools container
+    navTools.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-search-overlay')) {
+        toggleSearch(e);
+      }
+    });
+
+    // Close search when clicking anywhere outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-search-overlay')
+        && !e.target.closest('.nav-tools')
+        && !e.target.closest('.sticky-search')) {
+        closeSearch();
+      }
+    });
+
+    // Close search on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+
+    // Submit search
+    searchOverlay.querySelector('button').addEventListener('click', () => {
+      const query = searchOverlay.querySelector('input').value.trim();
+      if (query) {
+        window.location.href = `https://www.aig.co.jp/sonpo/search?kw=${encodeURIComponent(query)}`;
+      }
+    });
+
+    searchOverlay.querySelector('input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        searchOverlay.querySelector('button').click();
+      }
+    });
+
+    nav.append(searchOverlay);
   }
 
   // hamburger for mobile
@@ -241,6 +408,81 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // Build sticky header elements (logo + search) for compact mode on scroll
+  const navUl = navSections.querySelector('.default-content-wrapper > ul');
+  if (navUl) {
+    // Sticky logo (first item in UL, hidden by default via CSS)
+    const stickyLogoLi = document.createElement('li');
+    stickyLogoLi.className = 'sticky-logo';
+    const logoHref = navBrand.querySelector('a')?.getAttribute('href') || '/';
+    const logoLink = document.createElement('a');
+    logoLink.href = logoHref;
+    logoLink.textContent = 'AIG損保';
+    stickyLogoLi.append(logoLink);
+    navUl.prepend(stickyLogoLi);
+
+    // Sticky search icon (last item in UL, hidden by default via CSS)
+    const stickySearchLi = document.createElement('li');
+    stickySearchLi.className = 'sticky-search';
+    const searchBtn = document.createElement('a');
+    searchBtn.href = '#';
+    searchBtn.setAttribute('aria-label', '検索');
+    searchBtn.textContent = '検索';
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const overlay = nav.querySelector('.nav-search-overlay');
+      if (overlay) {
+        if (overlay.classList.contains('active')) {
+          overlay.classList.remove('active');
+        } else {
+          overlay.classList.add('active');
+          overlay.querySelector('input')?.focus();
+        }
+      }
+    });
+    stickySearchLi.append(searchBtn);
+    navUl.append(stickySearchLi);
+  }
+
+  // Sticky compact header on scroll (desktop only)
+  let isSticky = false;
+  let ticking = false;
+  const onScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const headerEl = navWrapper.closest('header');
+        const threshold = headerEl ? headerEl.offsetHeight : 160;
+        if (window.scrollY > threshold && !isSticky) {
+          // Close any open megamenus before switching
+          toggleAllNavSections(navSections, false);
+          navWrapper.classList.add('sticky-compact');
+          isSticky = true;
+        } else if (window.scrollY <= threshold && isSticky) {
+          toggleAllNavSections(navSections, false);
+          navWrapper.classList.remove('sticky-compact');
+          isSticky = false;
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+
+  if (isDesktop.matches) {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+  isDesktop.addEventListener('change', () => {
+    if (isDesktop.matches) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    } else {
+      window.removeEventListener('scroll', onScroll);
+      navWrapper.classList.remove('sticky-compact');
+      isSticky = false;
+    }
+  });
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     navWrapper.append(await buildBreadcrumbs());
