@@ -46,6 +46,8 @@ function decorateCategoryNav(section) {
 
 /**
  * Decorates SNS section with structured icon + label layout.
+ * Each li has: <p><a><picture><img></picture></a></p> <p>Label</p>
+ * We restructure into: <a><div.icon><img></div><div.label>Label</div></a>
  * @param {Element} section The section element
  */
 function decorateSns(section) {
@@ -55,17 +57,36 @@ function decorateSns(section) {
     const link = item.querySelector('a');
     if (link) {
       const img = link.querySelector('img');
-      const text = link.textContent.trim();
       if (img) {
-        link.textContent = '';
+        // Get label from sibling <p> text or img alt
+        const paragraphs = item.querySelectorAll('p');
+        let labelText = '';
+        paragraphs.forEach((p) => {
+          if (!p.querySelector('a') && !p.querySelector('img') && p.textContent.trim()) {
+            labelText = p.textContent.trim();
+            p.remove();
+          }
+        });
+        if (!labelText) labelText = img.alt || '';
+
+        const { href } = link;
+        // Clear the item and rebuild with a single clean link
+        item.textContent = '';
+        const newLink = document.createElement('a');
+        newLink.href = href;
+        newLink.setAttribute('aria-label', labelText);
+
         const iconDiv = document.createElement('div');
         iconDiv.className = 'footer-sns-icon';
         iconDiv.appendChild(img);
-        link.appendChild(iconDiv);
+        newLink.appendChild(iconDiv);
+
         const titleDiv = document.createElement('div');
         titleDiv.className = 'footer-sns-label';
-        titleDiv.textContent = text;
-        link.appendChild(titleDiv);
+        titleDiv.textContent = labelText;
+        newLink.appendChild(titleDiv);
+
+        item.appendChild(newLink);
       }
     }
   });
