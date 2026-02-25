@@ -1,27 +1,112 @@
+/* Cards block - AIG Japan styling */
+
+/* Mobile-first: 1 column */
 .cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 8px;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
-}
-
-.cards .cards-card-body {
-  margin: 16px;
+  position: relative;
+  border: none;
+  background-color: var(--color-white);
+  box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .cards .cards-card-image {
+  position: relative;
   line-height: 0;
+  overflow: hidden;
+  height: 200px;
 }
 
 .cards > ul > li img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.cards .cards-card-body {
+  margin: 0;
+  padding: 24px 16px;
+}
+
+/* Override button decoration inside cards */
+.cards .cards-card-body .button-container {
+  margin: 0;
+}
+
+.cards .cards-card-body a.button {
+  background: none;
+  border: none;
+  color: var(--color-navy);
+  font-weight: 700;
+  font-size: var(--body-font-size-m);
+  line-height: normal;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  white-space: pre-line;
+  text-decoration: none;
+  display: inline;
+}
+
+.cards .cards-card-body a.button::after {
+  display: none;
+}
+
+/* Make the entire card clickable via the link */
+.cards .cards-card-body a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Eyebrow tag overlay on image */
+.cards .cards-card-tag {
+  position: absolute;
+  top: var(--spacing-s);
+  left: var(--spacing-xs);
+  display: inline-block;
+  padding: 5px 13px;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 18px;
+  line-height: normal;
+  z-index: 1;
+}
+
+/* Hover: image fades, title underlines */
+.cards > ul > li:hover img {
+  opacity: 0.6;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.cards > ul > li:hover .cards-card-tag {
+  opacity: 0.6;
+}
+
+.cards > ul > li:hover .cards-card-body a {
+  text-decoration: underline;
+}
+
+/* Desktop: 3 columns from 768px */
+@media (width >= 768px) {
+  .cards > ul {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-s);
+  }
+
+  .cards .cards-card-body {
+    padding: 27px var(--spacing-s);
+  }
 }

@@ -1,4 +1,13 @@
-/* header and nav layout */
+/* AIG icon font for nav icons */
+@font-face {
+  font-family: aig-icons;
+  src: url('/fonts/aig-icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* header and nav layout - AIG Japan two-tier header */
 header .nav-wrapper {
   background-color: var(--background-color);
   width: 100%;
@@ -10,33 +19,58 @@ header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools' var(--nav-height)
-    'sections sections sections' 1fr / auto 1fr auto;
+    'brand tools hamburger' var(--nav-height)
+    'sections sections sections' 1fr / 1fr auto auto;
   align-items: center;
-  gap: 0 24px;
+  gap: 0;
   margin: auto;
-  max-width: 1248px;
+  max-width: 100%;
   height: var(--nav-height);
-  padding: 0 24px;
+  padding: 0;
   font-family: var(--body-font-family);
+  background-color: var(--color-navy);
 }
 
 header nav[aria-expanded='true'] {
   grid-template:
-    'hamburger brand' var(--nav-height)
-    'sections sections' 1fr
-    'tools tools' var(--nav-height) / auto 1fr;
+    'brand tools hamburger' var(--nav-height)
+    'sections sections sections' auto
+    'mobile-cta mobile-cta mobile-cta' auto / 1fr auto auto;
+  align-content: start;
   overflow-y: auto;
   min-height: 100dvh;
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 transparent;
 }
 
-@media (width >= 900px) {
+header nav[aria-expanded='true']::-webkit-scrollbar {
+  width: 4px;
+}
+
+header nav[aria-expanded='true']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+header nav[aria-expanded='true']::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border-radius: 2px;
+}
+
+@media (width >= 769px) {
+  header .nav-wrapper {
+    position: relative;
+  }
+
   header nav {
     display: flex;
-    justify-content: space-between;
-    gap: 0 32px;
-    max-width: 1264px;
-    padding: 0 32px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    max-width: 100%;
+    padding: 0;
+    height: auto;
+    background-color: transparent;
+    position: relative;
   }
 
   header nav[aria-expanded='true'] {
@@ -52,14 +86,24 @@ header nav p {
 
 header nav a:any-link {
   color: currentcolor;
+  text-decoration: none;
+}
+
+header nav a:hover {
+  text-decoration: none;
 }
 
 /* hamburger */
 header nav .nav-hamburger {
   grid-area: hamburger;
-  height: 22px;
+  height: var(--nav-height);
+  width: 44px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 0;
+  background-color: #5d738d;
+  color: var(--color-white);
 }
 
 header nav .nav-hamburger button {
@@ -68,8 +112,8 @@ header nav .nav-hamburger button {
   border: 0;
   border-radius: 0;
   padding: 0;
-  background-color: var(--background-color);
-  color: inherit;
+  background-color: transparent;
+  color: var(--color-white);
   overflow: initial;
   text-overflow: initial;
   white-space: initial;
@@ -128,49 +172,196 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   transform: rotate(-45deg);
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header nav .nav-hamburger {
     display: none;
     visibility: hidden;
   }
 }
 
-/* brand */
+/* =============================================
+   BRAND = Top Navy Bar (logo + utility links)
+   ============================================= */
 header .nav-brand {
   grid-area: brand;
-  flex-basis: 128px;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
   font-size: var(--heading-font-size-s);
   font-weight: 700;
   line-height: 1;
 }
 
-header nav .nav-brand img {
-  width: 128px;
-  height: auto;
+@media (width >= 769px) {
+  header .nav-brand {
+    height: 90px;
+    padding: 0;
+    order: -1;
+  }
+
+  header .nav-brand > .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 130px 0 32px;
+  }
 }
 
-/* sections */
+/* Brand logo */
+header nav .nav-brand img {
+  width: auto;
+  height: 26px;
+}
+
+@media (width >= 769px) {
+  header nav .nav-brand img {
+    height: 48px;
+  }
+}
+
+header .nav-brand a:any-link {
+  color: var(--color-white);
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+header .nav-brand a:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+/* Brand utility links (in the navy bar) */
+header .nav-brand ul {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (width >= 769px) {
+  header .nav-brand ul {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  header .nav-brand ul li {
+    margin: 0;
+  }
+
+  header .nav-brand ul a:any-link {
+    color: var(--color-white);
+    font-size: 9px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  header .nav-brand ul a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Mobile brand utility icons (between logo and hamburger) */
+@media (width < 769px) {
+  header .nav-brand {
+    padding: 0 0 0 16px;
+  }
+
+  header .nav-brand > .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+    align-items: center;
+  }
+
+  header .nav-brand ul li {
+    width: 44px;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
+
+  /* Hide third item (もっとAIG) on mobile */
+  header .nav-brand ul li:nth-child(3) {
+    display: none;
+  }
+
+  /* Style links as icon-only buttons */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul li a {
+    font-size: 0;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: var(--nav-height);
+    text-decoration: none;
+  }
+
+  /* Branch icon (お近くのAIG損保) */
+  header .nav-brand ul li:nth-child(1) a::before {
+    /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+    font-family: aig-icons;
+    content: '\e931';
+    font-size: 22px;
+    color: var(--color-white);
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  /* Contact icon (お問い合わせ) */
+  header .nav-brand ul li:nth-child(2) a::before {
+    /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+    font-family: aig-icons;
+    content: '\e92c';
+    font-size: 22px;
+    color: var(--color-white);
+    font-style: normal;
+    font-weight: normal;
+  }
+}
+
+/* =============================================
+   SECTIONS = White Navigation Bar
+   ============================================= */
 header nav .nav-sections {
   grid-area: sections;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: none;
   visibility: hidden;
+  background-color: var(--background-color);
 }
 
 header nav[aria-expanded='true'] .nav-sections {
   display: block;
   visibility: visible;
   align-self: start;
+  background-color: var(--background-color);
 }
 
 header nav .nav-sections ul {
   list-style: none;
   padding-left: 0;
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-xs);
 }
 
 header nav .nav-sections ul > li {
-  font-weight: 500;
+  font-weight: 400;
+  font-family: var(--body-font-family);
 }
 
 header nav .nav-sections ul > li > ul {
@@ -181,106 +372,1238 @@ header nav .nav-sections ul > li > ul > li {
   font-weight: 400;
 }
 
-@media (width >= 900px) {
+/* ===== Per-icon class content (global - used in both mobile & desktop) ===== */
+header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: aig-icons;
+  font-style: normal;
+  font-weight: normal;
+}
+
+header nav .icon-contractor::before {
+  content: '\e912';
+}
+
+header nav .icon-personal::before {
+  content: '\e923';
+}
+
+header nav .icon-business::before {
+  content: '\e90f';
+}
+
+header nav .icon-news::before {
+  content: '\e912';
+}
+
+header nav .icon-company::before {
+  content: '\e906';
+}
+
+header nav .icon-recruit::before {
+  content: '\e93d';
+}
+
+/* ===== Mobile menu styles (< 769px) ===== */
+@media (width < 769px) {
+  /* Override nav background when expanded so no navy shows between sections and CTA */
+  header nav[aria-expanded='true'] {
+    background-color: #eee;
+  }
+
+  /* Mobile expanded menu background */
+  header nav[aria-expanded='true'] .nav-sections {
+    background-color: #eee;
+    padding: 0 32px;
+    animation: mobile-slide-down 0.3s ease-out;
+  }
+
+  /* Slide-down animation for mobile menu */
+  @keyframes mobile-slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Top-level list layout */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Top-level items */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li {
+    min-height: 61px;
+    border-bottom: 1px solid #c0c0c0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  /* Hide sticky elements in mobile menu */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > .sticky-logo,
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > .sticky-search {
+    display: none !important;
+    min-height: 0;
+    border: none;
+  }
+
+  /* Top-level links */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > a {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    padding: 0 8px;
+    height: 61px;
+    flex: 1;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  /* Icon display in mobile nav */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon img {
+    display: none;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 26px;
+    color: #001871;
+  }
+
+  /* Down chevron on expandable items */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li.nav-drop > a::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #5d738d;
+    border-bottom: 2px solid #5d738d;
+    transform: rotate(45deg);
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  /* Chevron rotates up when expanded */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'].nav-drop > a::after {
+    transform: rotate(-135deg);
+  }
+
+  /* Blue dotted border on expanded accordion item */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] {
+    border-top: 2px dotted #001871;
+    border-bottom: 2px dotted #001871;
+  }
+
+  /* Submenus hidden by default in mobile */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul {
+    display: none;
+  }
+
+  /* Submenu shown when item is expanded (accordion) */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
+    display: block;
+    width: 100%;
+    background-color: #eee;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* All submenu list items - consistent height and border-top (full width) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
+    min-height: 61px;
+    border-top: 1px solid #c0c0c0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* Submenu link items - flex layout with right-arrow */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > a {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    padding: 0 16px 0 32px;
+    min-height: 61px;
+    flex: 1;
+    position: relative;
+  }
+
+  /* Blue circle right-arrow on submenu link items */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  /* Category headers (text in span - no link) */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > span {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    min-height: 61px;
+    padding: 0 0 0 32px;
+    border-bottom: none;
+    margin-bottom: 0;
+    flex: 1;
+  }
+
+  /* Nested list (level 3) under categories - show all items flat */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li {
+    min-height: 61px;
+    border-top: 1px solid #c0c0c0;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    min-height: 61px;
+    flex: 1;
+    padding: 0 16px 0 48px;
+  }
+
+  /* Blue circle right-arrow on nested link items */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  /* Hover effect on submenu link items - background + dark blue text */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Hover on category headers (span text, no link) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > span:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Hover on level 3 child links */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Hover on top-level parent nav items (ご契約者さま, 個人向け保険, etc.) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav[aria-expanded='true'] .nav-sections .default-content-wrapper > ul > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Hide megamenu bottom / close in mobile */
+  header nav .nav-sections .megamenu-close {
+    display: none;
+  }
+
+}
+
+/* =============================================
+   MOBILE CTA = Bottom section of mobile menu
+   ============================================= */
+header nav .nav-mobile-cta {
+  grid-area: mobile-cta;
+  display: none;
+}
+
+@media (width < 769px) {
+  header nav[aria-expanded='true'] .nav-mobile-cta {
+    display: block;
+    background-color: #eee;
+    padding: 16px 32px 24px;
+    animation: mobile-slide-down 0.3s ease-out;
+  }
+
+  /* Emergency CTA button (first ul > li) */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    margin: 0;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+    padding: 8px 16px;
+    min-height: 40px;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  /* Section title (p tag: 資料のご請求...) */
+  header nav .nav-mobile-cta .default-content-wrapper > p:first-of-type {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+
+  /* CTA links list (second ul) - individual rounded pill items */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    margin: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+    padding: 8px 16px;
+    min-height: 40px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li > a::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  /* Hover on emergency CTA item (事故・病気・ケガ...) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:first-child > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Hover on resource CTA items (お近くのAIG損保, 個人の資料請求, etc.) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > ul:nth-of-type(2) > li > a:hover {
+    background-color: #e6e6e6;
+    color: #001871;
+  }
+
+  /* Footer links row (採用情報 | ICA社員募集 | 不動産代理店募集) - 2-column grid */
+  header nav .nav-mobile-cta .default-content-wrapper > p:last-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    font-size: 0;
+    color: transparent;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-mobile-cta .default-content-wrapper > p:last-child a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  header nav .nav-mobile-cta .default-content-wrapper > p:last-child a::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+}
+
+@media (width >= 769px) {
   header nav .nav-sections {
     display: block;
     visibility: visible;
     white-space: nowrap;
+    border-bottom: 1px solid #e6e6e6;
   }
 
   header nav[aria-expanded='true'] .nav-sections {
     align-self: unset;
   }
 
-  header nav .nav-sections .nav-drop {
-    position: relative;
-    padding-right: 16px;
-    cursor: pointer;
-  }
-
-  header nav .nav-sections .nav-drop::after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    transform: rotate(135deg);
-    width: 6px;
-    height: 6px;
-    border: 2px solid currentcolor;
-    border-radius: 0 1px 0 0;
-    border-width: 2px 2px 0 0;
-  }
-
-  header nav .nav-sections .nav-drop[aria-expanded='true']::after {
-    top: unset;
-    bottom: 2px;
-    transform: rotate(315deg);
-  }
-
   header nav .nav-sections ul {
     display: flex;
-    gap: 24px;
+    gap: 0;
     margin: 0;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li {
-    flex: 0 1 auto;
+  header nav .nav-sections .default-content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul {
+    display: flex;
+    justify-content: center;
+    height: 70px;
     position: relative;
   }
 
+  /* Nav items */
+  header nav .nav-sections .default-content-wrapper > ul > li {
+    flex: 1 1 auto;
+    position: relative;
+    text-align: center;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  /* Centered vertical separator (not full height) */
+  header nav .nav-sections .default-content-wrapper > ul > li::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 1px;
+    background-color: #e6e6e6;
+    z-index: 1;
+  }
+
+  /* Left separator on the first item */
+  header nav .nav-sections .default-content-wrapper > ul::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 1px;
+    background-color: #e6e6e6;
+    z-index: 1;
+  }
+
+  /* Blue underline hover animation */
+  header nav .nav-sections .default-content-wrapper > ul > li::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 14px;
+    right: 14px;
+    width: auto;
+    height: 4px;
+    background: var(--color-navy);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    z-index: 2;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* Active/expanded state underline */
+  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true']::before {
+    transform: scaleX(1);
+  }
+
+  /* Nav links - flex row with icon + text + chevron */
+  header nav .nav-sections .default-content-wrapper > ul > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 9px;
+    color: var(--text-color);
+    font-size: 12px;
+    font-weight: 400;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    gap: 4px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a:hover {
+    text-decoration: none;
+  }
+
+  /* Nav icon spans (authored via :icon-name: in nav document) */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon {
+    flex-shrink: 0;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hide the <img> appended by decorateIcons (we use icon font, not SVGs) */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon img {
+    display: none;
+  }
+
+  /* Icon font glyph size/color override for desktop */
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 18px;
+    color: var(--color-navy);
+  }
+
+  /* Chevron arrow after text */
+  header nav .nav-sections .default-content-wrapper > ul > li > a::after {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid #5d738d;
+    border-bottom: 1.5px solid #5d738d;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    margin-left: 2px;
+    margin-bottom: 2px;
+    transition: transform 0.3s ease;
+  }
+
+  /* Chevron rotates up when expanded */
+  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > a::after {
+    transform: rotate(-135deg);
+    margin-bottom: -3px;
+  }
+
+  /* ===== Megamenu dropdown ===== */
   header nav .nav-sections .default-content-wrapper > ul > li > ul {
     display: none;
     position: relative;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
     position: absolute;
-    left: -24px;
-    width: 200px;
-    top: 150%;
-    padding: 16px;
-    background-color: var(--light-color);
+    top: 100%;
+    background-color: #eee;
     white-space: initial;
-    z-index: 1;
+    z-index: 10;
+    border-top: 1px solid #e6e6e6;
+    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
+    text-align: left;
+    padding: 0 max(32px, calc((100vw - 1200px) / 2));
+    box-sizing: border-box;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li > ul::before {
+  /* Top link (first item - e.g. ご契約者さまトップ) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:first-child {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    padding: 36px 9px 20px;
+    border-right: none;
+    margin-bottom: 16px;
+    margin-right: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:first-child > a {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:first-child > a::before {
     content: '';
-    position: absolute;
-    top: -8px;
-    left: 16px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--light-color);
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
   }
 
+  /* Category columns (items with nested ul) */
+  /* stylelint-disable-next-line no-descending-specificity */
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
-    padding: 8px 0;
+    flex: 1 1 22%;
+    min-width: 200px;
+    padding: 9px 16px 9px 9px;
+    box-sizing: border-box;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:last-child {
+    margin-right: 0;
+    padding-right: 9px;
+  }
+
+  /* Bottom link (e.g. よくあるご質問) - items without nested ul at the end */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li.megamenu-bottom {
+    width: 100%;
+    flex: 0 0 100%;
+    margin: 8px 0 0;
+    padding: 16px 9px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li.megamenu-bottom > a {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li.megamenu-bottom > a::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  /* Middle standalone links (e.g. 個人向け商品一覧) - not top, not bottom, no nested ul */
+  /* stylelint-disable-next-line no-descending-specificity, selector-not-notation */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:not(:first-child):not(.megamenu-bottom) > a:only-child {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* stylelint-disable-next-line selector-not-notation */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:not(:first-child):not(.megamenu-bottom) > a:only-child::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  /* Category header text (li text content before nested ul) */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > span {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  /* Category child links list */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul {
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li {
+    padding: 6px 0;
+    list-style: none;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a {
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.5;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='translate(-344.001 -429)'%3E%3Ccircle cx='19' cy='19' r='19' transform='translate(345 430)' fill='%23fff'/%3E%3Cpath d='M260.012,628.407a20,20,0,1,0,20,20A20,20,0,0,0,260.012,628.407Zm-2.537,31.343-4.218-4.217,7.076-7.076-7.135-7.134,4.275-4.275L268.826,648.4Z' transform='translate(103.989 -199.407)' fill='%235D738D'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li > ul > li > a:hover {
+    color: #001871;
+    text-decoration: underline;
+  }
+
+  /* Hover color for top link, bottom link, and standalone links */
+  /* stylelint-disable no-descending-specificity, selector-not-notation */
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:first-child > a:hover,
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li.megamenu-bottom > a:hover,
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li:not(:first-child):not(.megamenu-bottom) > a:only-child:hover {
+    color: #001871;
+  }
+
+  /* stylelint-enable no-descending-specificity, selector-not-notation */
+
+  /* Close chevron at bottom of megamenu - spans full dropdown width */
+  header nav .nav-sections .megamenu-close {
+    flex: 0 0 calc(100% + 2 * max(32px, calc((100vw - 1200px) / 2)));
+    text-align: center;
+    padding: 12px 0 16px;
+    border-top: 1px solid #e6e6e6;
+    margin: 0 calc(-1 * max(32px, calc((100vw - 1200px) / 2)));
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    background-color: #eee;
+  }
+
+  header nav .nav-sections .megamenu-close:hover {
+    background-color: #e6e6e6;
+  }
+
+  header nav .nav-sections .megamenu-close::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid #5d738d;
+    border-bottom: 2px solid #5d738d;
+    transform: rotate(-135deg);
   }
 }
 
-/* tools */
+/* ===== Responsive scaling for narrow desktop (769px–1080px) ===== */
+@media (width >= 921px) {
+  header nav .nav-sections .default-content-wrapper > ul > li > a {
+    font-size: 14px;
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 22px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a::after {
+    width: 6px;
+    height: 6px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+  }
+
+  header .nav-brand ul {
+    gap: 24px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul a:any-link {
+    font-size: 12px;
+  }
+}
+
+@media (width >= 1081px) {
+  header nav .nav-sections .default-content-wrapper > ul > li > a {
+    font-size: 16px;
+    padding: 0 12px;
+    gap: 6px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a > .icon::before {
+    font-size: 26px;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a::after {
+    width: 7px;
+    height: 7px;
+    margin-left: 4px;
+    margin-bottom: 3px;
+  }
+
+  header .nav-brand ul {
+    gap: 32px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-brand ul a:any-link {
+    font-size: var(--body-font-size-xs);
+  }
+}
+
+/* =============================================
+   TOOLS = Search button (navy bar, far right)
+   ============================================= */
 header nav .nav-tools {
   grid-area: tools;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  padding-right: 16px;
 }
 
-header nav .nav-tools .button {
-  margin: 0;
+@media (width >= 769px) {
+  header nav .nav-tools {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #5d738d;
+    padding: 0;
+    z-index: 2;
+    cursor: pointer;
+  }
+}
+
+/* Ensure inner wrappers fill the entire tools area */
+@media (width >= 769px) {
+  header nav .nav-tools .default-content-wrapper,
+  header nav .nav-tools .default-content-wrapper p {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+header nav .nav-tools a:any-link {
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Search icon via authored :search: icon span */
+header nav .nav-tools a .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+header nav .nav-tools a .icon img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+  margin-right: 4px;
+}
+
+@media (width >= 769px) {
+  header nav .nav-tools a {
+    font-size: 0;
+    color: transparent;
+    overflow: hidden;
+    width: 90px;
+    height: 90px;
+  }
+
+  header nav .nav-tools a .icon img {
+    width: 22px;
+    height: 22px;
+    margin-right: 0;
+  }
+}
+
+/* Mobile search icon - compact 44x44 button */
+@media (width < 769px) {
+  header nav .nav-tools {
+    padding: 0;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header nav .nav-tools .default-content-wrapper,
+  header nav .nav-tools .default-content-wrapper p {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-tools a:any-link {
+    font-size: 0;
+    color: transparent;
+    width: 44px;
+    height: var(--nav-height);
+    overflow: hidden;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header nav .nav-tools a .icon img {
+    width: 18px;
+    height: 18px;
+    margin-right: 0;
+  }
+}
+
+/* Search active state (X icon) - hide icon, show X via pseudo-element */
+header nav .nav-tools a.search-active .icon {
+  display: none;
+}
+
+header nav .nav-tools a.search-active::before {
+  content: '';
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+}
+
+/* =============================================
+   SEARCH OVERLAY PANEL
+   ============================================= */
+header nav .nav-search-overlay {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: absolute;
+  top: 90px;
+  left: 0;
+  width: 100%;
+  background-color: var(--background-color);
+  z-index: 10;
+  padding: 0 32px;
+  box-sizing: border-box;
+  border-bottom: 1px solid transparent;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease-out, opacity 0.25s ease, padding-top 0.35s ease-out, padding-bottom 0.35s ease-out, border-color 0.35s ease-out;
+  pointer-events: none;
+}
+
+header nav .nav-search-overlay.active {
+  max-height: 94px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-bottom-color: #e6e6e6;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+header nav .nav-search-overlay input[type="search"] {
+  flex: 1;
+  height: 62px;
+  padding: 0 20px;
+  font-size: var(--body-font-size-m);
+  border: 1px solid #e6e6e6;
+  background-color: #eee;
+  border-radius: 6px;
+  outline: none;
+  font-family: var(--body-font-family);
+  box-sizing: border-box;
+}
+
+header nav .nav-search-overlay input[type="search"]::placeholder {
+  color: #999;
+}
+
+header nav .nav-search-overlay button[type="submit"] {
+  width: 200px;
+  height: 62px;
+  padding: 0;
+  background-color: var(--color-blue);
+  color: var(--color-white);
   border: none;
-  padding: 0.5em;
-  background: none;
-  line-height: 0;
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--body-font-family);
+  border-radius: 6px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+header nav .nav-search-overlay button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+/* =============================================
+   STICKY COMPACT HEADER (appears on scroll)
+   ============================================= */
+
+/* Sticky logo and search - hidden by default in all viewports */
+header nav .nav-sections .default-content-wrapper > ul > .sticky-logo,
+header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
+  display: none;
+}
+
+@media (width >= 769px) {
+  /* Sticky compact mode - activated by JS on scroll */
+  header .nav-wrapper.sticky-compact {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    animation: sticky-slide-down 0.5s ease forwards;
+  }
+
+  @keyframes sticky-slide-down {
+    from {
+      transform: translateY(-100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* Hide brand (navy bar) in sticky mode */
+  header .nav-wrapper.sticky-compact .nav-brand {
+    display: none;
+  }
+
+  /* Hide tools (search button) in sticky mode */
+  header .nav-wrapper.sticky-compact .nav-tools {
+    display: none;
+  }
+
+  /* Search overlay position in sticky mode */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-search-overlay {
+    top: 77px;
+    z-index: 200;
+  }
+
+  /* Compact nav sections */
+  header .nav-wrapper.sticky-compact .nav-sections {
+    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper {
+    max-width: none;
+    padding: 0 80px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul {
+    height: 77px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  /* Hide left-edge separator in sticky mode (logo takes its place) */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul::before {
+    display: none;
+  }
+
+  /* Nav items - compact sizing, flex: 1 1 auto to distribute evenly like original */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li {
+    flex: 1 1 auto;
+    height: 77px;
+  }
+
+  /* Hide icons and chevrons in sticky mode */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a > .icon,
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a::after {
+    display: none;
+  }
+
+  /* Compact link styling - black text, 16px to match original */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a {
+    font-size: 16px;
+    color: #000;
+    padding: 0 9px;
+  }
+
+  /* Adjust underline animation for compact mode */
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li::before {
+    left: 0;
+    right: 0;
+  }
+
+  /* --- Sticky logo (first item) --- */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > .sticky-logo {
+    display: flex;
+    align-items: center;
+    height: 77px;
+    flex: 0 0 248px;
+    padding: 0;
+    cursor: default;
+  }
+
+  /* Hide underline animation from sticky-logo, keep separator */
+  header .nav-wrapper.sticky-compact .sticky-logo::before {
+    display: none;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .sticky-logo a {
+    display: block;
+    width: 190px;
+    height: 41px;
+    background: url('https://www.aig.co.jp/etc.clientlibs/ace/clientlibs/clientlib-site/resources/images/aig-logo-full-blue.svg') no-repeat center left;
+    background-size: contain;
+    text-indent: -9999px;
+    overflow: hidden;
+  }
+
+  /* stylelint-disable no-descending-specificity */
+  header .nav-wrapper.sticky-compact .sticky-logo a::before,
+  header .nav-wrapper.sticky-compact .sticky-logo a::after {
+    display: none;
+  }
+  /* stylelint-enable no-descending-specificity */
+
+  /* --- Sticky search icon (last item) --- */
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > .sticky-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 77px;
+    flex: 0 0 59px;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  /* Remove pseudo-elements from sticky-search */
+  header .nav-wrapper.sticky-compact .sticky-search::before,
+  header .nav-wrapper.sticky-compact .sticky-search::after {
+    display: none;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  header .nav-wrapper.sticky-compact .sticky-search a {
+    display: block;
+    width: 18px;
+    height: 18px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23333' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    text-indent: -9999px;
+    overflow: hidden;
+  }
+
+  /* stylelint-disable no-descending-specificity */
+  header .nav-wrapper.sticky-compact .sticky-search a::before,
+  header .nav-wrapper.sticky-compact .sticky-search a::after {
+    display: none;
+  }
+  /* stylelint-enable no-descending-specificity */
 }
 
 /* breadcrumbs */
 header .breadcrumbs {
   display: none;
   margin: auto;
-  max-width: 1248px;
+  max-width: 1200px;
   height: var(--breadcrumbs-height);
   padding: 0 24px;
   font-size: var(--body-font-size-xs);
@@ -313,10 +1636,10 @@ header .breadcrumbs ol li[aria-current] {
   color: var(--text-color);
 }
 
-@media (width >= 900px) {
+@media (width >= 769px) {
   header .breadcrumbs {
     display: block;
-    max-width: 1264px;
+    max-width: 1200px;
     padding: 0 32px;
   }
 }
