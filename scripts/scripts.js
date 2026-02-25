@@ -83,6 +83,38 @@ function buildAutoBlocks() {
   }
 }
 
+/**
+ * Converts :icon-name: text patterns into <span class="icon icon-name"> elements
+ * so that decorateIcons() can load the corresponding SVG files.
+ * This enables the :icon: authoring convention in markdown.
+ * @param {Element} element The container element to process
+ */
+function convertIconText(element) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+  const nodesToProcess = [];
+  while (walker.nextNode()) {
+    if (walker.currentNode.nodeValue.match(/:[\w-]+:/)) {
+      nodesToProcess.push(walker.currentNode);
+    }
+  }
+  nodesToProcess.forEach((textNode) => {
+    const parts = textNode.nodeValue.split(/(:[a-zA-Z][\w-]*:)/g);
+    if (parts.length <= 1) return;
+    const fragment = document.createDocumentFragment();
+    parts.forEach((part) => {
+      const iconMatch = part.match(/^:([\w-]+):$/);
+      if (iconMatch) {
+        const span = document.createElement('span');
+        span.className = `icon icon-${iconMatch[1]}`;
+        fragment.appendChild(span);
+      } else if (part) {
+        fragment.appendChild(document.createTextNode(part));
+      }
+    });
+    textNode.parentNode.replaceChild(fragment, textNode);
+  });
+}
+
 function a11yLinks(main) {
   const links = main.querySelectorAll('a');
   links.forEach((link) => {
@@ -138,6 +170,7 @@ function decorateNewsList(main) {
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
+  convertIconText(main);
   decorateButtons(main);
   decorateIcons(main);
   buildAutoBlocks(main);

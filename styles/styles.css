@@ -292,6 +292,26 @@ main img {
   width: 100%;
 }
 
+/* Larger icons inside buttons */
+a.button .icon,
+a.button:any-link .icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* White icons on blue/navy buttons (SVG is black via <img>, invert to white) */
+a.button .icon img {
+  filter: brightness(0) invert(1);
+}
+
+/* Gray-blue icons on outline/white buttons */
+a.button.outline .icon img {
+  filter: invert(44%) sepia(9%) saturate(1200%) hue-rotate(178deg) brightness(90%) contrast(88%);
+}
+
 /* sections */
 main > .section {
   margin: var(--spacing-xl) 0;
@@ -621,6 +641,18 @@ main .section.navy-background h3 {
   color: var(--color-white);
   text-decoration: none;
   opacity: 0.8;
+}
+
+/* Icons in online-contract buttons */
+.section.online-contract .columns a .icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.section.online-contract .columns a .icon img {
+  filter: brightness(0) invert(1);
 }
 
 /* Arrow circle on online-contract buttons */
