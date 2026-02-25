@@ -3,7 +3,7 @@ POC - migrate https://www.aig.co.jp/ to EDS
 
 ## Environments
 - Preview: https://main--poc-ba--aemdemos.aem.page/
-- Live: https://main-1708--poc-ba--aemdemos.aem.live/
+- Live: https://main--poc-ba--aemdemos.aem.live/
 
 ## Documentation
 
