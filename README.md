@@ -1,9 +1,9 @@
-# Your Project's Title...
-Your project's description...
+# https://www.aig.co.jp/ POC
+POC - migrate https://www.aig.co.jp/ to EDS
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
+- Preview: https://main--poc-ba--aemdemos.aem.page/
+- Live: https://main-1708--poc-ba--aemdemos.aem.live/
 
 ## Documentation
 
