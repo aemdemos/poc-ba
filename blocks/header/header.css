@@ -1483,7 +1483,8 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     display: none;
   }
 
-  header .nav-wrapper.sticky-compact .sticky-logo a::before {
+  header .nav-wrapper.sticky-compact .sticky-logo a::before,
+  header .nav-wrapper.sticky-compact .sticky-logo a::after {
     display: none;
   }
 
@@ -1536,7 +1537,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     align-items: center;
     height: 77px;
     flex: 0 0 auto;
-    padding: 0 24px;
+    padding: 0 24px 0;
     cursor: default;
   }
 
