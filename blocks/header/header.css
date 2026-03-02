@@ -1366,15 +1366,16 @@ header nav .nav-tools a.search-active::before {
 header nav .nav-search-overlay {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   position: absolute;
   top: 90px;
   left: 0;
   width: 100%;
   background-color: var(--background-color);
   z-index: 10;
-  padding: 0 32px;
+  padding: 0 27px;
   box-sizing: border-box;
+  border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   overflow: hidden;
   max-height: 0;
@@ -1384,9 +1385,10 @@ header nav .nav-search-overlay {
 }
 
 header nav .nav-search-overlay.active {
-  max-height: 94px;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  max-height: 100px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  border-top-color: #e6e6e6;
   border-bottom-color: #e6e6e6;
   opacity: 1;
   pointer-events: auto;
@@ -1520,14 +1522,15 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
   header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li > a {
     font-size: 16px;
     color: #000;
-    padding: 0 9px;
+    padding: 0 9px 8px;
   }
 
-  /* Adjust underline animation for compact mode */
   /* stylelint-disable-next-line no-descending-specificity */
   header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li::before {
-    left: 0;
-    right: 0;
+    left: 14px;
+    right: 14px;
+    bottom: 0;
+    height: 4px;
   }
 
   /* --- Sticky logo (first item) --- */
