@@ -1173,7 +1173,7 @@ header nav .nav-mobile-cta {
 
   header nav .nav-sections .default-content-wrapper > ul > li > a {
     font-size: 16px;
-    padding: 0 12px;
+    padding: 0 9px;
     gap: 6px;
   }
 
@@ -1499,7 +1499,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
   header .nav-wrapper.sticky-compact .sticky-logo a {
     display: block;
     width: 190px;
-    height: 44px;
+    height: 41px;
     background: url('https://www.aig.co.jp/etc.clientlibs/ace/clientlibs/clientlib-site/resources/images/aig-logo-full-blue.svg') no-repeat center left;
     background-size: contain;
     text-indent: -9999px;
