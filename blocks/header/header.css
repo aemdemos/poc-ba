@@ -1519,7 +1519,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     color: #000;
   }
 
-  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li:not(.sticky-logo):not(.sticky-search) > a:hover {
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li:not(.sticky-logo, .sticky-search) > a:hover {
     color: #001871; 
   }
 
@@ -1536,7 +1536,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     align-items: center;
     height: 77px;
     flex: 0 0 auto;
-    padding: 0 24px 0;
+    padding: 0 24px;
     cursor: default;
   }
 
