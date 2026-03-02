@@ -1483,8 +1483,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     display: none;
   }
 
-  header .nav-wrapper.sticky-compact .sticky-logo a::before,
-  header .nav-wrapper.sticky-compact .sticky-logo a::after {
+  header .nav-wrapper.sticky-compact .sticky-logo a::before {
     display: none;
   }
 
@@ -1520,6 +1519,10 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     color: #000;
   }
 
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li:not(.sticky-logo):not(.sticky-search) > a:hover {
+    color: #001871; 
+  }
+
   header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > li::before {
     left: 14px;
     right: 14px;
@@ -1533,9 +1536,14 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     align-items: center;
     height: 77px;
     flex: 0 0 auto;
-    padding: 0 24px 0 0;
+    padding: 0 24px 0;
     cursor: default;
   }
+
+  header .nav-wrapper.sticky-compact .nav-sections .default-content-wrapper > ul > .sticky-logo:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
 
   header .nav-wrapper.sticky-compact .sticky-logo::before {
     display: none;
