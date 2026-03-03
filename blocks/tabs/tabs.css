@@ -1,30 +1,39 @@
 /* Tabs block - AIG Japan styling */
+
+/* Wrapper stays at default content width — no background here.
+   The gray "wings" come from a pseudo-element on the panel only. */
+
 .tabs .tabs-list {
   display: flex;
   gap: 0;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .tabs .tabs-list button {
   flex: 1;
-  margin: 0;
+  margin: 0 0 0 -1px;
   border: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
   border-radius: 0;
-  padding: var(--spacing-s) var(--spacing-s);
-  background-color: transparent;
+  min-height: 80px;
+  padding: 9px 18px;
+  background-color: var(--color-white);
   color: var(--color-navy);
   font-family: var(--heading-font-family);
   font-weight: 700;
   font-size: var(--heading-font-size-l);
-  line-height: 1.5;
+  line-height: normal;
   text-align: center;
   text-overflow: unset;
   overflow: unset;
   white-space: nowrap;
   transition: background-color 0.2s;
 }
+
+.tabs .tabs-list button:first-child {
+  margin-left: 0;
+}
+
 
 /* Hide arrow on tab header buttons */
 .tabs .tabs-list button::after {
@@ -38,19 +47,28 @@
 .tabs .tabs-list button[aria-selected='true'] {
   border-top: 4px solid var(--color-navy);
   border-bottom: 1px solid transparent;
+  border-right-color: transparent;
   background-color: var(--color-gray);
   color: var(--color-black);
   cursor: initial;
 }
 
-/* Tab panels */
+/* Tab panels — gray background with "wings" extending beyond content width */
 .tabs .tabs-panel {
   margin-top: -1px;
   padding: var(--spacing-l) var(--spacing-s);
-  border: 1px solid var(--color-border);
-  border-top: none;
   background-color: var(--color-gray);
-  overflow: auto;
+  position: relative;
+  overflow: visible;
+}
+
+/* Wings: extend gray background 80px beyond each side of the panel */
+.tabs .tabs-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0 -80px;
+  background-color: var(--color-gray);
+  z-index: -1;
 }
 
 .tabs .tabs-panel[aria-hidden='true'] {
@@ -61,8 +79,10 @@
 .tabs .tabs-panel .tabs-description {
   text-align: center;
   margin: 0 0 var(--spacing-l);
-  font-size: var(--body-font-size-m);
-  line-height: 1.6;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  font-size: var(--heading-font-size-l);
+  line-height: 1.5;
 }
 
 /* Tab sub-headings (法人向け保険商品, etc.) */
@@ -103,23 +123,39 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 80px;
+  min-height: 80px;
   margin: 0;
-  padding: 18px 48px 18px 18px;
+  padding: 18px 27px 18px 9px;
   white-space: normal;
+  line-height: normal;
+  font-size: var(--heading-font-size-l);
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 /* Icons in tab panel grid buttons — gray-blue */
 .tabs .tabs-panel .tabs-button-grid a.button .icon {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   margin-right: 8px;
 }
 
 .tabs .tabs-panel .tabs-button-grid a.button.outline .icon img {
   filter: invert(44%) sepia(9%) saturate(1200%) hue-rotate(178deg) brightness(90%) contrast(88%);
+}
+
+/* 2-item grid — wider columns, centered content with image icons */
+.tabs .tabs-panel .tabs-button-grid.tabs-button-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tabs .tabs-panel .tabs-button-grid-2 a.button {
+  justify-content: center;
+}
+
+/* Keep natural icon colors in 2-item grids (法人会 colored icons) */
+.tabs .tabs-panel .tabs-button-grid-2 a.button.outline .icon img {
+  filter: none;
 }
 
 /* CTA button (資料請求) — navy, centered, wider */
@@ -134,10 +170,12 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 80px;
+  min-height: 80px;
   margin: 0;
-  padding: 18px 48px;
+  padding: 18px 27px;
   white-space: normal;
+  line-height: normal;
+  font-size: var(--heading-font-size-l);
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
@@ -156,5 +194,6 @@
   .tabs .tabs-list button {
     font-size: var(--body-font-size-s);
     padding: var(--spacing-xs) var(--spacing-xs);
+    min-height: auto;
   }
 }
