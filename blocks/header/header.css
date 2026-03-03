@@ -1537,7 +1537,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
     align-items: center;
     height: 77px;
     flex: 0 0 auto;
-    padding: 0 24px 0;
+    padding: 0 24px;
     cursor: default;
   }
 
