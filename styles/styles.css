@@ -710,3 +710,167 @@ main .section.navy-background h3 {
     font-size: var(--body-font-size-s);
   }
 }
+
+/* AIG section: about-aig — company overview with stats
+   Using :has() selector because section-metadata class isn't applied by pipeline */
+.section:has(h2[id="aig損害保険について"]) h3 {
+  text-align: center;
+  font-size: var(--heading-font-size-xl);
+}
+
+/* "企業情報" link — right-aligned text link style, not a filled button */
+.section:has(h2[id="aig損害保険について"]) > div > .button-container {
+  text-align: right;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section:has(h2[id="aig損害保険について"]) > div > .button-container a.button {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  min-height: unset;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--color-black);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  text-decoration: none;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+.section:has(h2[id="aig損害保険について"]) > div > .button-container a.button:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.section:has(h2[id="aig損害保険について"]) > div > .button-container a.button::after {
+  content: '';
+  position: static;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  transform: none;
+  vertical-align: middle;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Stats columns — navy background, white centered text */
+.section:has(h2[id="aig損害保険について"]) .columns {
+  margin-top: 36px;
+  margin-bottom: 54px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section:has(h2[id="aig損害保険について"]) .columns > div {
+  align-items: stretch;
+  gap: 36px;
+}
+
+.section:has(h2[id="aig損害保険について"]) .columns > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  text-align: center;
+  padding: 40px;
+  border-radius: 0;
+  flex: 1 1 0%;
+}
+
+.section:has(h2[id="aig損害保険について"]) .columns p {
+  color: var(--color-white);
+  text-align: center;
+}
+
+.section:has(h2[id="aig損害保険について"]) .columns strong {
+  font-size: var(--heading-font-size-xxl);
+  display: block;
+  color: var(--color-white);
+}
+
+/* ================================================================
+   AIG section: AIGグループについて — about AIG Group with stats
+   ================================================================ */
+
+/* Two-column layout: image 1/3, text 2/3 */
+.section:has(h2[id="aigグループについて"]) .columns-2-cols > div > .columns-img-col {
+  flex: 1 1 0%;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section:has(h2[id="aigグループについて"]) .columns-2-cols > div > div:not(.columns-img-col) {
+  flex: 2 1 0%;
+  text-align: left;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section:has(h2[id="aigグループについて"]) .columns-2-cols p {
+  text-align: left;
+}
+
+/* AIG.com link — right-aligned text link with arrow icon */
+.section:has(h2[id="aigグループについて"]) .columns-2-cols a[href*="aig.com"] {
+  display: block;
+  text-align: right;
+  margin-top: 18px;
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.section:has(h2[id="aigグループについて"]) .columns-2-cols a[href*="aig.com"]::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Stats columns — navy background, white centered text (same as about-aig) */
+.section:has(h2[id="aigグループについて"]) .columns-3-cols {
+  margin-top: 36px;
+  margin-bottom: 54px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section:has(h2[id="aigグループについて"]) .columns-3-cols > div {
+  align-items: stretch;
+  gap: 36px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section:has(h2[id="aigグループについて"]) .columns-3-cols > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  text-align: center;
+  padding: 40px;
+  border-radius: 0;
+  flex: 1 1 0%;
+}
+
+.section:has(h2[id="aigグループについて"]) .columns-3-cols p {
+  color: var(--color-white);
+  text-align: center;
+}
+
+.section:has(h2[id="aigグループについて"]) .columns-3-cols strong {
+  font-size: var(--heading-font-size-xxl);
+  display: block;
+  color: var(--color-white);
+}
