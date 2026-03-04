@@ -44,10 +44,16 @@ function decorateTabPanel(panel) {
   contentDiv.textContent = '';
   let currentGrid = null;
 
+  let gridItemCount = 0;
+
   function flushGrid() {
     if (currentGrid) {
+      if (gridItemCount <= 2) {
+        currentGrid.classList.add(`tabs-button-grid-${gridItemCount}`);
+      }
       contentDiv.appendChild(currentGrid);
       currentGrid = null;
+      gridItemCount = 0;
     }
   }
 
@@ -69,6 +75,7 @@ function decorateTabPanel(panel) {
         currentGrid = document.createElement('div');
         currentGrid.className = 'tabs-button-grid';
       }
+      gridItemCount += 1;
       const p = document.createElement('p');
       p.className = 'button-container';
       el.node.className = 'button outline';
@@ -90,6 +97,35 @@ function decorateTabPanel(panel) {
 }
 
 export default async function decorate(block) {
+  // Pre-process: merge continuation rows into the preceding tab row.
+  // A continuation row has an empty first cell and appends its content
+  // to the previous tab's content cell. This lets authors spread tab
+  // content across multiple rows for readability in the markdown.
+  const rows = [...block.children];
+  let currentTitleRow = null;
+  const continuationRows = [];
+
+  rows.forEach((row) => {
+    const firstCell = row.firstElementChild;
+    const hasTitle = firstCell && firstCell.textContent.trim().length > 0;
+
+    if (hasTitle) {
+      currentTitleRow = row;
+    } else if (currentTitleRow) {
+      const titleContent = currentTitleRow.children[1];
+      const contContent = row.children[1] || row.lastElementChild;
+
+      if (titleContent && contContent) {
+        while (contContent.firstChild) {
+          titleContent.appendChild(contContent.firstChild);
+        }
+      }
+      continuationRows.push(row);
+    }
+  });
+
+  continuationRows.forEach((row) => row.remove());
+
   // build tablist
   const tablist = document.createElement('div');
   tablist.className = 'tabs-list';

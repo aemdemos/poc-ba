@@ -1,8 +1,14 @@
-/* AIG Japan - System font stack for Japanese typography */
-
-/* Primary fonts: UD新ゴ R (body) and UD新ゴ DB (headings) are proprietary */
-
-/* Using system Japanese font fallback stack */
+/*
+ * AIG Japan - Font Loading Strategy
+ *
+ * Primary fonts: UD新ゴ R (body) and UD新ゴ DB (headings) by Morisawa
+ * Loaded via TypeSquare web font service (delayed.js injects the script).
+ * TypeSquare dynamically generates @font-face rules with character-subset URLs.
+ *
+ * Fallback stack: Arial → Hiragino Kaku Gothic ProN → Meiryo → sans-serif
+ * The fallback fonts below provide CLS-safe size-adjusted substitutes
+ * while TypeSquare fonts load asynchronously.
+ */
 
 @font-face {
   font-family: aig-body-fallback;
