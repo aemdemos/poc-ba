@@ -19,11 +19,8 @@ import {
  * @param {Element} to the element to copy attributes to
  */
 export function moveAttributes(from, to, attributes) {
-  if (!attributes) {
-    // eslint-disable-next-line no-param-reassign
-    attributes = [...from.attributes].map(({ nodeName }) => nodeName);
-  }
-  attributes.forEach((attr) => {
+  const attrs = attributes ?? [...from.attributes].map(({ nodeName }) => nodeName);
+  attrs.forEach((attr) => {
     const value = from.getAttribute(attr);
     if (value) {
       to?.setAttribute(attr, value);
@@ -164,10 +161,138 @@ function decorateNewsList(main) {
 }
 
 /**
+ * Decorates digital-links card buttons and online-contract links.
+ *
+ * Phase 1 — Merge consecutive <a> elements that share the same href.
+ * DA (Document Authoring) converts <a>title<br>caption</a> into two
+ * separate <a> tags with the same href.  We detect those siblings and
+ * merge them back into a single link, separated by a <br>.
+ *
+ * Phase 2 — Wrap everything after the first <br> inside a link in a
+ * <span class="card-caption"> so title and caption can be styled with
+ * different font sizes.
+ *
+ * Phase 3 — Mark rows where the left cell is empty as text-link rows.
+ * These rows contain plain text links (not card buttons) and receive
+ * the `.text-link-row` class for different styling.
+ *
+ * @param {Element} main The main element
+ */
+function decorateDigitalLinksCards(main) {
+  const sections = main.querySelectorAll(
+    '.section.digital-links .columns, .section.online-contract .columns',
+  );
+  if (!sections.length) return;
+
+  // Phase 1: merge consecutive same-href links (DA split fix)
+  sections.forEach((section) => {
+    section.querySelectorAll(':scope > div > div').forEach((cell) => {
+      const links = [...cell.querySelectorAll('a')];
+      for (let i = 0; i < links.length; i += 1) {
+        const link = links[i];
+        let j = i + 1;
+        while (j < links.length && links[j].href === link.href) {
+          // Remove orphan nodes (whitespace / <br>) between the two links
+          let sibling = link.nextSibling;
+          while (sibling && sibling !== links[j]) {
+            const next = sibling.nextSibling;
+            sibling.remove();
+            sibling = next;
+          }
+          // Append second link's content into the first, separated by <br>
+          link.appendChild(document.createElement('br'));
+          while (links[j].firstChild) {
+            link.appendChild(links[j].firstChild);
+          }
+          links[j].remove();
+          j += 1;
+        }
+        i = j - 1;
+      }
+    });
+  });
+
+  // Phase 2: wrap text after <br> in .card-caption
+  sections.forEach((section) => {
+    section.querySelectorAll('a').forEach((link) => {
+      const br = link.querySelector('br');
+      if (!br) return;
+
+      const captionNodes = [];
+      let node = br.nextSibling;
+      while (node) {
+        captionNodes.push(node);
+        node = node.nextSibling;
+      }
+      if (captionNodes.length === 0) return;
+
+      const caption = document.createElement('span');
+      caption.className = 'card-caption';
+      captionNodes.forEach((n) => caption.appendChild(n));
+      br.after(caption);
+      br.remove();
+    });
+  });
+
+  // Phase 3: mark text links — italic-wrapped links (em > a) and
+  // rows with empty left cells get text-link treatment
+  sections.forEach((section) => {
+    section.querySelectorAll(':scope > div').forEach((row) => {
+      const cells = row.querySelectorAll(':scope > div');
+      const leftCell = cells[0];
+      if (leftCell && !leftCell.textContent.trim()) {
+        row.classList.add('text-link-row');
+      }
+    });
+    // Unwrap em > a and add .text-link class
+    // EDS decorateButtons wraps standalone links in <p class="button-container">
+    // and adds class="button secondary", so the DOM is p.button-container > em > a.button
+    section.querySelectorAll(':scope > div > div em > a').forEach((link) => {
+      link.classList.remove('button', 'primary', 'secondary');
+      link.classList.add('text-link');
+      const em = link.parentElement;
+      const wrapper = em.closest('.button-container') || em;
+      wrapper.replaceWith(link);
+    });
+  });
+
+  // Phase 4: restructure digital-links into independent flex columns
+  // so left/right items stack with their own gaps (not forced into rows)
+  const digitalLinks = main.querySelector('.section.digital-links .columns');
+  if (digitalLinks) {
+    const rows = [...digitalLinks.querySelectorAll(':scope > div')];
+    const leftCol = document.createElement('div');
+    const rightCol = document.createElement('div');
+    leftCol.className = 'col-left';
+    rightCol.className = 'col-right';
+
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll(':scope > div');
+      const left = cells[0];
+      const right = cells[1];
+      if (left && left.textContent.trim()) leftCol.appendChild(left);
+      if (right) {
+        // Mark cells containing only text-links
+        if (right.querySelector('.text-link') && !right.querySelector('a:not(.text-link)')) {
+          right.classList.add('text-link-cell');
+        }
+        rightCol.appendChild(right);
+      }
+      row.remove();
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cols-wrapper';
+    wrapper.appendChild(leftCol);
+    wrapper.appendChild(rightCol);
+    digitalLinks.appendChild(wrapper);
+  }
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
-// eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   convertIconText(main);
@@ -177,6 +302,7 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateNewsList(main);
+  decorateDigitalLinksCards(main);
   // add aria-label to links
   a11yLinks(main);
 }
@@ -234,7 +360,6 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  // eslint-disable-next-line import/no-cycle
   window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
 }
