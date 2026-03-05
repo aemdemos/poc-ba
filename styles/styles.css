@@ -378,6 +378,16 @@ main .section .default-content-wrapper > h2::after {
   margin: var(--spacing-s) auto 0;
 }
 
+.section.centered-subheading h3 {
+  text-align: center;
+  font-size: var(--heading-font-size-xl);
+}
+
+main .section.navy-background h2,
+main .section.navy-background h3 {
+  color: var(--color-white);
+}
+
 /* Underline-heading variant — left-aligned with gray rule + navy accent */
 main .section.underline-heading .default-content-wrapper > h2 {
   text-align: left;
@@ -462,10 +472,38 @@ main .section.news-list ul li a {
   transition: background-color 0.2s;
 }
 
+main .section.news-list > div > p a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-black);
+  font-size: var(--body-font-size-s);
+}
+
+main .section.bordered ul li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-black);
+  font-size: var(--body-font-size-m);
+  text-decoration: none;
+}
+
+main .section.navy-background a:any-link {
+  color: var(--color-white);
+}
+
 main .section.news-list ul li a:hover {
   background-color: var(--color-light-blue);
   text-decoration: none;
   color: var(--color-black);
+}
+
+main .section.news-list .news-title {
+  flex: 1 1 auto;
+  margin-left: var(--spacing-s);
+  font-weight: 400;
+  transition: opacity 0.2s;
 }
 
 main .section.news-list ul li a:hover .news-title {
@@ -501,14 +539,6 @@ main .section.news-list .news-tag span {
   box-sizing: border-box;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.news-list .news-title {
-  flex: 1 1 auto;
-  margin-left: var(--spacing-s);
-  font-weight: 400;
-  transition: opacity 0.2s;
-}
-
 /* Arrow icon on news items — matches reference arrow-circle-next.svg */
 main .section.news-list ul li a::after {
   content: '';
@@ -527,15 +557,6 @@ main .section.news-list > div > p {
   gap: var(--spacing-m);
   margin-top: var(--spacing-s);
   font-size: 0;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.news-list > div > p a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-black);
-  font-size: var(--body-font-size-s);
 }
 
 main .section.news-list > div > p a::before {
@@ -586,16 +607,6 @@ main .section.bordered ul li {
   padding: 4px 0;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.bordered ul li a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-black);
-  font-size: var(--body-font-size-m);
-  text-decoration: none;
-}
-
 main .section.bordered ul li a::before {
   content: '';
   display: inline-block;
@@ -625,28 +636,39 @@ main .section.navy-background {
   padding: var(--spacing-xl) 0;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.navy-background a:any-link {
-  color: var(--color-white);
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.navy-background h2,
-main .section.navy-background h3 {
-  color: var(--color-white);
-}
-
 /* AIG section: online-contract — blue banner buttons in columns */
 .section.online-contract .columns > div {
   max-width: 1084px;
   margin: 0 auto;
 }
 
+.section.navy-stat-counters .columns-3-cols {
+  margin-top: 36px;
+  margin-bottom: 54px;
+}
+
+.section.navy-stat-counters .columns-3-cols > div {
+  align-items: stretch;
+  gap: 36px;
+}
+
+.section.navy-stat-counters .columns-3-cols > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  text-align: center;
+  padding: 40px;
+  border-radius: 0;
+  flex: 1 1 0%;
+}
+
 .section.online-contract .columns > div > div > div {
   padding: 0;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .section.online-contract .columns a:any-link {
   display: flex;
   align-items: center;
@@ -709,4 +731,109 @@ main .section.navy-background h3 {
   .section.online-contract .columns a:any-link {
     font-size: var(--body-font-size-s);
   }
+}
+
+.section.navy-stat-counters .columns-3-cols p {
+  color: var(--color-white);
+  text-align: center;
+  font-size: var(--body-font-size-xs);
+  line-height: 1.6;
+}
+
+.section.navy-stat-counters .columns-3-cols strong {
+  font-size: var(--heading-font-size-xxl);
+  display: inline;
+  color: var(--color-white);
+  line-height: 1.2;
+}
+
+/* Medium headline — authored with _italic_ (em) for text-only headlines (26px) */
+.section.navy-stat-counters .columns-3-cols em {
+  font-size: var(--heading-font-size-xl);
+  font-style: normal;
+  font-weight: 700;
+  display: inline;
+  color: var(--color-white);
+  line-height: 1.2;
+}
+
+.section.text-link-cta > div > .button-container {
+  text-align: right;
+}
+
+.section.text-link-cta > div > .button-container a.button {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  min-height: unset;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--color-black);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  text-decoration: none;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+.section.text-link-cta > div > .button-container a.button:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.section.text-link-cta > div > .button-container a.button::after {
+  content: '';
+  position: static;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  transform: none;
+  vertical-align: middle;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* ================================================================
+   Composable Pattern: content-1-2
+   Two-column layout: image 1/3, text 2/3. The last link in the
+   text column is styled as a right-aligned CTA with arrow icon.
+   Usage: | style | content-1-2 |
+   ================================================================ */
+.section.content-1-2 .columns-2-cols > div > .columns-img-col {
+  flex: 1 1 0%;
+}
+
+.section.content-1-2 .columns-2-cols > div > div:not(.columns-img-col) {
+  flex: 2 1 0%;
+  text-align: left;
+}
+
+.section.content-1-2 .columns-2-cols p {
+  text-align: left;
+}
+
+/* Trailing CTA link — right-aligned text with arrow icon */
+.section.content-1-2 .columns-2-cols > div > div:not(.columns-img-col) p:last-child a {
+  display: block;
+  text-align: right;
+  margin-top: 18px;
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.section.content-1-2 .columns-2-cols > div > div:not(.columns-img-col) p:last-child a::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
