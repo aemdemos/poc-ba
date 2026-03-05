@@ -167,14 +167,43 @@ function decorateNewsList(main) {
  * Decorates digital-links card buttons: wraps text after the first <br>
  * in a <span class="card-caption"> so title and caption can be styled
  * with different font sizes (matching the reference site pattern).
+ *
+ * Handles two scenarios:
+ * 1. Local preview: <br> inside <a> — wraps post-br text in .card-caption
+ * 2. DA live: DA splits <a>text<br>caption</a> into separate <a> elements
+ *    with the same href — merges them back and wraps caption text
+ *
  * @param {Element} main The main element
  */
 function decorateDigitalLinksCards(main) {
-  main.querySelectorAll('.section.digital-links .columns a').forEach((link) => {
+  const section = main.querySelector('.section.digital-links .columns');
+  if (!section) return;
+
+  // Phase 1: Merge consecutive links with the same href (DA split fix)
+  section.querySelectorAll(':scope > div > div').forEach((cell) => {
+    const links = [...cell.querySelectorAll('a')];
+    for (let i = 0; i < links.length; i += 1) {
+      const link = links[i];
+      // Look ahead for consecutive links with the same href
+      let j = i + 1;
+      while (j < links.length && links[j].href === link.href) {
+        // Append a <br> and the next link's content into the first link
+        link.appendChild(document.createElement('br'));
+        while (links[j].firstChild) {
+          link.appendChild(links[j].firstChild);
+        }
+        links[j].remove();
+        j += 1;
+      }
+      i = j - 1;
+    }
+  });
+
+  // Phase 2: Wrap text after <br> in .card-caption (works for both local and merged)
+  section.querySelectorAll('a').forEach((link) => {
     const br = link.querySelector('br');
     if (!br) return;
 
-    // Collect all nodes after the first <br>
     const captionNodes = [];
     let node = br.nextSibling;
     while (node) {
@@ -184,7 +213,6 @@ function decorateDigitalLinksCards(main) {
 
     if (captionNodes.length === 0) return;
 
-    // Wrap them in a caption span
     const caption = document.createElement('span');
     caption.className = 'card-caption';
     captionNodes.forEach((n) => caption.appendChild(n));
