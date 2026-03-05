@@ -175,6 +175,10 @@ function decorateNewsList(main) {
  * <span class="card-caption"> so title and caption can be styled with
  * different font sizes.
  *
+ * Phase 3 — Mark rows where the left cell is empty as text-link rows.
+ * These rows contain plain text links (not card buttons) and receive
+ * the `.text-link-row` class for different styling.
+ *
  * @param {Element} main The main element
  */
 function decorateDigitalLinksCards(main) {
@@ -232,6 +236,60 @@ function decorateDigitalLinksCards(main) {
       br.remove();
     });
   });
+
+  // Phase 3: mark text links — italic-wrapped links (em > a) and
+  // rows with empty left cells get text-link treatment
+  sections.forEach((section) => {
+    section.querySelectorAll(':scope > div').forEach((row) => {
+      const cells = row.querySelectorAll(':scope > div');
+      const leftCell = cells[0];
+      if (leftCell && !leftCell.textContent.trim()) {
+        row.classList.add('text-link-row');
+      }
+    });
+    // Unwrap em > a and add .text-link class
+    // EDS decorateButtons wraps standalone links in <p class="button-container">
+    // and adds class="button secondary", so the DOM is p.button-container > em > a.button
+    section.querySelectorAll(':scope > div > div em > a').forEach((link) => {
+      link.classList.remove('button', 'primary', 'secondary');
+      link.classList.add('text-link');
+      const em = link.parentElement;
+      const wrapper = em.closest('.button-container') || em;
+      wrapper.replaceWith(link);
+    });
+  });
+
+  // Phase 4: restructure digital-links into independent flex columns
+  // so left/right items stack with their own gaps (not forced into rows)
+  const digitalLinks = main.querySelector('.section.digital-links .columns');
+  if (digitalLinks) {
+    const rows = [...digitalLinks.querySelectorAll(':scope > div')];
+    const leftCol = document.createElement('div');
+    const rightCol = document.createElement('div');
+    leftCol.className = 'col-left';
+    rightCol.className = 'col-right';
+
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll(':scope > div');
+      const left = cells[0];
+      const right = cells[1];
+      if (left && left.textContent.trim()) leftCol.appendChild(left);
+      if (right) {
+        // Mark cells containing only text-links
+        if (right.querySelector('.text-link') && !right.querySelector('a:not(.text-link)')) {
+          right.classList.add('text-link-cell');
+        }
+        rightCol.appendChild(right);
+      }
+      row.remove();
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cols-wrapper';
+    wrapper.appendChild(leftCol);
+    wrapper.appendChild(rightCol);
+    digitalLinks.appendChild(wrapper);
+  }
 }
 
 /**
