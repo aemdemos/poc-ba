@@ -867,3 +867,307 @@ main .section.navy-background h3 {
   background-position: center;
   background-size: contain;
 }
+
+/* ================================================================
+   Composable Pattern: image-banner
+   Full-width image section with hidden heading. The heading text
+   is assumed to be embedded in the image itself.
+   Usage: | style | image-banner, text-link-cta |
+   ================================================================ */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.image-banner > div > h2 {
+  display: none;
+}
+
+/* ================================================================
+   Composable Pattern: digital-links
+   Two-column Columns block: left column = blue cards,
+   right column = navy cards. Below the columns, a <ul> list
+   of text links with circle-arrow bullets, and a centered
+   outline "survey" button.
+   Usage: | style | digital-links |
+   ================================================================ */
+
+/* Column layout — 36px horizontal gap between left/right columns */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div {
+  gap: 36px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div > p {
+  display: contents;
+}
+
+/* Card links — blue by default (left column) */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns a:any-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100px;
+  padding: 18px 40px 18px 9px;
+  background-color: var(--color-blue);
+  border: none;
+  border-radius: 6px;
+  color: var(--color-white);
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  line-height: normal;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  transition: opacity 0.3s;
+}
+
+/* Card caption — smaller text below title (decorated via JS) */
+.section.digital-links .columns a .card-caption {
+  display: block;
+  width: 100%;
+  font-size: var(--body-font-size-xxs);
+  font-weight: 400;
+  margin-top: 9px;
+}
+
+/* Document icon inside left-column cards */
+.section.digital-links .columns a .icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.section.digital-links .columns a .icon img {
+  filter: brightness(0) invert(1);
+  width: 100%;
+  height: 100%;
+}
+
+/* Right column cards → navy background */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div:nth-child(2) a:any-link {
+  background-color: var(--color-navy);
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns a:hover {
+  opacity: 0.8;
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+/* Arrow icon on right side of each card */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns a::after {
+  content: '\e902';
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: aig-icons;
+  font-style: normal;
+  font-weight: normal;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  margin-top: -10px;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 20px;
+  color: var(--color-white);
+  text-align: center;
+}
+
+/* Heading */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links h2 {
+  text-align: center;
+}
+
+/* Text links — 3rd and 4th links in right column (plain text, not card buttons) */
+
+/* All links are in a single <p> with display:contents, so target a:nth-of-type */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div:nth-child(2) a:nth-of-type(n+3) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 8px;
+  width: auto;
+  align-self: flex-start;
+  min-height: unset;
+  padding: 4px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: var(--color-black);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 400;
+  text-align: left;
+  box-shadow: none;
+  white-space: normal;
+  line-height: 1.6;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div:nth-child(2) a:nth-of-type(n+3):hover {
+  color: var(--color-blue);
+  text-decoration: underline;
+  opacity: 1;
+}
+
+/* Tighten gap between consecutive text links (4th+ link) — keeps 18px gap after the card */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div:nth-child(2) a:nth-of-type(n+4) {
+  margin-top: -15px;
+}
+
+/* Gray circle SVG arrow before text — matches 詳しくはこちら style */
+.section.digital-links .columns > div > div:nth-child(2) a:nth-of-type(n+3)::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Remove the card ::after arrow on text links */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links .columns > div > div:nth-child(2) a:nth-of-type(n+3)::after {
+  content: none;
+}
+
+/* Survey button (お客さまアンケート) — centered outline button */
+.section.digital-links > .default-content-wrapper:last-child {
+  text-align: center;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links > .default-content-wrapper:last-child > p > a.button:any-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 450px;
+  min-height: 80px;
+  margin: var(--spacing-l) auto 0;
+  padding: 18px 40px 18px 18px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-black);
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  transition: opacity 0.3s;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links > .default-content-wrapper:last-child > p > a.button:hover {
+  opacity: 0.8;
+}
+
+/* Survey arrow — gray circle SVG matching card button arrows */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.digital-links > .default-content-wrapper:last-child > p > a.button::after {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+@media (width >= 900px) {
+  .section.digital-links .columns > div {
+    align-items: flex-start;
+  }
+}
+
+/* ================================================================
+   Composable Pattern: recruitment
+   Text + image columns layout where the last link in the text
+   column displays as a right-aligned text CTA with arrow icon,
+   matching the reference site's recruitment section.
+   Usage: | style | light-gray-background, recruitment |
+   ================================================================ */
+
+/* Text column takes 2/3, image column takes 1/3 */
+.section.recruitment .columns > div > div:not(.columns-img-col) {
+  flex: 2 1 0%;
+}
+
+.section.recruitment .columns > div > .columns-img-col {
+  flex: 1 1 0%;
+}
+
+/* Description text left-aligned */
+.section.recruitment .columns > div > div:not(.columns-img-col) p {
+  text-align: left;
+}
+
+/* CTA link on its own line, right-aligned */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.recruitment .columns > div > div:not(.columns-img-col) a:any-link {
+  display: block;
+  margin-top: var(--spacing-s);
+  color: var(--color-black);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  text-align: right;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.recruitment .columns > div > div:not(.columns-img-col) a:hover {
+  color: var(--color-blue);
+  text-decoration: underline;
+}
+
+/* Arrow icon — same gray circle SVG as text-link-cta pattern */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.recruitment .columns > div > div:not(.columns-img-col) a::after {
+  content: '';
+  position: static;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
