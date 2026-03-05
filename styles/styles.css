@@ -746,12 +746,25 @@ main .section.navy-background h3 {
 .section.navy-stat-counters .columns-3-cols p {
   color: var(--color-white);
   text-align: center;
+  font-size: var(--body-font-size-xs);
+  line-height: 1.6;
 }
 
 .section.navy-stat-counters .columns-3-cols strong {
   font-size: var(--heading-font-size-xxl);
-  display: block;
+  display: inline;
   color: var(--color-white);
+  line-height: 1.2;
+}
+
+/* Medium headline — authored with _italic_ (em) for text-only headlines (26px) */
+.section.navy-stat-counters .columns-3-cols em {
+  font-size: var(--heading-font-size-xl);
+  font-style: normal;
+  font-weight: 700;
+  display: inline;
+  color: var(--color-white);
+  line-height: 1.2;
 }
 
 /* ================================================================
