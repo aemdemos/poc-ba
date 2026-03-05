@@ -164,32 +164,73 @@ function decorateNewsList(main) {
 }
 
 /**
- * Decorates digital-links card buttons: wraps text after the first <br>
- * in a <span class="card-caption"> so title and caption can be styled
- * with different font sizes (matching the reference site pattern).
+ * Decorates digital-links card buttons and online-contract links.
+ *
+ * Phase 1 — Merge consecutive <a> elements that share the same href.
+ * DA (Document Authoring) converts <a>title<br>caption</a> into two
+ * separate <a> tags with the same href.  We detect those siblings and
+ * merge them back into a single link, separated by a <br>.
+ *
+ * Phase 2 — Wrap everything after the first <br> inside a link in a
+ * <span class="card-caption"> so title and caption can be styled with
+ * different font sizes.
+ *
  * @param {Element} main The main element
  */
 function decorateDigitalLinksCards(main) {
-  main.querySelectorAll('.section.digital-links .columns a').forEach((link) => {
-    const br = link.querySelector('br');
-    if (!br) return;
+  const sections = main.querySelectorAll(
+    '.section.digital-links .columns, .section.online-contract .columns',
+  );
+  if (!sections.length) return;
 
-    // Collect all nodes after the first <br>
-    const captionNodes = [];
-    let node = br.nextSibling;
-    while (node) {
-      captionNodes.push(node);
-      node = node.nextSibling;
-    }
+  // Phase 1: merge consecutive same-href links (DA split fix)
+  sections.forEach((section) => {
+    section.querySelectorAll(':scope > div > div').forEach((cell) => {
+      const links = [...cell.querySelectorAll('a')];
+      for (let i = 0; i < links.length; i += 1) {
+        const link = links[i];
+        let j = i + 1;
+        while (j < links.length && links[j].href === link.href) {
+          // Remove orphan nodes (whitespace / <br>) between the two links
+          let sibling = link.nextSibling;
+          while (sibling && sibling !== links[j]) {
+            const next = sibling.nextSibling;
+            sibling.remove();
+            sibling = next;
+          }
+          // Append second link's content into the first, separated by <br>
+          link.appendChild(document.createElement('br'));
+          while (links[j].firstChild) {
+            link.appendChild(links[j].firstChild);
+          }
+          links[j].remove();
+          j += 1;
+        }
+        i = j - 1;
+      }
+    });
+  });
 
-    if (captionNodes.length === 0) return;
+  // Phase 2: wrap text after <br> in .card-caption
+  sections.forEach((section) => {
+    section.querySelectorAll('a').forEach((link) => {
+      const br = link.querySelector('br');
+      if (!br) return;
 
-    // Wrap them in a caption span
-    const caption = document.createElement('span');
-    caption.className = 'card-caption';
-    captionNodes.forEach((n) => caption.appendChild(n));
-    br.after(caption);
-    br.remove();
+      const captionNodes = [];
+      let node = br.nextSibling;
+      while (node) {
+        captionNodes.push(node);
+        node = node.nextSibling;
+      }
+      if (captionNodes.length === 0) return;
+
+      const caption = document.createElement('span');
+      caption.className = 'card-caption';
+      captionNodes.forEach((n) => caption.appendChild(n));
+      br.after(caption);
+      br.remove();
+    });
   });
 }
 
