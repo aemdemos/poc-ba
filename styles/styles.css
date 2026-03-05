@@ -378,6 +378,16 @@ main .section .default-content-wrapper > h2::after {
   margin: var(--spacing-s) auto 0;
 }
 
+.section.centered-subheading h3 {
+  text-align: center;
+  font-size: var(--heading-font-size-xl);
+}
+
+main .section.navy-background h2,
+main .section.navy-background h3 {
+  color: var(--color-white);
+}
+
 /* Underline-heading variant — left-aligned with gray rule + navy accent */
 main .section.underline-heading .default-content-wrapper > h2 {
   text-align: left;
@@ -462,10 +472,38 @@ main .section.news-list ul li a {
   transition: background-color 0.2s;
 }
 
+main .section.news-list > div > p a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-black);
+  font-size: var(--body-font-size-s);
+}
+
+main .section.bordered ul li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-black);
+  font-size: var(--body-font-size-m);
+  text-decoration: none;
+}
+
+main .section.navy-background a:any-link {
+  color: var(--color-white);
+}
+
 main .section.news-list ul li a:hover {
   background-color: var(--color-light-blue);
   text-decoration: none;
   color: var(--color-black);
+}
+
+main .section.news-list .news-title {
+  flex: 1 1 auto;
+  margin-left: var(--spacing-s);
+  font-weight: 400;
+  transition: opacity 0.2s;
 }
 
 main .section.news-list ul li a:hover .news-title {
@@ -501,14 +539,6 @@ main .section.news-list .news-tag span {
   box-sizing: border-box;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.news-list .news-title {
-  flex: 1 1 auto;
-  margin-left: var(--spacing-s);
-  font-weight: 400;
-  transition: opacity 0.2s;
-}
-
 /* Arrow icon on news items — matches reference arrow-circle-next.svg */
 main .section.news-list ul li a::after {
   content: '';
@@ -527,15 +557,6 @@ main .section.news-list > div > p {
   gap: var(--spacing-m);
   margin-top: var(--spacing-s);
   font-size: 0;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.news-list > div > p a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-black);
-  font-size: var(--body-font-size-s);
 }
 
 main .section.news-list > div > p a::before {
@@ -586,16 +607,6 @@ main .section.bordered ul li {
   padding: 4px 0;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.bordered ul li a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-black);
-  font-size: var(--body-font-size-m);
-  text-decoration: none;
-}
-
 main .section.bordered ul li a::before {
   content: '';
   display: inline-block;
@@ -625,28 +636,39 @@ main .section.navy-background {
   padding: var(--spacing-xl) 0;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.navy-background a:any-link {
-  color: var(--color-white);
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-main .section.navy-background h2,
-main .section.navy-background h3 {
-  color: var(--color-white);
-}
-
 /* AIG section: online-contract — blue banner buttons in columns */
 .section.online-contract .columns > div {
   max-width: 1084px;
   margin: 0 auto;
 }
 
+.section.navy-stat-counters .columns-3-cols {
+  margin-top: 36px;
+  margin-bottom: 54px;
+}
+
+.section.navy-stat-counters .columns-3-cols > div {
+  align-items: stretch;
+  gap: 36px;
+}
+
+.section.navy-stat-counters .columns-3-cols > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  text-align: center;
+  padding: 40px;
+  border-radius: 0;
+  flex: 1 1 0%;
+}
+
 .section.online-contract .columns > div > div > div {
   padding: 0;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .section.online-contract .columns a:any-link {
   display: flex;
   align-items: center;
@@ -711,38 +733,6 @@ main .section.navy-background h3 {
   }
 }
 
-/* ================================================================
-   Composable Pattern: navy-stat-counters
-   Navy-background stat counter boxes in 3-column columns blocks.
-   Authors can apply to any section via section metadata.
-   Usage: | style | navy-stat-counters |
-   ================================================================ */
-.section.navy-stat-counters .columns-3-cols {
-  margin-top: 36px;
-  margin-bottom: 54px;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-.section.navy-stat-counters .columns-3-cols > div {
-  align-items: stretch;
-  gap: 36px;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-.section.navy-stat-counters .columns-3-cols > div > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-navy);
-  color: var(--color-white);
-  text-align: center;
-  padding: 40px;
-  border-radius: 0;
-  flex: 1 1 0%;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
 .section.navy-stat-counters .columns-3-cols p {
   color: var(--color-white);
   text-align: center;
@@ -767,28 +757,10 @@ main .section.navy-background h3 {
   line-height: 1.2;
 }
 
-/* ================================================================
-   Composable Pattern: centered-subheading
-   Centers h3 headings within a section with larger font size.
-   Usage: | style | centered-subheading |
-   ================================================================ */
-/* stylelint-disable-next-line no-descending-specificity */
-.section.centered-subheading h3 {
-  text-align: center;
-  font-size: var(--heading-font-size-xl);
-}
-
-/* ================================================================
-   Composable Pattern: text-link-cta
-   Displays standalone button links as plain text with arrow icon,
-   right-aligned. Removes filled-button styling.
-   Usage: | style | text-link-cta |
-   ================================================================ */
 .section.text-link-cta > div > .button-container {
   text-align: right;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .section.text-link-cta > div > .button-container a.button {
   display: inline;
   padding: 0;
@@ -835,13 +807,11 @@ main .section.navy-background h3 {
   flex: 1 1 0%;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .section.content-1-2 .columns-2-cols > div > div:not(.columns-img-col) {
   flex: 2 1 0%;
   text-align: left;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .section.content-1-2 .columns-2-cols p {
   text-align: left;
 }
