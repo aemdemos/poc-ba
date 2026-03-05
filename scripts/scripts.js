@@ -164,6 +164,36 @@ function decorateNewsList(main) {
 }
 
 /**
+ * Decorates digital-links card buttons: wraps text after the first <br>
+ * in a <span class="card-caption"> so title and caption can be styled
+ * with different font sizes (matching the reference site pattern).
+ * @param {Element} main The main element
+ */
+function decorateDigitalLinksCards(main) {
+  main.querySelectorAll('.section.digital-links .columns a').forEach((link) => {
+    const br = link.querySelector('br');
+    if (!br) return;
+
+    // Collect all nodes after the first <br>
+    const captionNodes = [];
+    let node = br.nextSibling;
+    while (node) {
+      captionNodes.push(node);
+      node = node.nextSibling;
+    }
+
+    if (captionNodes.length === 0) return;
+
+    // Wrap them in a caption span
+    const caption = document.createElement('span');
+    caption.className = 'card-caption';
+    captionNodes.forEach((n) => caption.appendChild(n));
+    br.after(caption);
+    br.remove();
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -177,6 +207,7 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateNewsList(main);
+  decorateDigitalLinksCards(main);
   // add aria-label to links
   a11yLinks(main);
 }
