@@ -179,15 +179,24 @@ function decorateDigitalLinksCards(main) {
   const section = main.querySelector('.section.digital-links .columns');
   if (!section) return;
 
-  // Phase 1: Merge consecutive links with the same href (DA split fix)
+  // Phase 1: Merge consecutive links with the same href (DA split fix).
+  // DA converts <a>title<br>caption</a> into <a>title</a><br><a>caption</a>.
+  // We detect same-href siblings and merge them back, also removing the
+  // orphan <br> that DA left between them in the parent container.
   section.querySelectorAll(':scope > div > div').forEach((cell) => {
     const links = [...cell.querySelectorAll('a')];
     for (let i = 0; i < links.length; i += 1) {
       const link = links[i];
-      // Look ahead for consecutive links with the same href
       let j = i + 1;
       while (j < links.length && links[j].href === link.href) {
-        // Append a <br> and the next link's content into the first link
+        // Remove any <br> or whitespace nodes between the two links
+        let sibling = link.nextSibling;
+        while (sibling && sibling !== links[j]) {
+          const next = sibling.nextSibling;
+          sibling.remove();
+          sibling = next;
+        }
+        // Move the second link's content into the first, separated by <br>
         link.appendChild(document.createElement('br'));
         while (links[j].firstChild) {
           link.appendChild(links[j].firstChild);
