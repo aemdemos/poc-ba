@@ -1,0 +1,50 @@
+/* columns-cta: 3 navy CTA buttons in a row */
+
+/* Hide default h2 underline in this section */
+main .section.columns-cta-container .default-content-wrapper > h2::after {
+  display: none;
+}
+
+.columns-cta > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.columns-cta > div > div {
+  order: unset;
+}
+
+.columns-cta .button-container {
+  margin: 0;
+}
+
+/* Override global button styles for CTA buttons */
+.columns-cta a.button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 27px 18px 9px;
+  background-color: #001871;
+  color: #fff;
+  border: 1px solid #c0c0c0;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  min-height: 80px;
+  margin: 0;
+}
+
+.columns-cta a.button:hover {
+  background-color: var(--color-blue);
+  color: #fff;
+}
+
+@media (width >= 600px) {
+  .columns-cta > div {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

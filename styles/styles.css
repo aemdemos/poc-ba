@@ -495,7 +495,9 @@ main .section.blue-background {
   padding: 54px 0;
 }
 
-main .section.light-gray-background {
+/* AIG section: light-gray / light-gray-background */
+main .section.light-gray-background,
+main .section.light-gray {
   background-color: var(--color-gray);
   margin: 0;
   padding: var(--spacing-xl) 0;

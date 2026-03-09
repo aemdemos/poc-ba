@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-link-grid",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-09T09:45:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.aig.co.jp/sonpo/personal",
+    "originPage": "category landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "link-grid",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "text-only link buttons in grid",
+    "buttonCount": 6,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "link grids without images",
+      "navigation button collections",
+      "utility link sections"
+    ],
+    "notSuitableFor": [
+      "product cards with images",
+      "feature showcase cards"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/sonpo/personal"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-09T09:45:00.000Z"
+  }
+}

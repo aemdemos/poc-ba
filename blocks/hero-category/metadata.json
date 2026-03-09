@@ -1,0 +1,39 @@
+{
+  "variantName": "hero-category",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-03-09T09:45:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.aig.co.jp/sonpo/personal",
+    "originPage": "category landing page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "category-landing-hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "background-image + heading + subtitle",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "category landing pages",
+      "product category pages",
+      "section overview pages"
+    ],
+    "notSuitableFor": [
+      "homepage hero with CTAs",
+      "article pages",
+      "minimal text-only heroes"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/sonpo/personal"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-09T09:45:00.000Z"
+  }
+}

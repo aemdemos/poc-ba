@@ -1,0 +1,103 @@
+/* Gap between hero and this section */
+main .section.columns-product-nav-container {
+  background-color: transparent;
+  padding: 0;
+  margin-top: 40px;
+}
+
+.columns-product-nav-container .columns-product-nav-wrapper {
+  background-color: #eee;
+  padding: 40px 18px;
+}
+
+.columns-product-nav > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.columns-product-nav > div > div:first-child h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.4;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #c0c0c0;
+  position: relative;
+}
+
+/* Two-tone underline: short navy accent overlaying the gray border */
+.columns-product-nav > div > div:first-child h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  background-color: #001871;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+}
+
+/* Button grid column */
+.columns-product-nav > div > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px 36px;
+}
+
+.columns-product-nav > div > div:last-child p {
+  margin: 0;
+  line-height: 0;
+  display: contents;
+}
+
+.columns-product-nav > div > div:last-child a {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 27px 9px 9px;
+  background-color: #001871;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #c0c0c0;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  min-height: 54px;
+  transition: opacity 0.2s;
+}
+
+.columns-product-nav > div > div:last-child a:hover {
+  opacity: 0.85;
+}
+
+/* Last link (個人向け商品一覧トップへ) uses accent blue */
+.columns-product-nav > div > div:last-child p:last-child a {
+  background-color: #1352de;
+}
+
+@media (width >= 600px) {
+  .columns-product-nav > div > div:last-child {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (width >= 900px) {
+  .columns-product-nav > div {
+    flex-direction: row;
+    align-items: start;
+    gap: 32px;
+  }
+
+  .columns-product-nav > div > div:first-child {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .columns-product-nav > div > div:last-child {
+    flex: 3;
+    grid-template-columns: 1fr 1fr;
+  }
+}

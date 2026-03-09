@@ -1,0 +1,130 @@
+/* Hero wrapper: no side padding, overflow visible so image can extend beyond 1120px */
+.hero-category-container .hero-category-wrapper {
+  padding: 0;
+  overflow: visible;
+}
+
+main > .hero-category-container {
+  overflow: visible;
+  margin: 0;
+}
+
+.hero-category {
+  position: relative;
+  overflow: visible;
+}
+
+/* === MOBILE (default, < 768px) === */
+
+/* Show SP image, hide PC image */
+.hero-category .hero-category-image img.hero-pc {
+  display: none;
+}
+
+.hero-category .hero-category-image img.hero-sp {
+  display: block;
+}
+
+/* Image row: fixed height with center crop */
+.hero-category .hero-category-image {
+  line-height: 0;
+  height: 280px;
+  overflow: hidden;
+}
+
+.hero-category .hero-category-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Content row: below image with gray background */
+.hero-category .hero-category-content {
+  background-color: #eee;
+  padding: 24px;
+}
+
+.hero-category .hero-category-content > div {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-category h1 {
+  color: #001871;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.hero-category p {
+  color: #000;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* === DESKTOP (>= 768px) === */
+@media (width >= 768px) {
+  .hero-category {
+    position: relative;
+  }
+
+  /* Show PC image, hide SP image */
+  .hero-category .hero-category-image img.hero-pc {
+    display: block;
+  }
+
+  .hero-category .hero-category-image img.hero-sp {
+    display: none;
+  }
+
+  /* Image row: centered, overflows the 1120px wrapper to show at natural width (1225px) */
+  .hero-category .hero-category-image {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1225px;
+    height: 280px;
+    overflow: visible;
+  }
+
+  .hero-category .hero-category-image > div {
+    height: 100%;
+  }
+
+  .hero-category .hero-category-image img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Content row: overlaid on top of image, vertically centered within 280px */
+  .hero-category .hero-category-content {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+    padding: 0 32px;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-category .hero-category-content > div {
+    background-color: rgb(255 255 255 / 77%);
+    padding: 27px;
+    max-width: 660px;
+    margin: 0;
+  }
+
+  .hero-category h1 {
+    font-size: 38px;
+  }
+
+  .hero-category p {
+    font-size: 18px;
+  }
+}

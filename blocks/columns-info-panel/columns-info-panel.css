@@ -1,0 +1,94 @@
+/* columns-info-panel: 2-column white panels on gray background */
+.columns-info-panel > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.columns-info-panel > div > div {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 4px;
+}
+
+.columns-info-panel h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #000;
+}
+
+.columns-info-panel p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.columns-info-panel ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.columns-info-panel li {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+/* Low-specificity link rules first */
+.columns-info-panel li a {
+  color: #001871;
+  text-decoration: none;
+}
+
+.columns-info-panel li a:hover {
+  text-decoration: underline;
+}
+
+.columns-info-panel .button-container {
+  margin: 0 0 8px;
+}
+
+/* Higher-specificity button link rules after */
+.columns-info-panel a.button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 27px 12px 9px;
+  background-color: #001871;
+  color: #fff;
+  border: 1px solid #c0c0c0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  margin: 0 0 8px;
+}
+
+.columns-info-panel a.button:hover {
+  background-color: var(--color-blue);
+  color: #fff;
+}
+
+.columns-info-panel p > a:not(.button) {
+  color: #001871;
+  text-decoration: none;
+}
+
+.columns-info-panel p > a:not(.button):hover {
+  text-decoration: underline;
+}
+
+@media (width >= 768px) {
+  .columns-info-panel > div {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .columns-info-panel > div > div {
+    flex: 1;
+  }
+}
