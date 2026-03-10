@@ -82,13 +82,13 @@
   top: var(--spacing-s);
   left: var(--spacing-xs);
   display: inline-block;
-  padding: 5px 13px;
+  padding: 5px 12.6px;
   background-color: var(--color-navy);
   color: var(--color-white);
   font-size: 12px;
   font-weight: 700;
   border-radius: 18px;
-  line-height: normal;
+  line-height: 19px;
   z-index: 1;
 }
 
