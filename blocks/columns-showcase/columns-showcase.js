@@ -12,6 +12,19 @@ export default function decorate(block) {
           picWrapper.classList.add('columns-showcase-img-col');
         }
       }
+
+      // Eyebrow tag: duplicate h3 text as overlay on the card image
+      const h3 = col.querySelector('h3');
+      const cardImageLink = col.querySelector('p > a > img, p > a > picture');
+      if (h3 && cardImageLink) {
+        const cardPara = cardImageLink.closest('a').closest('p');
+        if (cardPara) {
+          const tag = document.createElement('span');
+          tag.className = 'columns-showcase-tag';
+          tag.textContent = h3.textContent;
+          cardPara.appendChild(tag);
+        }
+      }
     });
   });
 }
