@@ -19,6 +19,8 @@
 
 .columns-showcase > div > div {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Category heading (Personal Risk / Our People) */
@@ -66,13 +68,16 @@
   height: auto;
 }
 
-/* Card image paragraph — remove bottom margin to merge with h4 */
-.columns-showcase p:has(> a > img) {
+/* Card image paragraph — remove bottom margin to merge with h4, push card to bottom */
+.columns-showcase p:has(> a > img),
+.columns-showcase p:has(> a > picture) {
   margin-bottom: 0;
+  margin-top: auto;
 }
 
 /* Article card image — consistent height across columns */
-.columns-showcase p a img {
+.columns-showcase p a img,
+.columns-showcase p a picture img {
   width: 100%;
   aspect-ratio: 2 / 1;
   object-fit: cover;
