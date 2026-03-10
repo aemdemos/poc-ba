@@ -5,7 +5,7 @@ export default function decorate(block) {
   const imageRow = rows[0];
   const contentRow = rows[1];
 
-  // Mark PC and SP images for CSS show/hide (no <picture> swap delay)
+  // Mark PC and SP images: first img = PC, second img = SP
   const imgs = imageRow.querySelectorAll('img');
   if (imgs.length >= 2) {
     imgs[0].classList.add('hero-pc');

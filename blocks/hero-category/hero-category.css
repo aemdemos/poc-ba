@@ -65,6 +65,12 @@ main > .hero-category-container {
   margin: 0;
 }
 
+/* Reset <p> wrappers around images (DA-compatible structure) */
+.hero-category .hero-category-image p {
+  margin: 0;
+  line-height: 0;
+}
+
 /* === DESKTOP (>= 768px) === */
 @media (width >= 768px) {
   .hero-category {
