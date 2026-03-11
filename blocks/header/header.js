@@ -152,23 +152,47 @@ async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
 }
 
 async function buildBreadcrumbs() {
+  // Skip auto-generated breadcrumbs if a manual breadcrumb block exists on the page
+  if (document.querySelector('main .breadcrumb')) return null;
+
   const breadcrumbs = document.createElement('nav');
   breadcrumbs.className = 'breadcrumbs';
+  breadcrumbs.setAttribute('aria-label', 'パンくず');
 
   const crumbs = await buildBreadcrumbsFromNavTree(document.querySelector('.nav-sections'), document.location.href);
 
   const ol = document.createElement('ol');
-  ol.append(...crumbs.map((item) => {
+  ol.setAttribute('itemscope', '');
+  ol.setAttribute('itemtype', 'http://schema.org/BreadcrumbList');
+
+  ol.append(...crumbs.map((item, i) => {
     const li = document.createElement('li');
+    li.setAttribute('itemprop', 'itemListElement');
+    li.setAttribute('itemscope', '');
+    li.setAttribute('itemtype', 'http://schema.org/ListItem');
     if (item['aria-current']) li.setAttribute('aria-current', item['aria-current']);
+
     if (item.url) {
       const a = document.createElement('a');
       a.href = item.url;
-      a.textContent = item.title;
+      a.setAttribute('itemprop', 'item');
+      const span = document.createElement('span');
+      span.setAttribute('itemprop', 'name');
+      span.textContent = item.title;
+      a.append(span);
       li.append(a);
     } else {
-      li.textContent = item.title;
+      const span = document.createElement('span');
+      span.setAttribute('itemprop', 'name');
+      span.textContent = item.title;
+      li.append(span);
     }
+
+    const meta = document.createElement('meta');
+    meta.setAttribute('itemprop', 'position');
+    meta.setAttribute('content', String(i + 1));
+    li.append(meta);
+
     return li;
   }));
 
@@ -485,6 +509,7 @@ export default async function decorate(block) {
   });
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
-    navWrapper.append(await buildBreadcrumbs());
+    const bc = await buildBreadcrumbs();
+    if (bc) navWrapper.append(bc);
   }
 }

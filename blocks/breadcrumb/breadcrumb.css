@@ -3,9 +3,15 @@ main > .breadcrumb-container {
 }
 
 .breadcrumb nav {
-  display: flex;
+  display: none;
   align-items: center;
   min-height: 40px;
+}
+
+@media (width >= 769px) {
+  .breadcrumb nav {
+    display: flex;
+  }
 }
 
 .breadcrumb ol {
