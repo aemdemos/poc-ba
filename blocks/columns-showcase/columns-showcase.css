@@ -1,0 +1,122 @@
+/* columns-showcase: 2-column teaser cards for もっとAIG */
+
+/* Space between Pick up banners and もっとAIG heading */
+.columns-showcase-container > .default-content-wrapper h2:last-of-type {
+  margin-top: 60px;
+}
+
+/* Gray background on the block wrapper (same as 個人向け商品一覧) */
+.columns-showcase-container .columns-showcase-wrapper {
+  background-color: #eee;
+  padding: 40px 18px;
+}
+
+.columns-showcase > div {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.columns-showcase > div > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Category heading (Personal Risk / Our People) */
+.columns-showcase h3 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 18px;
+  color: #000;
+}
+
+/* Article title link — unified card with image above */
+.columns-showcase h4 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+  padding: 27px 18px;
+  background-color: #fff;
+}
+
+/* Description paragraph */
+.columns-showcase p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #000;
+  margin: 0 0 12px;
+}
+
+/* Two-element selectors (0,1,2) */
+.columns-showcase h4 a {
+  color: #001871;
+  text-decoration: none;
+}
+
+/* Card image link — flush with title below to form unified card */
+.columns-showcase p a {
+  display: block;
+  background-color: #fff;
+  box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+}
+
+/* Thumbnail banner image (not circular — full-width rectangular) */
+.columns-showcase p img {
+  width: 100%;
+  height: auto;
+}
+
+/* Card image paragraph — remove bottom margin to merge with h4, push card to bottom */
+.columns-showcase p:has(> a > img),
+.columns-showcase p:has(> a > picture) {
+  position: relative;
+  margin-bottom: 0;
+  margin-top: auto;
+}
+
+/* Eyebrow tag overlay on card image (reuses cards block design) */
+.columns-showcase .columns-showcase-tag {
+  position: absolute;
+  top: var(--spacing-s);
+  left: var(--spacing-xs);
+  display: inline-block;
+  padding: 5px 12.6px;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 18px;
+  line-height: 19px;
+  z-index: 1;
+}
+
+/* Article card image — full-width, natural aspect ratio on mobile */
+.columns-showcase p a img,
+.columns-showcase p a picture img {
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+  display: block;
+}
+
+/* Pseudo-class selector (0,2,2) */
+.columns-showcase h4 a:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 768px) {
+  .columns-showcase > div {
+    flex-direction: row;
+    gap: 40px;
+  }
+
+  /* Force consistent card image height when columns are side-by-side */
+  .columns-showcase p a img,
+  .columns-showcase p a picture img {
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+  }
+}
+

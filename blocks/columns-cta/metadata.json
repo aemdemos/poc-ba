@@ -1,0 +1,38 @@
+{
+  "variantName": "columns-cta",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-03-09T09:45:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.aig.co.jp/sonpo/personal",
+    "originPage": "category landing page",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "minimal",
+    "purpose": "cta",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "3 icon+text buttons in row",
+    "buttonCount": 3,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "call-to-action sections",
+      "contact/request sections",
+      "icon button rows"
+    ],
+    "notSuitableFor": [
+      "content-heavy layouts",
+      "image gallery layouts"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/sonpo/personal"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-09T09:45:00.000Z"
+  }
+}

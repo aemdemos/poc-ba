@@ -30,6 +30,17 @@ footer .footer p {
   margin: 0;
 }
 
+/* ===== Tracking / Approval Number ===== */
+footer .footer .footer-approve-no {
+  font-size: 12px;
+  color: #575757;
+  text-align: right;
+  padding: 18px;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 /* ===== Back to Top ===== */
 footer .footer .footer-back-to-top {
   border-top: 1px solid #e6e6e6;

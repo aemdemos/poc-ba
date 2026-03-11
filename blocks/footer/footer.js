@@ -107,23 +107,31 @@ export default async function decorate(block) {
 
   const sections = [...footer.children];
 
-  // Section 0: Back to top arrow
-  if (sections[0]) decorateBackToTop(sections[0]);
+  // Detect optional tracking/approval number section (authored as first section).
+  // It contains only a short text paragraph with no links.
+  let offset = 0;
+  if (sections[0] && !sections[0].querySelector('a') && sections[0].textContent.trim().length < 80) {
+    sections[0].classList.add('footer-approve-no');
+    offset = 1;
+  }
 
-  // Section 1: Category navigation with icons
-  if (sections[1]) decorateCategoryNav(sections[1]);
+  // Back to top arrow
+  if (sections[offset]) decorateBackToTop(sections[offset]);
 
-  // Section 2: Social media (SNS) links
-  if (sections[2]) decorateSns(sections[2]);
+  // Category navigation with icons
+  if (sections[1 + offset]) decorateCategoryNav(sections[1 + offset]);
 
-  // Section 3: Policy / utility links
-  if (sections[3]) sections[3].classList.add('footer-policy-links');
+  // Social media (SNS) links
+  if (sections[2 + offset]) decorateSns(sections[2 + offset]);
 
-  // Section 4: AIG Group links
-  if (sections[4]) sections[4].classList.add('footer-aig-group');
+  // Policy / utility links
+  if (sections[3 + offset]) sections[3 + offset].classList.add('footer-policy-links');
 
-  // Section 5: Copyright
-  if (sections[5]) sections[5].classList.add('footer-copyright');
+  // AIG Group links
+  if (sections[4 + offset]) sections[4 + offset].classList.add('footer-aig-group');
+
+  // Copyright
+  if (sections[5 + offset]) sections[5 + offset].classList.add('footer-copyright');
 
   block.append(footer);
 }

@@ -1,0 +1,43 @@
+/* pickup-banners: responsive PC/SP banner pairs */
+
+.pickup-banners > div {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.pickup-banners > div:last-child {
+  margin-bottom: 0;
+}
+
+/* Banner images full-width */
+.pickup-banners img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Reset paragraph margins inside links */
+.pickup-banners a p {
+  margin: 0;
+  line-height: 0;
+}
+
+/* Mobile: show SP, hide PC */
+.pickup-banners .banner-pc {
+  display: none;
+}
+
+.pickup-banners .banner-sp {
+  display: block;
+}
+
+@media (width >= 768px) {
+  /* Desktop: show PC, hide SP */
+  .pickup-banners .banner-pc {
+    display: block;
+  }
+
+  .pickup-banners .banner-sp {
+    display: none;
+  }
+}

@@ -1,0 +1,66 @@
+/* cards-link-grid: 3-column grid of outline-style link buttons */
+.cards-link-grid > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.cards-link-grid > ul > li {
+  border: none;
+  background: none;
+}
+
+/* Hide the empty image column */
+.cards-link-grid .cards-link-grid-card-image {
+  display: none;
+}
+
+.cards-link-grid .cards-link-grid-card-body {
+  margin: 0;
+}
+
+.cards-link-grid .cards-link-grid-card-body .button-container {
+  margin: 0;
+}
+
+/* Override global button styles to outline style */
+.cards-link-grid .cards-link-grid-card-body a.button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 27px 18px 9px;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #c0c0c0;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  min-height: 80px;
+  margin: 0;
+}
+
+.cards-link-grid .cards-link-grid-card-body a.button::after {
+  background-image: var(--arrow-circle-gray);
+}
+
+.cards-link-grid .cards-link-grid-card-body a.button:hover {
+  background-color: var(--light-color);
+  color: #000;
+}
+
+/* Reduce gap between consecutive cards-link-grid blocks */
+.cards-link-grid-wrapper + .cards-link-grid-wrapper {
+  margin-top: 18px;
+}
+
+@media (width >= 600px) {
+  .cards-link-grid > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
