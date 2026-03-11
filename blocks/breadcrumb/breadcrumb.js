@@ -46,6 +46,7 @@ export default function decorate(block) {
 
     if (i === items.length - 1) {
       li.classList.add('breadcrumb-active');
+      li.setAttribute('aria-current', 'page');
     }
 
     ol.appendChild(li);
