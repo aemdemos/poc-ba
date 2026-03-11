@@ -139,7 +139,7 @@ The header loads its content from the `/nav` fragment page, which has **4 sectio
 
 **Purpose:** Renders a path-based breadcrumb navigation bar with Schema.org `BreadcrumbList` microdata for SEO. Present on all pages except the homepage.
 
-Two approaches are available — **both produce identical visual output** (same `>` separator, navy links, gray text, 12px font, visible on mobile):
+Two approaches are available — **both produce identical visual output** (same `>` separator, navy links, gray text, 12px font, hidden on mobile <=768px):
 
 **Option A — Auto-generated (recommended for most pages):**
 
@@ -166,9 +166,11 @@ Each row is one breadcrumb level. The first column is the link text (linked item
 **Implementation notes:**
 - Both approaches produce a semantic `<nav aria-label="パンくず"> > <ol>` structure with Schema.org `BreadcrumbList` microdata (`itemprop="itemListElement"`, `position`) for SEO
 - Separator `>` rendered via CSS `::after` pseudo-element
+- Hidden on mobile (<=768px) via `display: none` — matching the original site behavior
 - Unified CSS styling shared between both approaches (12px font, navy `#001871` links, gray `#7d7d7d` text)
 - Auto-generated: built in `header.js`, appended inside the header wrapper; falls back to `og:title` if the current URL isn't found in the nav tree
 - Manual block: built in `breadcrumb.js`, rendered in the page content area as the first section
+- Some page types (landing pages, brand microsites) intentionally omit breadcrumbs entirely
 
 ---
 

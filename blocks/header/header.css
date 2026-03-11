@@ -1624,7 +1624,7 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
 
 /* breadcrumbs (auto-generated) — unified with manual breadcrumb block */
 header .nav-wrapper .breadcrumbs {
-  display: flex;
+  display: none;
   align-items: center;
   min-height: 40px;
   margin: auto;
@@ -1666,6 +1666,7 @@ header .nav-wrapper nav.breadcrumbs a:hover {
 
 @media (width >= 769px) {
   header .nav-wrapper .breadcrumbs {
+    display: flex;
     padding: 0 32px;
   }
 }
