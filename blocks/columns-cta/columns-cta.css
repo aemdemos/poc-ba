@@ -1,14 +1,10 @@
 /* columns-cta: 3 navy CTA buttons in a row */
 
-/* Hide default h2 underline in this section */
-main .section.columns-cta-container .default-content-wrapper > h2::after {
-  display: none;
-}
-
 .columns-cta > div {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap: 36px;
+  padding: 0 36px;
 }
 
 .columns-cta > div > div {
@@ -31,16 +27,45 @@ main .section.columns-cta-container .default-content-wrapper > h2::after {
   border: 1px solid #c0c0c0;
   border-radius: 6px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.4;
   text-decoration: none;
   min-height: 80px;
   margin: 0;
 }
 
+/* Icon sizing for CTA buttons */
+.columns-cta a.button .icon {
+  width: 40px;
+  height: 40px;
+}
+
 .columns-cta a.button:hover {
   background-color: var(--color-blue);
   color: #fff;
+}
+
+/* Contained gray background (not full-width) */
+main .section.columns-cta-container.light-gray {
+  background-color: transparent;
+  position: relative;
+  margin-bottom: var(--spacing-xl);
+}
+
+main .section.columns-cta-container.light-gray::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: var(--content-max-width);
+  width: 100%;
+  background-color: var(--color-gray);
+}
+
+main .section.columns-cta-container.light-gray > div {
+  position: relative;
 }
 
 @media (width >= 600px) {

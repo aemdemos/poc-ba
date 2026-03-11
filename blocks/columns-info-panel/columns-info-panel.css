@@ -1,23 +1,37 @@
-/* columns-info-panel: 2-column white panels on gray background */
+/* columns-info-panel: 2-column white panels on gray background
+ *
+ * Button variants (author-controlled in DA document):
+ *   Bold link     → Blue button with white arrow  (primary, default)
+ *   Italic link   → White/outline button with gray arrow (secondary)
+ *   Link in <ul>  → Text link with arrow icon
+ *   Short text after a link → Caption merged into button by JS
+ *   :icon-name: in link → Icon rendered inside button
+ */
+
+/* --- Layout ------------------------------------------------------------ */
 .columns-info-panel > div {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .columns-info-panel > div > div {
   background-color: #fff;
-  padding: 24px;
-  border-radius: 4px;
+  padding: 27px;
 }
 
+/* --- Headings ---------------------------------------------------------- */
 .columns-info-panel h3 {
   font-size: 20px;
   font-weight: 700;
   margin: 0 0 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
   color: #000;
+  text-align: center;
 }
 
+/* --- Body text --------------------------------------------------------- */
 .columns-info-panel p {
   font-size: 14px;
   line-height: 1.6;
@@ -25,70 +39,241 @@
   color: #333;
 }
 
-.columns-info-panel ul {
-  padding-left: 20px;
-  margin: 8px 0;
-}
-
-.columns-info-panel li {
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 4px;
-}
-
-/* Low-specificity link rules first */
-.columns-info-panel li a {
-  color: #001871;
-  text-decoration: none;
-}
-
-.columns-info-panel li a:hover {
-  text-decoration: underline;
-}
-
+/* --- Button container spacing ------------------------------------------ */
 .columns-info-panel .button-container {
   margin: 0 0 8px;
 }
 
-/* Higher-specificity button link rules after */
+/* --- Blue button (default) --------------------------------------------- */
 .columns-info-panel a.button {
   display: flex;
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 27px 12px 9px;
-  background-color: #001871;
+  padding: 18px 36px 18px 9px;
+  background-color: var(--color-blue);
   color: #fff;
-  border: 1px solid #c0c0c0;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
   line-height: 1.4;
   text-decoration: none;
-  margin: 0 0 8px;
+  margin: 0;
+  min-height: var(--button-min-height);
+  position: relative;
+  box-shadow: var(--button-box-shadow);
+  white-space: normal;
 }
 
 .columns-info-panel a.button:hover {
-  background-color: var(--color-blue);
+  background-color: var(--color-navy);
   color: #fff;
 }
 
-.columns-info-panel p > a:not(.button) {
-  color: #001871;
+/* --- Icon inside button ------------------------------------------------ */
+.columns-info-panel a.button .icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.columns-info-panel a.button .icon img {
+  width: 40px;
+  height: 40px;
+  filter: brightness(0) invert(1);
+}
+
+/* Gray icon for white/secondary buttons */
+.columns-info-panel a.button.secondary .icon img {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(11%) saturate(748%) hue-rotate(169deg) brightness(93%) contrast(87%);
+}
+
+/* --- White / outline button (author uses italic link) ------------------- */
+.columns-info-panel a.button.secondary {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid var(--color-border);
+}
+
+.columns-info-panel a.button.secondary::after {
+  background-image: var(--arrow-circle-gray);
+}
+
+.columns-info-panel a.button.secondary:hover {
+  background-color: var(--light-color);
+  color: #000;
+}
+
+/* --- Text link (converted from button by JS) --------------------------- */
+.columns-info-panel .text-link-container {
+  margin: 0 0 8px;
+}
+
+.columns-info-panel a.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #000;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 8px 0;
+}
+
+.columns-info-panel a.text-link::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.columns-info-panel a.text-link:hover {
+  text-decoration: underline;
+  color: var(--link-hover-color);
+}
+
+/* --- Button with caption (JS-merged subtitle) -------------------------- */
+.columns-info-panel a.button:has(.button-caption) {
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+/* When a button has both an icon and a caption, use row layout for icon+text */
+.columns-info-panel a.button:has(.button-caption):has(.icon) {
+  flex-flow: row wrap;
+  justify-content: center;
+  text-align: center;
+}
+
+.columns-info-panel a.button .button-caption {
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* --- List text-links with arrow icon ----------------------------------- */
+.columns-info-panel ul {
+  padding-left: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
+.columns-info-panel li {
+  margin-bottom: 8px;
+}
+
+.columns-info-panel li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #000;
+  font-size: 16px;
   text-decoration: none;
 }
 
-.columns-info-panel p > a:not(.button):hover {
+.columns-info-panel li a::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.columns-info-panel li a:hover {
+  text-decoration: underline;
+  color: var(--link-hover-color);
+}
+
+/* --- 旧AIU / 旧富士火災 subsection ------------------------------------ */
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper {
+  background-color: #fff;
+  padding: 18px 27px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  margin-top: 18px;
+  box-sizing: border-box;
+}
+
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper > h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--spacing-s);
+  flex: 1;
+}
+
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper > ul li {
+  font-size: 16px;
+  margin: 0;
+}
+
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper > ul li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #000;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper > ul li a::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper > ul li a:hover {
+  color: var(--link-hover-color);
   text-decoration: underline;
 }
 
+/* --- Responsive -------------------------------------------------------- */
 @media (width >= 768px) {
   .columns-info-panel > div {
     flex-direction: row;
-    gap: 24px;
+    gap: 18px;
   }
 
   .columns-info-panel > div > div {
     flex: 1;
+  }
+}
+
+@media (width < 768px) {
+  .columns-info-panel-container > .columns-info-panel-wrapper + .default-content-wrapper {
+    flex-direction: column;
+    gap: 12px;
   }
 }

@@ -1064,3 +1064,11 @@ main .section.navy-background {
 .section.recruitment .columns > div > div:not(.columns-img-col) p {
   text-align: left;
 }
+
+/* Tracking / approval number section (author-editable per page) */
+main .section.approve-no {
+  padding: 18px 0 0;
+  font-size: 12px;
+  color: #575757;
+  text-align: right;
+}
