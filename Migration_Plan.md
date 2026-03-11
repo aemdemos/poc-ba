@@ -90,6 +90,99 @@ _Blocks marked ✓\* on T2 appear specifically on the Contractors sub-type of Ca
 
 ---
 
+## Global Blocks — Reference
+
+These blocks appear on every page (or nearly every page) of the site. They are loaded as fragments or auto-decorated by the EDS pipeline, independent of any specific template.
+
+---
+
+### 1. Header (nav fragment)
+
+**Purpose:** Global site header with two-tier navigation (brand bar + mega-dropdown nav), search overlay, mobile hamburger menu, and sticky compact mode on scroll.
+
+**DA authoring (nav document):**
+
+The header loads its content from the `/nav` fragment page, which has **4 sections** mapped by position:
+
+| Section | Class | Content |
+|---|---|---|
+| 1. Brand | `nav-brand` | Logo `<a>` with `<picture>` + utility links `<ul>` (お近くのAIG損保, お問い合わせ, もっとAIG) |
+| 2. Sections | `nav-sections` | `<ul>` of 7 top-level nav items, each with `:icon:` prefix and nested dropdown `<ul>` |
+| 3. Mobile CTA | `nav-mobile-cta` | Emergency contact CTA + resource request links + footer utility links (mobile only) |
+| 4. Tools | `nav-tools` | Search link with `:search:` icon |
+
+**Mega-dropdown structure (within each nav item):**
+
+```
+- :contractor: ご契約者さま       ← top-level link with icon
+  - ご契約者さまトップ             ← first child → full-width header link
+  - 事故のご連絡について           ← category header (text node, no link)
+    - 事故のご連絡                 ← category link
+    - …
+  - よくあるご質問                 ← last child (no nested ul) → megamenu-bottom
+```
+
+**Implementation notes:**
+- Two-tier desktop layout: navy brand bar (90px) + white nav bar (70px) = 160px total height
+- Mobile: single navy bar (44px) with hamburger menu expanding to full viewport height
+- Uses custom `aig-icons` font for nav item icons (loaded from `/fonts/aig-icons.ttf`)
+- Megamenu dropdowns positioned full-viewport-width via JS offset calculation
+- Sticky compact mode (desktop only): after scrolling past the header height, brand bar hides and nav becomes `position: fixed` with slide-down animation, showing an inline logo and search icon
+- Search overlay: animated panel below brand bar with text input + submit button, redirects to `https://www.aig.co.jp/sonpo/search?kw=<query>`
+- Mobile hamburger: CSS-animated three-line → X icon transition; body scroll locked when open
+- Responsive breakpoint: `769px` (single breakpoint for mobile vs. desktop)
+- DA output normalization: unwraps `<p>` tags inside `<li>` elements, strips `.button` / `.button-container` classes auto-added by AEM
+
+---
+
+### 2. Breadcrumb
+
+**Purpose:** Renders a path-based breadcrumb navigation bar with Schema.org `BreadcrumbList` microdata for SEO. Present on all pages except the homepage.
+
+**DA authoring:**
+
+```
+| breadcrumb |                |
+| AIG損保     |                |
+| 個人向け保険 |                |
+```
+
+Each row is one breadcrumb level. The first column is the link text (linked items use `<a>`), plain text for the current/active page. The last item automatically gets the `breadcrumb-active` class.
+
+**Implementation notes:**
+- Converts rows into a semantic `<nav aria-label="パンくず"> > <ol>` structure
+- The `aria-label` value `パンくず` is the only hardcoded string (Japanese for "breadcrumb")
+- Separator `>` rendered via CSS `::after` pseudo-element
+- Schema.org `BreadcrumbList` microdata (`itemprop="itemListElement"`, `position`) for SEO
+
+---
+
+### 3. Footer (footer fragment)
+
+**Purpose:** Shared footer loaded as a fragment from `/footer`. Contains back-to-top arrow, category navigation with icons, SNS links, policy links, AIG group links, and copyright.
+
+**DA authoring (footer document):**
+
+The footer document has 6 required sections (in order), plus an optional tracking number section:
+
+| Section | Content |
+|---|---|
+| *(optional)* Tracking number | Plain text paragraph (no links), e.g., `25-2F8007, MKT-2025-013` — auto-detected by JS |
+| Back to top | `[ページトップへ戻る](#)` |
+| Category nav | `<ul>` of links with `:icon-name:` syntax (e.g., `:contractor: ご契約者さま`) |
+| SNS | Heading `**公式SNS**` + `<ul>` of links with `<picture>` icon images |
+| Policy links | `<ul>` of plain text links |
+| AIG Group | Heading `**AIGグループ**` + `<ul>` of links |
+| Copyright | `© AIG, Inc.` |
+
+**Implementation notes:**
+- The optional tracking number section is auto-detected: if the first section has no links and text < 80 characters, it's classified as `footer-approve-no` and all subsequent section indices shift by 1. This allows backward compatibility with footer documents that don't include a tracking number.
+- Category nav icons use the `:icon:` → `<span class="icon">` pipeline; JS restructures each link to show icon above text label
+- SNS links are restructured into icon + label layout with accessible aria-labels
+- Back-to-top link has `e.preventDefault()` + smooth scroll to top
+
+---
+
 ## T1 Homepage — Block Reference
 
 Reference page: `/sonpo` (index)
@@ -474,28 +567,7 @@ This section documents every block and section style used in the **Category Land
 
 ---
 
-### 1. breadcrumb
-
-**Purpose:** Renders a path-based breadcrumb navigation bar with Schema.org `BreadcrumbList` microdata for SEO.
-
-**DA authoring:**
-
-```
-| breadcrumb |                |
-| AIG損保     |                |
-| 個人向け保険 |                |
-```
-
-Each row is one breadcrumb level. The first column is the link text (linked items use `<a>`), plain text for the current/active page. The last item automatically gets the `breadcrumb-active` class.
-
-**Implementation notes:**
-- Converts rows into a semantic `<nav aria-label="パンくず"> > <ol>` structure
-- The `aria-label` value `パンくず` is the only hardcoded string (Japanese for "breadcrumb")
-- Separator `>` rendered via CSS `::after` pseudo-element
-
----
-
-### 2. hero-category
+### 1. hero-category
 
 **Purpose:** Full-width hero banner with responsive desktop/mobile images and an overlaid text card with heading and description.
 
@@ -517,7 +589,7 @@ Row 1 has two columns: the first contains two images (desktop then mobile), the 
 
 ---
 
-### 3. columns-product-nav
+### 2. columns-product-nav
 
 **Purpose:** Two-column layout with a section heading on the left and a grid of navigation button links on the right.
 
@@ -540,7 +612,7 @@ Left column has the `<h2>` heading. Right column has `<p><a>` links, each render
 
 ---
 
-### 4. pickup-banners
+### 3. pickup-banners
 
 **Purpose:** Promotional image banners with responsive desktop/mobile images that link to campaign pages.
 
@@ -564,7 +636,7 @@ The first image is desktop, the second is mobile, and the link provides both the
 
 ---
 
-### 5. columns-showcase
+### 4. columns-showcase
 
 **Purpose:** Two-column editorial cards with category badge, thumbnail image, description text, and a featured article link.
 
@@ -588,7 +660,7 @@ Each column contains: `<h3>` (category name, becomes eyebrow badge), thumbnail i
 
 ---
 
-### 6. cards-link-grid
+### 5. cards-link-grid
 
 **Purpose:** Grid of text CTA button links for navigating to related legal/informational pages.
 
@@ -611,7 +683,7 @@ Each row has two columns: an empty image column (hidden by CSS) and a body colum
 
 ---
 
-### 7. columns-cta
+### 6. columns-cta
 
 **Purpose:** Row of 3 large icon CTA buttons for primary contact actions (Nearest AIG, Request Materials, Contact).
 
@@ -632,7 +704,7 @@ Each column contains a single link with an `:icon-name:` prefix for the icon. Th
 
 ---
 
-### 8. columns-info-panel
+### 7. columns-info-panel
 
 **Purpose:** Two-column white information panels containing a mix of primary buttons, secondary buttons, text links, and descriptive text for policyholder services.
 
@@ -676,27 +748,3 @@ Icons are authored using `:icon-name:` syntax inside the link text (e.g., `:cont
 | `light-gray` | Gray background section | Background `#f5f5f5` applied to section, used by columns-product-nav, columns-cta, and columns-info-panel sections |
 | `approve-no` | Tracking/approval number (承認番号) | Small (12px), right-aligned, gray (#575757) text at the bottom of the page. Displays the regulatory compliance code required on Japanese insurance pages (e.g., "25-2F8007, MKT-2025-013"). Content-driven — the author adds a paragraph with the tracking text and sets the section style to `approve-no`; if removed, nothing displays. Each page can have its own unique approval number. |
 
----
-
-### Footer (global)
-
-**Purpose:** Shared footer loaded as a fragment from `/footer`. Contains back-to-top arrow, category navigation with icons, SNS links, policy links, AIG group links, and copyright.
-
-**DA authoring (footer document):**
-
-The footer document has 6 required sections (in order), plus an optional tracking number section:
-
-| Section | Content |
-|---|---|
-| *(optional)* Tracking number | Plain text paragraph (no links), e.g., `25-2F8007, MKT-2025-013` — auto-detected by JS |
-| Back to top | `[ページトップへ戻る](#)` |
-| Category nav | `<ul>` of links with `:icon-name:` syntax (e.g., `:contractor: ご契約者さま`) |
-| SNS | Heading `**公式SNS**` + `<ul>` of links with `<picture>` icon images |
-| Policy links | `<ul>` of plain text links |
-| AIG Group | Heading `**AIGグループ**` + `<ul>` of links |
-| Copyright | `© AIG, Inc.` |
-
-**Implementation notes:**
-- The optional tracking number section is auto-detected: if the first section has no links and text < 80 characters, it's classified as `footer-approve-no` and all subsequent section indices shift by 1. This allows backward compatibility with footer documents that don't include a tracking number.
-- Category nav icons use the `:icon:` → `<span class="icon">` pipeline; JS restructures each link to show icon above text label
-- SNS links are restructured into icon + label layout with accessible aria-labels
