@@ -359,11 +359,6 @@ header nav .nav-sections ul {
   font-size: var(--body-font-size-xs);
 }
 
-header .breadcrumbs ol li {
-  padding: 0;
-  color: var(--dark-color);
-}
-
 header nav .nav-sections ul > li {
   font-weight: 400;
   font-family: var(--body-font-family);
@@ -1627,41 +1622,50 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
   }
 }
 
-/* breadcrumbs */
-header .breadcrumbs {
-  display: none;
+/* breadcrumbs (auto-generated) — unified with manual breadcrumb block */
+header .nav-wrapper .breadcrumbs {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
   margin: auto;
   max-width: 1200px;
-  height: var(--breadcrumbs-height);
   padding: 0 24px;
-  font-size: var(--body-font-size-xs);
   overflow: hidden;
 }
 
-header .breadcrumbs ol {
+header .nav-wrapper .breadcrumbs ol {
   display: flex;
   flex-flow: wrap;
   list-style: none;
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
-  gap: 1ch;
 }
 
-header .breadcrumbs ol li:not(:last-child)::after {
-  content: '/';
-  padding-left: 1ch;
+header .nav-wrapper .breadcrumbs ol li {
+  display: inline-block;
+  font-size: 12px;
+  color: #7d7d7d;
+  line-height: normal;
 }
 
+header .nav-wrapper .breadcrumbs ol li:not(:last-child)::after {
+  content: ">";
+  margin: 0 5px;
+}
 
-header .breadcrumbs ol li[aria-current] {
-  color: var(--text-color);
+header .nav-wrapper nav.breadcrumbs a {
+  color: #001871;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+header .nav-wrapper nav.breadcrumbs a:hover {
+  text-decoration: underline;
 }
 
 @media (width >= 769px) {
-  header .breadcrumbs {
-    display: block;
-    max-width: 1200px;
+  header .nav-wrapper .breadcrumbs {
     padding: 0 32px;
   }
 }

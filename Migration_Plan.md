@@ -139,7 +139,19 @@ The header loads its content from the `/nav` fragment page, which has **4 sectio
 
 **Purpose:** Renders a path-based breadcrumb navigation bar with Schema.org `BreadcrumbList` microdata for SEO. Present on all pages except the homepage.
 
-**DA authoring:**
+Two approaches are available — **both produce identical visual output** (same `>` separator, navy links, gray text, 12px font, visible on mobile):
+
+**Option A — Auto-generated (recommended for most pages):**
+
+Set the page metadata:
+```
+| metadata     |           |
+| breadcrumbs  | true      |
+```
+
+The header automatically builds breadcrumbs by walking the nav tree to find the current page URL and tracing back through parent menu items. No manual authoring needed.
+
+**Option B — Manual block (for custom labels or pages not in the nav tree):**
 
 ```
 | breadcrumb |                |
@@ -149,11 +161,14 @@ The header loads its content from the `/nav` fragment page, which has **4 sectio
 
 Each row is one breadcrumb level. The first column is the link text (linked items use `<a>`), plain text for the current/active page. The last item automatically gets the `breadcrumb-active` class.
 
+**Priority logic:** If a manual `breadcrumb` block exists on the page, the auto-generated breadcrumb is suppressed — the manual block always wins.
+
 **Implementation notes:**
-- Converts rows into a semantic `<nav aria-label="パンくず"> > <ol>` structure
-- The `aria-label` value `パンくず` is the only hardcoded string (Japanese for "breadcrumb")
+- Both approaches produce a semantic `<nav aria-label="パンくず"> > <ol>` structure with Schema.org `BreadcrumbList` microdata (`itemprop="itemListElement"`, `position`) for SEO
 - Separator `>` rendered via CSS `::after` pseudo-element
-- Schema.org `BreadcrumbList` microdata (`itemprop="itemListElement"`, `position`) for SEO
+- Unified CSS styling shared between both approaches (12px font, navy `#001871` links, gray `#7d7d7d` text)
+- Auto-generated: built in `header.js`, appended inside the header wrapper; falls back to `og:title` if the current URL isn't found in the nav tree
+- Manual block: built in `breadcrumb.js`, rendered in the page content area as the first section
 
 ---
 
