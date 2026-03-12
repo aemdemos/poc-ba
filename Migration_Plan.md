@@ -13,7 +13,7 @@
 ## Sitemap Analysis
 
 - **Sitemap:** https://www.aig.co.jp/sonpo/sitemap.xml
-- **Total URLs in sitemap:** ~917 (as of March 2026)
+- **Total URLs in sitemap:** ~1,245 unique (1,246 total, 1 duplicate) (as of March 2026)
 
 ### Critical Finding: Single Base Layout
 
@@ -41,7 +41,7 @@ The **variation between pages is in the content blocks used** (cards, tabs, acco
 
 | #   | Template                       | URL Patterns                                                                                                                                                                               | Est. Count | Status        | Content Pattern                                                         |
 | --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------------- | ----------------------------------------------------------------------- |
-| T1  | **Homepage**                   | `/sonpo`                                                                                                                                                                                   | 1          | Not started   | Unique multi-section showcase (tabs, stats, editorial, digital-links)   |
+| T1  | **Homepage**                   | `/sonpo`                                                                                                                                                                                   | 1          | **Complete**  | Unique multi-section showcase (tabs, stats, editorial, digital-links)   |
 | T2  | **Category Landing**           | `/sonpo/personal`, `/sonpo/business`, `/sonpo/personal/product`, `/sonpo/business/product`, `/sonpo/business/{industry,risk,nzk,hjk}`                                                     | **8**      | **Complete** | Hero (photo) + card grids + columns + CTA + info panels + promo banners |
 | T3  | **Product/Section Page**       | `/sonpo/personal/product/{cat}`, `/sonpo/service`, `/sonpo/contact`, `/sonpo/contractor`, `/sonpo/service/claim`                                                                          | ~25        | Needs scoping | Hero (photo) + button grids/anchor nav + accordion + category content + bottom nav |
 | T4  | **Product Detail Page**        | `/sonpo/personal/product/{cat}/{sub}`, `/sonpo/business/global/**`, `/sonpo/service/claim/{type}`                                                                                          | ~80        | Needs scoping | Hero (photo) + tabbed content panels + document tables + bottom nav     |
@@ -57,7 +57,7 @@ The **variation between pages is in the content blocks used** (cards, tabs, acco
 
 | Template | Sample Page Migrated | Import Infrastructure | Pages Migrated | Total Pages |
 |---|---|---|---|---|
-| T1 Homepage | — | — | 0 | 1 |
+| T1 Homepage | `/sonpo` (index) | Hand-authored (no import script) | **1/1** | **1** |
 | T2 Category Landing | `/sonpo/personal` | Yes (6 parsers, 2 transformers) | **8/8** | **8** |
 | T3 Product/Section | — | — | 0 | ~25 |
 | T4 Product Detail | — | — | 0 | ~80 |
@@ -98,7 +98,7 @@ The site is **block-driven, not layout-driven**. All pages share the same full-w
 
 | Code | Template              | Est. count | Scoping status |
 | ---- | --------------------- | ---------- | -------------- |
-| T1   | Homepage              | 1 page     | Documented     |
+| T1   | Homepage              | 1 page     | **Complete**   |
 | T2   | Category Landing      | 8 pages    | **Complete**   |
 | T3   | Product/Section Page  | ~20 pages  | Needs scoping  |
 | T4   | Product Detail Page   | ~80 pages  | Needs scoping  |
@@ -992,6 +992,6 @@ T3 is the natural next target because it **shares the most blocks with T2**:
 | 5 | T5 Content/Info | ~500+ | hero, many from T3-T4 | Mostly default content + FAQ accordion |
 | 6 | T7 Landing/Campaign | ~57 | Unknown | Needs scoping — custom marketing layouts |
 | 7 | T8 Archive/Reference | ~112 | Minimal | Needs scoping — document-style pages |
-| 8 | T1 Homepage | 1 | Minimal | Already documented, unique blocks |
+| 8 | T1 Homepage | 1 | — | **Already complete** (hand-authored) |
 | 9 | T9 Micro-site | ~10 | None | Standalone template, separate chrome |
 
