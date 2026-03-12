@@ -1,92 +1,152 @@
 # Migration Plan
 
+## Revision History
+
+| Date | Change |
+|---|---|
+| 2026-03-12 | **Major revision:** Re-scoped site templates after visual inspection of 20+ pages across all sections and depths. Discovered that the site uses a **single base full-width layout** — no 2-column sidebar template exists. Previous T3 "Content Page with Sidebar" (830 pages, 67%) was incorrectly classified. What appeared to be sidebar navigation is actually bottom navigation rendered below the main content. Templates are now classified by **content block patterns** rather than layout structure. |
+| 2026-03-12 | **T2 scoping complete:** Analyzed 12 candidate pages for T2 Category Landing. Confirmed 8 pages across 4 similarity clusters (A–D). Reclassified 4 pages (contact, contractor, service, totalrisk) to other templates. Documented block reuse matrix, XF class divergence patterns, and recommended migration order. |
+| 2026-03-12 | **T2 bulk import complete:** Broadened XF selectors in import script with CSS attribute wildcards (`[class*="cmp-experiencefragment--utility"]`, `[class*="cmp-experiencefragment--cta-"]`). Added 3 new section definitions (main content, local navigation, archive links). Bulk imported all 7 remaining T2 URLs — 7/7 success, 0 failures. All 8 T2 pages now have content files. No new parsers were needed; the existing 6 parsers + 2 transformers handled all pages. |
+
+---
+
 ## Sitemap Analysis
 
 - **Sitemap:** https://www.aig.co.jp/sonpo/sitemap.xml
-- **Total URLs found:** 1,246 across 25 distinct URL patterns.
+- **Total URLs in sitemap:** ~1,245 unique (1,246 total, 1 duplicate) (as of March 2026)
+
+### Critical Finding: Single Base Layout
+
+After visual inspection of 20+ pages across all URL patterns and depths (personal, business, contractor, service, contact, company/news), the AIG Sonpo site uses **one universal full-width layout**:
+
+- **Every page** has a hero banner at the top (photo or solid-color variants)
+- **Every page** uses full-width sections (no 2-column sidebar layout exists)
+- **No sidebar navigation** — section/category navigation links render as a **bottom navigation block** below the main content, not as a left sidebar column
+- **Standard global chrome** on all pages: Header (mega-nav), Breadcrumb, Footer
+
+The **variation between pages is in the content blocks used** (cards, tabs, accordion, columns, etc.), not in the layout structure. Templates should therefore be classified by **which content blocks they use** (import script compatibility), not by layout.
+
+### Exceptions
+
+- **Micro-sites** (e.g., `/sonpo/personal/product/travel/ota/anshin-guide/**`) have their own standalone header, navigation, and footer — completely separate from the main AIG Sonpo template
+- **Landing/Campaign pages** (`/sonpo/lp/**`) may use custom layouts — needs verification
+- **Archive/Reference pages** (`/sonpo/eyakkan/**`, `/sonpo/archives/**`) may have minimal content layouts — needs verification
+- Some `/sonpo/business/global/**` URLs redirect to `/sonpo/global/**`
 
 ---
 
 ## Page Templates
 
-| #   | Template                      | URL Patterns                                                                                                                                                                                             | Count | %       | Layout Structure                                 |
-| --- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------- | ------------------------------------------------ |
-| 1   | **Homepage**                  | `/sonpo`                                                                                                                                                                                                 | 1     | < 1%    | Multi-section showcase (unique)                  |
-| 2   | **Category Landing**          | `/sonpo/personal`, `/sonpo/business`, `/sonpo/personal/product/{cat}`, `/sonpo/business/{section}`                                                                                                       | 16    | 1%      | Hero banner + multi-section content (no sidebar) |
-| 3   | **Content Page with Sidebar** | `/sonpo/company/news/**`, `/sonpo/company/press/**`, `/sonpo/personal/product/{cat}/{sub}/**`, `/sonpo/global/**`, `/sonpo/service/**`, `/sonpo/company/**`, `/sonpo/contractor/**`, `/sonpo/contact/**` | 830   | **67%** | 2-column: main content + sidebar navigation      |
-| 4   | **Simple Content Page**       | `/sonpo/brand/**`, `/sonpo/faq/**`, `/sonpo/recruit/**`, `/sonpo/aignext/**`, `/sonpo/more-aig/**`, `/sonpo/{top-level-page}`                                                                            | 230   | 18%     | Single-column, no sidebar                        |
-| 5   | **Landing/Campaign Page**     | `/sonpo/lp/**`, `/sonpo/military/**`                                                                                                                                                                     | 57    | 5%      | Custom marketing layout (forms, promos)          |
-| 6   | **Archive/Reference**         | `/sonpo/eyakkan/**`, `/sonpo/archives/**`, `/sonpo/mmlp/**`, `/sonpo/term/**`                                                                                                                            | 112   | 9%      | Document-style (policy terms, legacy content)    |
+> **Classification approach:** Templates are grouped by **content block patterns** (which import script can handle them), not by layout structure (which is the same everywhere).
+
+| #   | Template                       | URL Patterns                                                                                                                                                                               | Est. Count | Status        | Content Pattern                                                         |
+| --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------------- | ----------------------------------------------------------------------- |
+| T1  | **Homepage**                   | `/sonpo`                                                                                                                                                                                   | 1          | **Complete**  | Unique multi-section showcase (tabs, stats, editorial, digital-links)   |
+| T2  | **Category Landing**           | `/sonpo/personal`, `/sonpo/business`, `/sonpo/personal/product`, `/sonpo/business/product`, `/sonpo/business/{industry,risk,nzk,hjk}`                                                     | **8**      | **Complete** | Hero (photo) + card grids + columns + CTA + info panels + promo banners |
+| T3  | **Product/Section Page**       | `/sonpo/personal/product/{cat}`, `/sonpo/service`, `/sonpo/contact`, `/sonpo/contractor`, `/sonpo/service/claim`                                                                          | ~25        | Needs scoping | Hero (photo) + button grids/anchor nav + accordion + category content + bottom nav |
+| T4  | **Product Detail Page**        | `/sonpo/personal/product/{cat}/{sub}`, `/sonpo/business/global/**`, `/sonpo/service/claim/{type}`                                                                                          | ~80        | Needs scoping | Hero (photo) + tabbed content panels + document tables + bottom nav     |
+| T5  | **Content/Info Page**          | `/sonpo/company/**`, `/sonpo/contractor/**`, `/sonpo/more-aig/**`, `/sonpo/brand/**`, `/sonpo/faq/**`, `/sonpo/recruit/**`, deeper sub-pages                                              | ~500+      | Needs scoping | Hero (solid-color) + prose content + accordion/FAQ + various blocks     |
+| T6  | **News/Editorial**             | `/sonpo/company/news/**`, `/sonpo/company/press/**`, `/sonpo/news`                                                                                                                         | ~100+      | Needs scoping | Hero + news list / article body + year archive links                    |
+| T7  | **Landing/Campaign Page**      | `/sonpo/lp/**`, `/sonpo/military/**`                                                                                                                                                       | ~57        | Needs scoping | Custom marketing layouts (forms, promos) — needs verification           |
+| T8  | **Archive/Reference**          | `/sonpo/eyakkan/**`, `/sonpo/archives/**`, `/sonpo/mmlp/**`, `/sonpo/term/**`                                                                                                              | ~112       | Needs scoping | Document-style (policy terms, legacy content) — needs verification      |
+| T9  | **Micro-site**                 | `/sonpo/personal/product/travel/ota/anshin-guide/**`                                                                                                                                       | ~10        | Needs scoping | Standalone template with own header/nav/footer — separate from main site |
+
+> **Note:** Counts are estimates. Each template needs individual scoping by analyzing sample pages to confirm block patterns and determine the exact URL list. The T5 "Content/Info Page" is the largest bucket and will likely need further sub-classification as pages are analyzed.
+
+### Migration Progress
+
+| Template | Sample Page Migrated | Import Infrastructure | Pages Migrated | Total Pages |
+|---|---|---|---|---|
+| T1 Homepage | `/sonpo` (index) | Hand-authored (no import script) | **1/1** | **1** |
+| T2 Category Landing | `/sonpo/personal` | Yes (6 parsers, 2 transformers) | **8/8** | **8** |
+| T3 Product/Section | — | — | 0 | ~25 |
+| T4 Product Detail | — | — | 0 | ~80 |
+| T5 Content/Info | — | — | 0 | ~500+ |
+| T6 News/Editorial | — | — | 0 | ~100+ |
+| T7 Landing/Campaign | — | — | 0 | ~57 |
+| T8 Archive/Reference | — | — | 0 | ~112 |
+| T9 Micro-site | — | — | 0 | ~10 |
+
+### T2 Import Results
+
+All 8 T2 Category Landing pages have been migrated:
+
+| # | Page | Blocks Parsed | Status |
+|---|---|---|---|
+| 1 | `/sonpo/personal` | hero, prod-nav, showcase, link-grid, cta, info-panel (6/6) | Migrated (initial) |
+| 2 | `/sonpo/business` | hero, prod-nav, showcase, link-grid, cta, info-panel (6/6) | **Imported** |
+| 3 | `/sonpo/personal/product` | hero, prod-nav, link-grid, cta (4/6) | **Imported** |
+| 4 | `/sonpo/business/product` | hero, prod-nav, link-grid, cta (4/6) | **Imported** |
+| 5 | `/sonpo/business/industry` | hero, link-grid, cta (3/6) | **Imported** |
+| 6 | `/sonpo/business/risk` | hero, link-grid, cta (3/6) | **Imported** |
+| 7 | `/sonpo/business/nzk` | hero, link-grid, cta (3/6) | **Imported** |
+| 8 | `/sonpo/business/hjk` | hero, link-grid, cta (3/6) | **Imported** |
+
+**Key implementation detail:** The XF selector broadening approach worked — no new parsers were needed. The 6 existing parsers use generic internal DOM selectors (`.cmp-button`, `.cmp-columncontainer-item`, etc.) that match all page variants. Only the block-finding selectors in the import script needed wildcarding.
 
 ### Key takeaway
 
-**Template 3** (Content Page with Sidebar) alone covers **67%** of the site. Together with **Template 4** (Simple Content Page), that's **85%** of all pages using just two layout structures.
+The site is **block-driven, not layout-driven**. All pages share the same full-width layout structure. The migration challenge is mapping the ~30+ distinct content block patterns, not dealing with multiple layout templates. Templates T3–T5 will likely share many blocks with T2, meaning block variants built for Category Landing can be reused.
 
 ---
 
 ## Reusable Blocks Catalog
 
+> **Note:** The template codes below (T1–T9) reflect the revised classification. Block assignments to T3–T9 are preliminary and will be confirmed as each template is individually scoped.
+
 ### Template mapping
 
-| Code | Template                  | Page count       |
-| ---- | ------------------------- | ---------------- |
-| T1   | Homepage                  | 1 page           |
-| T2   | Category Landing          | ~16 pages        |
-| T3   | Content Page with Sidebar | ~830 pages (67%) |
-| T4   | Simple Content Page       | ~230 pages (18%) |
-| T5   | Landing/Campaign          | ~57 pages (5%)   |
-| T6   | Archive/Reference         | ~112 pages (9%)  |
+| Code | Template              | Est. count | Scoping status |
+| ---- | --------------------- | ---------- | -------------- |
+| T1   | Homepage              | 1 page     | **Complete**   |
+| T2   | Category Landing      | 8 pages    | **Complete**   |
+| T3   | Product/Section Page  | ~20 pages  | Needs scoping  |
+| T4   | Product Detail Page   | ~80 pages  | Needs scoping  |
+| T5   | Content/Info Page     | ~500+ pages| Needs scoping  |
+| T6   | News/Editorial        | ~100+ pages| Needs scoping  |
+| T7   | Landing/Campaign      | ~57 pages  | Needs scoping  |
+| T8   | Archive/Reference     | ~112 pages | Needs scoping  |
+| T9   | Micro-site            | ~10 pages  | Needs scoping  |
 
-### Block usage by template
+### Block usage by template (preliminary)
 
-| No                             | Category            | Block                            | T1  | T2  | T3  | T4  | T5  | T6  | Description                                                                                            |
-| ------------------------------ | ------------------- | -------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | ------------------------------------------------------------------------------------------------------ |
+> Columns T3–T9 are **preliminary estimates** based on URL pattern analysis and limited sampling. They will be confirmed during individual template scoping.
+
+| No                             | Category            | Block                            | T1  | T2  | T3  | T4  | T5  | T6  | T7  | T8  | T9  | Description                                                                                            |
+| ------------------------------ | ------------------- | -------------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------------------------------------------------------------------------------------------------ |
 | **Global Blocks (every page)** |
-| 1                              | Global Blocks       | **Header**                       |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Global nav with mega dropdown, mobile nav, search, utility links. Condensed sticky nav when scrolling. |
-| 2                              |                     | **Breadcrumb**                   |  —  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Path-based breadcrumb navigation (all pages except homepage)                                           |
-| 3                              |                     | **Footer**                       |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Back-to-top, category nav, SNS links, legal links, AIG group links, copyright                          |
+| 1                              | Global Blocks       | **Header**                       |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✗  | Global nav with mega dropdown, mobile nav, search, utility links. Condensed sticky nav when scrolling. |
+| 2                              |                     | **Breadcrumb**                   |  —  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ?  |  ?  |  ✗  | Path-based breadcrumb navigation (all pages except homepage)                                           |
+| 3                              |                     | **Footer**                       |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✗  | Back-to-top, category nav, SNS links, legal links, AIG group links, copyright                          |
 | **Content Blocks**             |
-| 4                              | Content Blocks      | **Hero Banner**                  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Homepage, Personal, Business (full-width image + text overlay)                                         |
-| 5                              |                     | **Cards**                        |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  —  | Homepage, Personal, Business (image + heading, various grid layouts: 2-up, 3-up, 4-up)                 |
-| 6                              |                     | **Columns**                      |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  —  | Homepage, multiple pages (2-col and 3-col layouts)                                                     |
-| 7                              |                     | **Tabs**                         |  ✓  |  —  |  ✓  |  —  |  —  |  —  | Homepage (tabbed content switcher — Personal/Business)                                                 |
-| 8                              |                     | **Accordion**                    |  —  | ✓\* |  ✓  |  ✓  |  ✓  |  —  | Contractor, Contact (expandable DT/DD sections for claim categories)                                   |
-| 9                              |                     | **Sidebar Navigation**           |  —  |  —  |  ✓  |  —  |  ✓  |  ✓  | Product, News, Press, Company, Contact pages                                                           |
-| 10                             |                     | **News List**                    |  ✓  |  —  |  ✓  |  —  |  —  |  ✓  | Homepage (dated article links with category tags)                                                      |
+| 4                              | Content Blocks      | **Hero Banner (photo)**          |  ✓  |  ✓  |  ✓  |  ✓  |  —  |  ✓  |  ?  |  —  |  ✓  | Full-width image + text overlay (personal, business, product pages)                                    |
+| 5                              |                     | **Hero Banner (solid-color)**    |  —  |  —  |  —  |  —  |  ✓  |  —  |  ?  |  ?  |  —  | Blue/navy banner with title only (contractor sub-pages, info pages)                                    |
+| 6                              |                     | **Cards**                        |  ✓  |  ✓  |  ?  |  ?  |  ?  |  —  |  ?  |  —  |  ?  | Image + heading cards (various grid layouts: 2-up, 3-up, 4-up)                                         |
+| 7                              |                     | **Columns**                      |  ✓  |  ✓  |  ?  |  ?  |  ?  |  —  |  ?  |  —  |  —  | 2-col and 3-col layouts (multiple section styles)                                                      |
+| 8                              |                     | **Tabs**                         |  ✓  |  —  |  —  |  ✓  |  ?  |  —  |  —  |  —  |  —  | Tabbed content panels (homepage, product detail pages)                                                 |
+| 9                              |                     | **Accordion**                    |  —  |  —  |  ✓  |  ✓  |  ✓  |  —  |  ?  |  —  |  —  | Expandable sections (product index, claims, FAQ, contractor)                                           |
+| 10                             |                     | **Bottom Navigation**            |  —  |  —  |  ✓  |  ✓  |  —  |  —  |  —  |  —  |  —  | Section nav links rendered below main content (replaces old "Sidebar Navigation")                      |
+| 11                             |                     | **News List**                    |  ✓  |  —  |  —  |  —  |  —  |  ✓  |  —  |  —  |  —  | Dated article links with category tags                                                                 |
 | **CTA / Action Blocks**        |
-| 11                             | CTA / Action Blocks | **Button Grid**                  |  ✓  |  ✓  |  ✓  |  ✓  |  —  |  —  | Homepage, Personal, Business, Contractor (icon + label CTA buttons in grid)                            |
-| 12                             |                     | **CTA Section**                  |  ✓  |  ✓  |  ✓  |  ✓  |  —  |  —  | Personal, Business, Travel (3 icon CTAs: Nearest AIG, Request Materials, Contact)                      |
-| 13                             |                     | **Sticky Contact Bar**           |  ✓  |  ✓  |  —  |  —  |  ✓  |  —  | Homepage (floating bottom bar with action buttons)                                                     |
-| 14                             |                     | **Quick Action Buttons**         |  ✓  |  —  |  —  |  —  |  —  |  —  | Homepage (expandable CTA buttons in hero area)                                                         |
+| 12                             | CTA / Action Blocks | **Button Grid / Anchor Nav**     |  ✓  |  ✓  |  ✓  |  —  |  ?  |  —  |  —  |  —  |  —  | Icon + label CTA buttons / in-page jump navigation                                                     |
+| 13                             |                     | **CTA Section**                  |  ✓  |  ✓  |  ✓  |  ✓  |  ?  |  —  |  —  |  —  |  —  | 3 icon CTAs (Nearest AIG, Request Materials, Contact)                                                  |
+| 14                             |                     | **Sticky Contact Bar**           |  ✓  |  ✓  |  —  |  —  |  —  |  —  |  ?  |  —  |  —  | Floating bottom bar with action buttons                                                                |
 | **Editorial / Article Blocks** |
-| 15                             | Editorial / Article | **Article Body**                 |  —  |  —  |  ✓  |  ✓  |  —  |  ✓  | News, Press Release (prose + inline images + captions)                                                 |
-| 16                             |                     | **Year Archive Nav**             |  —  |  —  |  ✓  |  —  |  —  |  ✓  | News, Press Release (sidebar year-by-year links)                                                       |
-| 17                             |                     | **More AIG Editorial**           |  —  |  ✓  |  —  |  —  |  —  |  —  | Personal, Business (2-column layout with featured article + category badge)                            |
-| 18                             |                     | **Pick Up / Promo Banners**      |  —  |  ✓  |  ✓  |  —  |  —  |  —  | Personal, Business (promotional image banner links)                                                    |
-| **Data / Stats Blocks**        |
-| 19                             | Data / Stats        | **Stats Counter**                |  ✓  |  —  |  —  |  —  |  —  |  —  | Homepage (number + label: "1946 年 営業開始", "6,061 名")                                              |
-| 20                             |                     | **Company Info Prose**           |  ✓  |  —  |  —  |  ✓  |  —  |  —  | Homepage (text block + CTA link about AIG)                                                             |
+| 15                             | Editorial / Article | **Article Body**                 |  —  |  —  |  —  |  —  |  ✓  |  ✓  |  —  |  ?  |  —  | Prose + inline images + captions                                                                       |
+| 16                             |                     | **Year Archive Nav**             |  —  |  —  |  —  |  —  |  —  |  ✓  |  —  |  ?  |  —  | Year-by-year article navigation links                                                                  |
+| 17                             |                     | **More AIG Editorial**           |  —  |  ✓  |  —  |  —  |  —  |  —  |  —  |  —  |  —  | 2-column editorial cards with category badge                                                           |
+| 18                             |                     | **Pick Up / Promo Banners**      |  —  |  ✓  |  ?  |  —  |  —  |  —  |  —  |  —  |  —  | Promotional image banner links                                                                         |
 | **Specialized Blocks**         |
-| 21                             | Specialized         | **Alert/Warning Box**            |  ✓  |  —  |  —  |  —  |  —  |  —  | Homepage (bordered notice list)                                                                        |
-| 22                             |                     | **Product Description Card**     |  —  |  —  |  ✓  |  —  |  ✓  |  —  | Travel (H2 + description + CTA per product)                                                            |
-| 23                             |                     | **Solution Cards**               |  —  |  ✓  |  —  |  —  |  —  |  —  | Business (image + H3 + description)                                                                    |
-| 24                             |                     | **Anchor Link List**             |  —  | ✓\* |  —  |  ✓  |  —  |  —  | Contractor (in-page jump navigation)                                                                   |
-| 25                             |                     | **Phone Contact Block**          |  —  | ✓\* |  ✓  |  ✓  |  —  |  —  | Contractor (phone number + hours + notes)                                                              |
-| 26                             |                     | **Dispute Resolution**           |  —  | ✓\* |  —  |  —  |  —  |  —  | Contractor (complex expandable legal sections)                                                         |
-| 27                             |                     | **Archive Links**                |  —  |  ✓  |  ✓  |  —  |  —  |  ✓  | Personal, Business, Company, Contractor (former company links)                                         |
-| 28                             |                     | **Contract Info Grid**           |  —  |  ✓  |  —  |  —  |  —  |  —  | Personal, Business (text CTA buttons for legal pages)                                                  |
-| 29                             |                     | **Document/Certificate Section** |  ✓  |  —  |  ✓  |  —  |  —  |  ✓  | Homepage (e-policy, digital certificate grid)                                                          |
-| 30                             |                     | **Recruitment Promo**            |  ✓  |  —  |  —  |  —  |  —  |  —  | Homepage (image + text + CTA)                                                                          |
-| 31                             |                     | **Claim Guide Links**            |  —  | ✓\* |  ✓  |  ✓  |  —  |  —  | Contact (category-specific link list)                                                                  |
+| 19                             | Specialized         | **Phone Contact Block**          |  —  |  —  |  ✓  |  —  |  ✓  |  —  |  —  |  —  |  —  | Phone number + hours + notes                                                                           |
+| 20                             |                     | **Archive Links**                |  —  |  ✓  |  ✓  |  ✓  |  ✓  |  —  |  —  |  —  |  —  | Former company product links (旧AIU, 旧富士火災)                                                         |
+| 21                             |                     | **Contract Info Grid**           |  —  |  ✓  |  ✓  |  —  |  —  |  —  |  —  |  —  |  —  | Text CTA buttons for legal/info pages                                                                  |
+| 22                             |                     | **Document Table**               |  —  |  —  |  —  |  ✓  |  —  |  —  |  —  |  ?  |  —  | Pamphlet/document download links (product detail pages)                                                |
 | **Utility Blocks**             |
-| 32                             | Utility Blocks      | **Metadata**                     |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | All pages (hidden page metadata)                                                                       |
-| 33                             |                     | **Section Metadata**             |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Multiple pages (section styling: blue-background, news-list, bordered, etc.)                           |
-| 34                             |                     | **Fragment**                     |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Header, Footer (reusable fragment loading)                                                             |
-| 35                             |                     | **Modal**                        |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | Various (modal dialog support via /modals/ links)                                                      |
+| 23                             | Utility Blocks      | **Metadata**                     |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  | All pages (hidden page metadata)                                                                       |
+| 24                             |                     | **Section Metadata**             |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ?  | Section styling (light-gray, blue-background, etc.)                                                    |
+| 25                             |                     | **Fragment**                     |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✗  | Header, Footer (reusable fragment loading)                                                             |
 
-_✓_ = used in some pages of this template type
-
-_Blocks marked ✓\* on T2 appear specifically on the Contractors sub-type of Category Landing._
+_✓_ = confirmed on this template &nbsp; _?_ = likely but needs verification &nbsp; _✗_ = does not apply (micro-site has own chrome) &nbsp; _—_ = not used
 
 ---
 
@@ -764,4 +824,174 @@ Icons are authored using `:icon-name:` syntax inside the link text (e.g., `:cont
 |---|---|---|
 | `light-gray` | Gray background section | Background `#f5f5f5` applied to section, used by columns-product-nav, columns-cta, and columns-info-panel sections |
 | `approve-no` | Tracking/approval number (承認番号) | Small (12px), right-aligned, gray (#575757) text at the bottom of the page. Displays the regulatory compliance code required on Japanese insurance pages (e.g., "25-2F8007, MKT-2025-013"). Content-driven — the author adds a paragraph with the tracking text and sets the section style to `approve-no`; if removed, nothing displays. Each page can have its own unique approval number. |
+
+---
+
+## T2 Category Landing — Scoping Results
+
+### Analysis methodology
+
+Visual inspection + DOM analysis of 12 candidate pages using Playwright. For each page, checked all 6 existing personal parser selectors, business-variant selectors, and mapped the full section structure to identify new content patterns.
+
+### Existing import infrastructure (from `/sonpo/personal`)
+
+| # | Parser | CSS Selector |
+|---|---|---|
+| 1 | hero-category | `.ace-heroimage.cmp-heroimage--width-full` |
+| 2 | columns-product-nav | `.cmp-section--light-gray:not(.cmp-section--background-full) .cmp-columncontainer--2col-1_3` |
+| 3 | columns-showcase | `.ace-section.cmp-section--light-gray:not(.cmp-section--primary) .cmp-columncontainer` |
+| 4 | cards-link-grid | `.cmp-experiencefragment--utility-personal .cmp-columncontainer--3` |
+| 5 | columns-cta | `.cmp-experiencefragment--cta-personal-products .cmp-columncontainer--3` |
+| 6 | columns-info-panel | `.cmp-section--background-full .cmp-columncontainer:has(.cmp-section--white)` |
+
+### Block reuse matrix (all 12 T2 candidates)
+
+| Page | hero-category | col-product-nav | col-showcase | cards-link-grid | columns-cta | col-info-panel | Match |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| `/sonpo/personal` *(migrated)* | ✓ | ✓ | ✓ | ✓ (personal) | ✓ (personal) | ✓ | **6/6** |
+| `/sonpo/business` | ✓ | ✓ | ✓ | ✗ (biz XF) | ✗ (biz XF) | ✓ | **4/6** |
+| `/sonpo/personal/product` | ✓ | ✓ | — | ✓ (personal) | ✓ (personal) | — | **4/6** |
+| `/sonpo/business/product` | ✓ | ✓ | — | ✗ (biz XF) | ✗ (biz XF) | — | **2/6** |
+| `/sonpo/business/industry` | ✓ | — | — | ✗ (biz XF) | ✗ (biz XF) | — | **1/6** |
+| `/sonpo/business/risk` | ✓ | — | — | ✗ (biz XF) | ✗ (biz XF) | — | **1/6** |
+| `/sonpo/business/nzk` | ✓ | — | — | — | ✗ (nzk XF) | — | **1/6** |
+| `/sonpo/business/hjk` | ✓ | — | — | — | ✗ (hjk XF) | — | **1/6** |
+| `/sonpo/business/totalrisk` | ✓ | — | — | — | — | — | **1/6** |
+| `/sonpo/service` | ✓ | — | — | — | — | — | **1/6** |
+| `/sonpo/contact` | ✓ | — | — | — | — | — | **1/6** |
+| `/sonpo/contractor` | ✓ | — | — | — | — | — | **1/6** |
+
+### Key finding: Experience Fragment class divergence
+
+The main blocker for parser reuse is that the site uses **page-specific Experience Fragment (XF) class names**. The internal content structure is often identical, but the wrapper class differs:
+
+| XF Purpose | Personal variant | Business variant | Nzk/Hjk variant |
+|---|---|---|---|
+| Contract info links | `--utility-personal` (3-col, 6 items) | `--utility-business` (2-col, 2 items) | `--utility-business` (same) |
+| CTA buttons | `--cta-personal-products` (3-col) | `--cta-business-products` (3-col) | `--cta-business-nzk` / `--cta-business-hjk` (3-col) |
+| Disclaimer guard | *(none)* | `--guard-products` | `--guard-business-hjk-nzk` |
+| Archive links | *(inline section)* | `--link-to-archives` | *(none)* |
+| Local nav | *(none)* | `--localnav-business` | *(none)* |
+| Contact accordion | *(none)* | *(none)* | *(none, on contact/contractor only)* |
+
+**Recommendation:** Broaden parser selectors to match XF classes with wildcards (e.g., `[class*="cmp-experiencefragment--cta-"]`) rather than targeting specific page variants.
+
+### Page similarity clusters
+
+**Cluster A — Closest to `/sonpo/personal` (highest reuse, migrate first)**
+
+| Page | Similarity | Existing parsers reusable | New parsers needed |
+|---|---|---|---|
+| `/sonpo/business` | **HIGH** | hero-category, columns-product-nav, columns-showcase, columns-info-panel | Broaden XF selectors for cards-link-grid + columns-cta; new: solution-cards (海外/国内ソリューション), image-banners (standalone promo images) |
+
+**Cluster B — Product index pages (share hero + footer XFs, need product-accordion parser)**
+
+| Page | Similarity | Existing parsers reusable | New parsers needed |
+|---|---|---|---|
+| `/sonpo/personal/product` | **MEDIUM** | hero-category, columns-product-nav, cards-link-grid, columns-cta | product-accordion (alternating blue/gray sections with expandable items), anchor-nav (top jump links), disclaimer-section |
+| `/sonpo/business/product` | **MEDIUM** | hero-category, columns-product-nav | Same as above + broaden XF selectors |
+
+**Cluster C — Business category landings (share business XF set)**
+
+| Page | Similarity | Existing parsers reusable | New parsers needed |
+|---|---|---|---|
+| `/sonpo/business/industry` | **LOW-MED** | hero-category | icon-button-grid (industry/risk selection), guard-products XF, link-to-archives XF, localnav-business XF |
+| `/sonpo/business/risk` | **LOW-MED** | hero-category | Same as industry (structurally identical) |
+
+**Cluster D — Business association pages (simplified business template)**
+
+| Page | Similarity | Existing parsers reusable | New parsers needed |
+|---|---|---|---|
+| `/sonpo/business/nzk` | **LOW** | hero-category | nav-button-grid, guard-business-hjk-nzk XF, cta-business-nzk XF variant |
+| `/sonpo/business/hjk` | **LOW** | hero-category | Same as nzk (structurally identical) |
+
+**Cluster E — Should be reclassified (too different from T2)**
+
+These pages share only the hero with T2. Their content patterns are fundamentally different and belong to other templates:
+
+| Page | Reason to reclassify | Suggested template |
+|---|---|---|
+| `/sonpo/contact` | 34 accordion elements, contact-accordion XFs, unique phone/email layout (49 sections) | T3 (Product/Section) or new "Contact Hub" template |
+| `/sonpo/contractor` | Identical accordion zone as contact + unique button grids, procedure sections, dispute resolution (60 sections) | T3 or new "Contractor Hub" template |
+| `/sonpo/service` | Plain content-card sections, no XFs besides header/footer, unique layout (17 sections) | T3 (Service Hub) |
+| `/sonpo/business/totalrisk` | Informational content page, no business XF set, unique contact XF (11 sections) | T5 (Content/Info Page) |
+
+### Recommended T2 migration order
+
+Based on parser reuse potential, the recommended order is:
+
+| Priority | Page(s) | Effort | Why |
+|---|---|---|---|
+| **1** | `/sonpo/business` | Low — broaden 2 XF selectors, add 2 new parsers | Closest sibling to `/sonpo/personal`. 4/6 parsers reusable. |
+| **2** | `/sonpo/personal/product` + `/sonpo/business/product` | Medium — 1 major new parser (product-accordion) | Share hero + footer XFs. Product-accordion parser unlocks both pages. |
+| **3** | `/sonpo/business/industry` + `/sonpo/business/risk` | Medium — icon-button-grid + 3 business XF parsers | Identical structure. Business XF parsers reusable by cluster D. |
+| **4** | `/sonpo/business/nzk` + `/sonpo/business/hjk` | Low — reuse business XF parsers from priority 3 | Simplified version of cluster C. |
+
+### Revised T2 page count
+
+After reclassifying 4 pages out of T2 (contact, contractor, service, totalrisk), the confirmed T2 Category Landing pages are:
+
+| # | URL | Cluster | Status |
+|---|---|---|---|
+| 1 | `/sonpo/personal` | A | **Migrated** (initial) |
+| 2 | `/sonpo/business` | A | **Imported** |
+| 3 | `/sonpo/personal/product` | B | **Imported** |
+| 4 | `/sonpo/business/product` | B | **Imported** |
+| 5 | `/sonpo/business/industry` | C | **Imported** |
+| 6 | `/sonpo/business/risk` | C | **Imported** |
+| 7 | `/sonpo/business/nzk` | D | **Imported** |
+| 8 | `/sonpo/business/hjk` | D | **Imported** |
+
+**Total: 8/8 T2 pages imported.**
+
+> **Note:** `/sonpo/business/riskappetite` was not analyzed but based on URL pattern it likely belongs to cluster C or D. Needs verification.
+
+### T2 import implementation notes
+
+The bulk import used the broadened selector approach (Option 1 from scoping):
+
+1. **No new parsers needed** — the 6 existing parsers all use generic internal DOM selectors (`.cmp-button`, `.cmp-columncontainer-item`, etc.) that matched across all page variants
+2. **XF selectors broadened with CSS attribute wildcards:**
+   - `cards-link-grid`: `[class*="cmp-experiencefragment--utility"]` (was `--utility-personal`)
+   - `columns-cta`: `[class*="cmp-experiencefragment--cta-"]` (was `--cta-personal-products`)
+   - Section 5 (contract info) and Section 6 (CTA) selectors broadened with array fallbacks
+   - Section 7 (policyholders) archive link selector broadened to `[class*="cmp-experiencefragment--link-to-archives"]`
+3. **3 new sections added** to handle content that appears on business pages but not personal:
+   - `section-8-content` — main content areas not matching any other section
+   - `section-9-localnav` — local navigation Experience Fragments
+   - `section-10-archives` — archive links Experience Fragments
+4. **Content not captured by existing parsers** flows through as default content (headings, links, images, text) — this is by design. The business pages have additional content patterns (solution cards, icon grids, product accordions) that could benefit from dedicated parsers in the future but render acceptably as default content for now.
+
+---
+
+## Next Steps
+
+### Immediate (T2 refinement)
+
+1. **Visual QA** — Compare each imported page side-by-side with the original to identify content gaps and styling issues. The business page has several content sections (海外/国内ソリューション, 法人会・納税協会制度商品) that imported as default content and may need dedicated blocks for better visual fidelity.
+
+2. **Block CSS refinement** — The 6 block variants (hero-category, columns-product-nav, columns-showcase, cards-link-grid, columns-cta, columns-info-panel) were styled for `/sonpo/personal`. Verify they look correct on business pages and adjust CSS if needed.
+
+3. **Verify `/sonpo/business/riskappetite`** — This URL appeared in earlier analysis but wasn't included in the T2 scope. Check if it should be added as a 9th T2 page.
+
+### Next template (recommended: T3 Product/Section Page)
+
+T3 is the natural next target because it **shares the most blocks with T2**:
+- Reusable from T2: hero-category, cards-link-grid, columns-cta (3/6 parsers)
+- New blocks needed: accordion, anchor-nav, button-grid, phone-contact, bottom-navigation
+- Estimated ~25 pages
+- Representative pages to analyze first: `/sonpo/personal/product/auto/aap`, `/sonpo/service/claim`
+
+**Migration order recommendation for remaining templates:**
+
+| Priority | Template | Est. Pages | Shared blocks with prior | New blocks needed |
+|---|---|---|---|---|
+| **Next** | T3 Product/Section | ~25 | 3 from T2 | accordion, anchor-nav, button-grid, bottom-nav |
+| 3 | T4 Product Detail | ~80 | Many from T2+T3 | tabs, document-table |
+| 4 | T6 News/Editorial | ~100+ | hero, metadata | news-list, year-archive, article-body |
+| 5 | T5 Content/Info | ~500+ | hero, many from T3-T4 | Mostly default content + FAQ accordion |
+| 6 | T7 Landing/Campaign | ~57 | Unknown | Needs scoping — custom marketing layouts |
+| 7 | T8 Archive/Reference | ~112 | Minimal | Needs scoping — document-style pages |
+| 8 | T1 Homepage | 1 | — | **Already complete** (hand-authored) |
+| 9 | T9 Micro-site | ~10 | None | Standalone template, separate chrome |
 

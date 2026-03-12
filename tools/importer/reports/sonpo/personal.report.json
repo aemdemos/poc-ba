@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://www.aig.co.jp/sonpo/personal",
+  "path": "sonpo/personal",
+  "timestamp": "2026-03-09T12:50:45.889Z",
+  "title": "個人向け保険 | AIG損保",
+  "template": "category-landing",
+  "blocks": [
+    "hero-category",
+    "columns-product-nav",
+    "columns-showcase",
+    "cards-link-grid",
+    "cards-link-grid",
+    "columns-cta",
+    "columns-info-panel"
+  ]
+}

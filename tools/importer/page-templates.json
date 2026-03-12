@@ -1,0 +1,175 @@
+{
+  "templates": [
+    {
+      "name": "category-landing",
+      "urls": [
+        "https://www.aig.co.jp/sonpo/personal",
+        "https://www.aig.co.jp/sonpo/business",
+        "https://www.aig.co.jp/sonpo/personal/product",
+        "https://www.aig.co.jp/sonpo/business/product",
+        "https://www.aig.co.jp/sonpo/business/industry",
+        "https://www.aig.co.jp/sonpo/business/risk",
+        "https://www.aig.co.jp/sonpo/business/nzk",
+        "https://www.aig.co.jp/sonpo/business/hjk"
+      ],
+      "description": "Category landing page for insurance product categories (personal, business). Features hero banner, product listings, promotional banners, CTA sections, and category navigation. Broadened selectors to match both personal and business XF variants.",
+      "blocks": [
+        {
+          "name": "hero-category",
+          "instances": [
+            ".ace-heroimage.cmp-heroimage--width-full"
+          ]
+        },
+        {
+          "name": "columns-product-nav",
+          "instances": [
+            ".cmp-section--light-gray:not(.cmp-section--background-full) .cmp-columncontainer--2col-1_3"
+          ]
+        },
+        {
+          "name": "columns-showcase",
+          "instances": [
+            ".ace-section.cmp-section--light-gray:not(.cmp-section--primary) .cmp-columncontainer"
+          ]
+        },
+        {
+          "name": "cards-link-grid",
+          "instances": [
+            "[class*=\"cmp-experiencefragment--utility\"] .cmp-columncontainer--3",
+            "[class*=\"cmp-experiencefragment--utility\"] .cmp-columncontainer--2col-1_1"
+          ]
+        },
+        {
+          "name": "columns-cta",
+          "instances": [
+            "[class*=\"cmp-experiencefragment--cta-\"] .cmp-columncontainer--3"
+          ]
+        },
+        {
+          "name": "columns-info-panel",
+          "instances": [
+            ".cmp-section--background-full .cmp-columncontainer:has(.cmp-section--white)"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1-hero",
+          "name": "Hero",
+          "selector": ".ace-heroimage.cmp-heroimage--width-full",
+          "style": null,
+          "blocks": [
+            "hero-category"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2-product-listing",
+          "name": "Product Listing",
+          "selector": ".ace-section.cmp-section--primary.cmp-section--light-gray:not(.cmp-section--background-full)",
+          "style": "light-gray",
+          "blocks": [
+            "columns-product-nav"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-3-pickup",
+          "name": "Pick Up",
+          "selector": ".ace-section.cmp-section--primary:not(.cmp-section--light-gray):has(.cmp-image__link)",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            ".cmp-image__link"
+          ]
+        },
+        {
+          "id": "section-4-more-aig",
+          "name": "More AIG",
+          "selector": ".ace-section.cmp-section--primary:not(.cmp-section--light-gray):has(.ace-teaser)",
+          "style": null,
+          "blocks": [
+            "columns-showcase"
+          ],
+          "defaultContent": [
+            ".cmp-section-header__title"
+          ]
+        },
+        {
+          "id": "section-5-contract-info",
+          "name": "Contract Information",
+          "selector": [
+            "[class*=\"cmp-experiencefragment--utility\"] .ace-section.cmp-section--primary",
+            "[class*=\"cmp-experiencefragment--guard\"] + [class*=\"cmp-experiencefragment--utility\"] .ace-section"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-link-grid"
+          ],
+          "defaultContent": [
+            ".cmp-section-header__title"
+          ]
+        },
+        {
+          "id": "section-6-cta",
+          "name": "Request Materials CTA",
+          "selector": [
+            "[class*=\"cmp-experiencefragment--cta-\"] .ace-section.cmp-section--primary.cmp-section--light-gray",
+            "[class*=\"cmp-experiencefragment--cta-\"] .ace-section.cmp-section--primary"
+          ],
+          "style": "light-gray",
+          "blocks": [
+            "columns-cta"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-7-contractors",
+          "name": "For Policyholders",
+          "selector": ".ace-section.cmp-section--primary.cmp-section--light-gray.cmp-section--background-full",
+          "style": "light-gray",
+          "blocks": [
+            "columns-info-panel"
+          ],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            "[class*=\"cmp-experiencefragment--link-to-archives\"]"
+          ]
+        },
+        {
+          "id": "section-8-content",
+          "name": "Main Content",
+          "selector": ".ace-section:not(.cmp-section--primary):not(.cmp-section--light-gray):not(.cmp-section--background-full)",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            ".cmp-columncontainer",
+            ".cmp-text",
+            ".cmp-image"
+          ]
+        },
+        {
+          "id": "section-9-localnav",
+          "name": "Local Navigation",
+          "selector": "[class*=\"cmp-experiencefragment--localnav\"] .ace-section",
+          "style": null,
+          "blocks": [],
+          "defaultContent": []
+        },
+        {
+          "id": "section-10-archives",
+          "name": "Archive Links",
+          "selector": "[class*=\"cmp-experiencefragment--link-to-archives\"] .ace-section",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            "a"
+          ]
+        }
+      ]
+    }
+  ]
+}
