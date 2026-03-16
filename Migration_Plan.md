@@ -768,7 +768,9 @@ Each row has two columns: an empty image column (hidden by CSS) and a body colum
 - Fully content-driven
 - Converts rows into `<ul>/<li>` card list
 - Links styled as white outlined buttons with gray border, 80px min-height, and gray arrow circle icon
-- Grid: 1 column on mobile, 3 columns at >=600px
+- Icons displayed in original colors (`filter: none`) since buttons have white background
+- Grid: 1 column on mobile, responsive at >=600px: 3 columns (default), 2 columns for 2-item grids, centered single item for 1-item grids
+- Text is center-aligned within buttons (`justify-content: center`)
 
 ---
 
@@ -789,7 +791,7 @@ Each column contains a single link with an `:icon-name:` prefix for the icon. Th
 - Content-driven with fallback — if the author includes `:icon:` syntax, those icons are used; otherwise, a JS `ICON_MAP` injects icons based on URL pathname as a fallback
 - Used inside a section with `light-gray` style
 - The `light-gray` background uses a `::before` pseudo-element capped at `--content-max-width` (not full-width)
-- Navy buttons with white text and icons, 80px min-height
+- Navy buttons with white text and icons, 80px min-height, center-aligned text (`justify-content: center`)
 
 ---
 
@@ -807,7 +809,7 @@ The block uses three authoring conventions to control button variants:
 | `<p><em><a>` (italic link) | White/outline secondary button | `*[:office-location: お近くのAIG損保](url)*` |
 | `<ul><li><a>` (list item link) | Text link with arrow icon | `- [耳や言葉の不自由なお客さま](url)` |
 
-Icons are authored using `:icon-name:` syntax inside the link text (e.g., `:contact:`, `:document:`, `:corporation:`). A short text paragraph (<=25 characters) immediately following a button is automatically merged as a caption inside the button.
+Icons are authored using `:icon-name:` syntax inside the link text (e.g., `:contact:`, `:document:`, `:corporation:`). A short text paragraph (<=80 characters) immediately following a button is automatically merged as a caption inside the button.
 
 ```
 | columns-info-panel |                          |
@@ -820,7 +822,8 @@ Icons are authored using `:icon-name:` syntax inside the link text (e.g., `:cont
 
 **Implementation notes:**
 - Fully content-driven — all button variants, icons, and text links are controlled by the author in DA
-- JS only does column counting and caption merging (no hardcoded URL maps or icon injection)
+- JS only does column counting and caption merging (no hardcoded URL maps or icon injection). `MAX_CAPTION_LENGTH = 80` to support longer descriptions (e.g., business page デジタル保険証券 subtitle)
+- Text is center-aligned within all buttons (`justify-content: center`)
 - Most extensively styled block (~280 lines of CSS)
 - White card panels on flex layout, side-by-side at >=768px
 - `<h3>` headings are centered with a bottom border
@@ -982,7 +985,7 @@ The bulk import used the broadened selector approach (Option 1 from scoping):
 
 1. **Visual QA** — Compare each imported page side-by-side with the original to identify content gaps and styling issues. The business page has several content sections (海外/国内ソリューション, 法人会・納税協会制度商品) that imported as default content and may need dedicated blocks for better visual fidelity.
 
-2. **Block CSS refinement** — The 6 block variants (hero-category, columns-product-nav, columns-showcase, cards-link-grid, columns-cta, columns-info-panel) were styled for `/sonpo/personal`. Verify they look correct on business pages and adjust CSS if needed.
+2. ~~**Block CSS refinement**~~ ✅ **DONE** — cards-link-grid (icon visibility, responsive grid for 1/2/3 item counts, text centering), columns-cta (text centering), and columns-info-panel (text centering, caption length increased to 80 chars) all verified on both `/sonpo/personal` and `/sonpo/business`.
 
 3. **Verify `/sonpo/business/riskappetite`** — This URL appeared in earlier analysis but wasn't included in the T2 scope. Check if it should be added as a 9th T2 page.
 
