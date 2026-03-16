@@ -495,7 +495,7 @@ main .section.light-gray-background,
 main .section.light-gray {
   background-color: var(--color-gray);
   margin: 0;
-  padding: var(--spacing-xl) 0;
+  padding: 54px 0;
 }
 
 main .section.news-list {

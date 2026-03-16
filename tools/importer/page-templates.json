@@ -27,9 +27,21 @@
           ]
         },
         {
+          "name": "anchor-nav",
+          "instances": [
+            ".ace-list.cmp-list--anchor"
+          ]
+        },
+        {
+          "name": "columns-product-detail",
+          "instances": [
+            ".cmp-section--primary .cmp-columncontainer--2col-1_3:has(.cmp-button-caption)"
+          ]
+        },
+        {
           "name": "columns-product-nav",
           "instances": [
-            ".cmp-section--light-gray:not(.cmp-section--background-full) .cmp-columncontainer--2col-1_3"
+            ".cmp-section--light-gray:not(.cmp-section--background-full) .cmp-columncontainer--2col-1_3:not(:has(.cmp-button-caption))"
           ]
         },
         {
@@ -195,25 +207,6 @@
             ".cmp-columncontainer",
             ".cmp-text",
             ".cmp-image"
-          ]
-        },
-        {
-          "id": "section-9-localnav",
-          "name": "Local Navigation",
-          "selector": "[class*=\"cmp-experiencefragment--localnav\"] .ace-section",
-          "style": null,
-          "blocks": [],
-          "defaultContent": []
-        },
-        {
-          "id": "section-10-archives",
-          "name": "Archive Links",
-          "selector": "[class*=\"cmp-experiencefragment--link-to-archives\"] .ace-section",
-          "style": null,
-          "blocks": [],
-          "defaultContent": [
-            ".cmp-section-header__title",
-            "a"
           ]
         }
       ]

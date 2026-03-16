@@ -22,7 +22,7 @@ export default function transform(hookName, element, payload) {
     element.querySelectorAll('.cmp-image[data-cmp-src]').forEach((container) => {
       const dataCmpSrc = container.getAttribute('data-cmp-src');
       if (dataCmpSrc) {
-        const realSrc = dataCmpSrc.replace('{.width}', '1280');
+        const realSrc = dataCmpSrc.replace('{.width}', '.1280');
         const img = container.querySelector('img.cmp-image__image');
         if (img) {
           const src = img.getAttribute('src') || '';
@@ -54,6 +54,21 @@ export default function transform(hookName, element, payload) {
       const section = heading.closest('.ace-section');
       if (section) {
         section.setAttribute('data-section-name', heading.textContent.trim());
+      }
+    });
+
+    // Normalize section headings to h2. Source pages use h1 for some section titles
+    // (e.g. ご契約者さま on business page). Hero uses .cmp-heroimage__title (not affected).
+    // Skip sub-headings inside white panel sections (.cmp-section--white / .cmp-section--secondary).
+    element.querySelectorAll('.cmp-section-header__title').forEach((heading) => {
+      if (heading.closest('.cmp-section--white') || heading.closest('.cmp-section--secondary')) return;
+      if (heading.closest('.cmp-heroimage')) return; // Hero heading stays h1
+      if (heading.tagName !== 'H2') {
+        const doc = element.ownerDocument || element.getRootNode();
+        const h2 = doc.createElement('h2');
+        h2.className = heading.className;
+        h2.textContent = heading.textContent;
+        heading.replaceWith(h2);
       }
     });
   }

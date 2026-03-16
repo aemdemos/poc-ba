@@ -7,6 +7,9 @@
  * Inserts <hr> before each section (except first) and section-metadata blocks
  * for sections with a style property.
  * Runs in afterTransform only (after block parsing).
+ *
+ * Sections marked with data-section-handled by parsers are skipped to avoid
+ * duplicate section breaks and metadata.
  */
 const TransformHook = { afterTransform: 'afterTransform' };
 
@@ -35,6 +38,9 @@ export default function transform(hookName, element, payload) {
     }
 
     if (!sectionEl) continue;
+
+    // Skip sections already handled by block parsers (e.g. columns-product-detail)
+    if (sectionEl.getAttribute('data-section-handled')) continue;
 
     // Add section-metadata block after section element if section has a style
     if (section.style) {

@@ -4,6 +4,8 @@
 // PARSER IMPORTS
 import breadcrumbParser from './parsers/breadcrumb.js';
 import heroCategoryParser from './parsers/hero-category.js';
+import anchorNavParser from './parsers/anchor-nav.js';
+import columnsProductDetailParser from './parsers/columns-product-detail.js';
 import columnsProductNavParser from './parsers/columns-product-nav.js';
 import columnsShowcaseParser from './parsers/columns-showcase.js';
 import cardsTeaserParser from './parsers/cards-teaser.js';
@@ -19,6 +21,8 @@ import aigSectionsTransformer from './transformers/aig-sections.js';
 const parsers = {
   'breadcrumb': breadcrumbParser,
   'hero-category': heroCategoryParser,
+  'anchor-nav': anchorNavParser,
+  'columns-product-detail': columnsProductDetailParser,
   'columns-product-nav': columnsProductNavParser,
   'columns-showcase': columnsShowcaseParser,
   'cards-teaser': cardsTeaserParser,
@@ -51,8 +55,16 @@ const PAGE_TEMPLATE = {
       instances: ['.ace-heroimage.cmp-heroimage--width-full']
     },
     {
+      name: 'anchor-nav',
+      instances: ['.ace-list.cmp-list--anchor']
+    },
+    {
+      name: 'columns-product-detail',
+      instances: ['.cmp-section--primary .cmp-columncontainer--2col-1_3:has(.cmp-button-caption)']
+    },
+    {
       name: 'columns-product-nav',
-      instances: ['.cmp-section--light-gray:not(.cmp-section--background-full) .cmp-columncontainer--2col-1_3']
+      instances: ['.cmp-section--light-gray:not(.cmp-section--background-full) .cmp-columncontainer--2col-1_3:not(:has(.cmp-button-caption))']
     },
     {
       name: 'columns-showcase',
@@ -66,7 +78,9 @@ const PAGE_TEMPLATE = {
       name: 'cards-link-grid',
       instances: [
         '[class*="cmp-experiencefragment--utility"] .cmp-columncontainer--3',
-        '[class*="cmp-experiencefragment--utility"] .cmp-columncontainer--2col-1_1'
+        '[class*="cmp-experiencefragment--utility"] .cmp-columncontainer--2col-1_1',
+        '[data-section-name="国内向けソリューション"] .button',
+        '[data-section-name="法人会・納税協会制度商品"] .cmp-columncontainer'
       ]
     },
     {
@@ -124,16 +138,16 @@ const PAGE_TEMPLATE = {
       name: 'Domestic Solutions',
       selector: '[data-section-name="国内向けソリューション"]',
       style: null,
-      blocks: [],
-      defaultContent: ['.cmp-section-header__title', '.cmp-button']
+      blocks: ['cards-link-grid'],
+      defaultContent: ['.cmp-section-header__title']
     },
     {
       id: 'section-4c-association-products',
       name: 'Association Products',
       selector: '[data-section-name="法人会・納税協会制度商品"]',
       style: null,
-      blocks: [],
-      defaultContent: ['.cmp-section-header__title', '.cmp-columncontainer']
+      blocks: ['cards-link-grid'],
+      defaultContent: ['.cmp-section-header__title']
     },
     {
       id: 'section-5-contract-info',
@@ -173,22 +187,9 @@ const PAGE_TEMPLATE = {
       blocks: [],
       defaultContent: ['.cmp-section-header__title', '.cmp-columncontainer', '.cmp-text', '.cmp-image']
     },
-    {
-      id: 'section-9-localnav',
-      name: 'Local Navigation',
-      selector: '[class*="cmp-experiencefragment--localnav"] .ace-section',
-      style: null,
-      blocks: [],
-      defaultContent: []
-    },
-    {
-      id: 'section-10-archives',
-      name: 'Archive Links',
-      selector: '[class*="cmp-experiencefragment--link-to-archives"] .ace-section',
-      style: null,
-      blocks: [],
-      defaultContent: ['.cmp-section-header__title', 'a']
-    }
+    // section-9-localnav and section-10-archives REMOVED:
+    // Archive links (旧AIU) are defaultContent of section-7-contractors (For Policyholders)
+    // and must NOT be in a separate section. Local nav is handled by EDS navigation.
   ]
 };
 
