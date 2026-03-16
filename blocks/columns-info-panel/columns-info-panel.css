@@ -48,6 +48,7 @@
 .columns-info-panel a.button {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   box-sizing: border-box;
   padding: 18px 36px 18px 9px;

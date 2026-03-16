@@ -30,6 +30,7 @@
 .cards-link-grid .cards-link-grid-card-body a.button {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   box-sizing: border-box;
   padding: 18px 27px 18px 9px;
@@ -54,6 +55,16 @@
   color: #000;
 }
 
+/* Show icons in original colors on white buttons */
+.cards-link-grid a.button .icon {
+  width: 40px;
+  height: 40px;
+}
+
+.cards-link-grid a.button .icon img {
+  filter: none;
+}
+
 /* Reduce gap between consecutive cards-link-grid blocks */
 .cards-link-grid-wrapper + .cards-link-grid-wrapper {
   margin-top: 18px;
@@ -62,5 +73,15 @@
 @media (width >= 600px) {
   .cards-link-grid > ul {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* 2-item grids: use 2 columns */
+  .cards-link-grid > ul:has(> li:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 1-item grids: center the single button */
+  .cards-link-grid > ul > li:only-child {
+    grid-column: 2;
   }
 }
