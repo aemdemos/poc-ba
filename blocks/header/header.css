@@ -1622,14 +1622,16 @@ header nav .nav-sections .default-content-wrapper > ul > .sticky-search {
   }
 }
 
-/* breadcrumbs (auto-generated) — unified with manual breadcrumb block */
+/* breadcrumbs (auto-generated) — aligned with content sections */
 header .nav-wrapper .breadcrumbs {
   display: none;
+  flex-direction: row;
   align-items: center;
+  box-sizing: content-box;
   min-height: 40px;
   margin: auto;
-  max-width: 1200px;
-  padding: 0 24px;
+  max-width: var(--content-max-width, 1120px);
+  padding: 0 var(--spacing-s, 18px);
   overflow: hidden;
 }
 
@@ -1667,6 +1669,6 @@ header .nav-wrapper nav.breadcrumbs a:hover {
 @media (width >= 769px) {
   header .nav-wrapper .breadcrumbs {
     display: flex;
-    padding: 0 32px;
+    padding: 0 var(--spacing-s, 18px);
   }
 }
