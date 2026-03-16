@@ -2,10 +2,11 @@
   "status": "success",
   "url": "https://www.aig.co.jp/sonpo/business/risk",
   "path": "sonpo/business/risk",
-  "timestamp": "2026-03-12T19:14:37.216Z",
+  "timestamp": "2026-03-13T14:08:38.429Z",
   "title": "リスクから探す | 法人向け保険 | AIG損保",
   "template": "category-landing",
   "blocks": [
+    "breadcrumb",
     "hero-category",
     "cards-link-grid",
     "columns-cta"

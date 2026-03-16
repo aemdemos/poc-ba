@@ -40,6 +40,30 @@ var CustomImportScript = (() => {
     default: () => import_category_landing_default
   });
 
+  // tools/importer/parsers/breadcrumb.js
+  function parse(element, { document }) {
+    const items = element.querySelectorAll(".cmp-breadcrumb__item");
+    if (!items.length) return;
+    const cells = [];
+    items.forEach((li, i) => {
+      const anchor = li.querySelector("a");
+      const row = [];
+      if (anchor && i < items.length - 1) {
+        const link = document.createElement("a");
+        link.href = anchor.href || anchor.getAttribute("href");
+        link.textContent = anchor.textContent.trim();
+        row.push(link);
+      } else {
+        row.push(li.textContent.trim());
+      }
+      cells.push(row);
+    });
+    const block = WebImporter.Blocks.createBlock(document, { name: "breadcrumb", cells });
+    element.replaceWith(block);
+    const hr = document.createElement("hr");
+    block.after(hr);
+  }
+
   // tools/importer/parsers/hero-category.js
   function extractBgUrl(el) {
     if (!el) return null;
@@ -53,7 +77,7 @@ var CustomImportScript = (() => {
     }
     return rawUrl;
   }
-  function parse(element, { document }) {
+  function parse2(element, { document }) {
     const pcUrl = extractBgUrl(element.querySelector(".cmp-heroimage-image.pc-only"));
     const spUrl = extractBgUrl(element.querySelector(".cmp-heroimage-image.sp-only"));
     const imgCell = [];
@@ -86,7 +110,7 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/columns-product-nav.js
-  function parse2(element, { document }) {
+  function parse3(element, { document }) {
     var _a;
     const columnItems = element.querySelectorAll(":scope > .cmp-columncontainer-item");
     const col1 = document.createElement("div");
@@ -111,7 +135,7 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/columns-showcase.js
-  function parse3(element, { document }) {
+  function parse4(element, { document }) {
     const columnItems = element.querySelectorAll(":scope > .cmp-columncontainer-item");
     const cols = [];
     columnItems.forEach((colItem) => {
@@ -157,8 +181,49 @@ var CustomImportScript = (() => {
     element.replaceWith(block);
   }
 
+  // tools/importer/parsers/cards-teaser.js
+  function parse5(element, { document }) {
+    const teasers = element.querySelectorAll(".ace-teaser .cmp-teaser");
+    if (!teasers.length) return;
+    const cells = [];
+    teasers.forEach((teaser) => {
+      const link = teaser.querySelector("a.cmp-teaser__link");
+      const img = teaser.querySelector(".cmp-teaser__image img");
+      const title = teaser.querySelector(".cmp-teaser__title");
+      const desc = teaser.querySelector(".cmp-teaser__description");
+      const imgCell = document.createElement("div");
+      if (img) {
+        const picture = document.createElement("img");
+        picture.src = img.src || img.getAttribute("src") || "";
+        picture.alt = img.alt || "";
+        imgCell.append(picture);
+      }
+      const contentCell = document.createElement("div");
+      if (title) {
+        const h3 = document.createElement("h3");
+        if (link) {
+          const a = document.createElement("a");
+          a.href = link.href || link.getAttribute("href");
+          a.textContent = title.textContent.trim();
+          h3.append(a);
+        } else {
+          h3.textContent = title.textContent.trim();
+        }
+        contentCell.append(h3);
+      }
+      if (desc) {
+        const p = document.createElement("p");
+        p.textContent = desc.textContent.trim();
+        contentCell.append(p);
+      }
+      cells.push([imgCell, contentCell]);
+    });
+    const block = WebImporter.Blocks.createBlock(document, { name: "cards", cells });
+    element.replaceWith(block);
+  }
+
   // tools/importer/parsers/cards-link-grid.js
-  function parse4(element, { document }) {
+  function parse6(element, { document }) {
     const buttons = element.querySelectorAll("a.cmp-button");
     const cells = [];
     buttons.forEach((btn) => {
@@ -175,7 +240,7 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/columns-cta.js
-  function parse5(element, { document }) {
+  function parse7(element, { document }) {
     const columnItems = element.querySelectorAll(":scope > .cmp-columncontainer-item");
     const cols = [];
     columnItems.forEach((colItem) => {
@@ -198,7 +263,7 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/columns-info-panel.js
-  function parse6(element, { document }) {
+  function parse8(element, { document }) {
     const columnItems = element.querySelectorAll(":scope > .cmp-columncontainer-item");
     const cols = [];
     columnItems.forEach((colItem) => {
@@ -279,11 +344,33 @@ var CustomImportScript = (() => {
           img.remove();
         }
       });
+      element.querySelectorAll(".ace-section .cmp-section-header__title").forEach((heading) => {
+        const section = heading.closest(".ace-section");
+        if (section) {
+          section.setAttribute("data-section-name", heading.textContent.trim());
+        }
+      });
     }
     if (hookName === H.after) {
+      const footerApproveNo = element.querySelector(".cmp-experiencefragment--site-footer .cmp-footer-approve-no");
+      if (footerApproveNo) {
+        const trackingText = footerApproveNo.textContent.trim();
+        if (trackingText) {
+          const doc = element.ownerDocument || element.getRootNode();
+          const hr = doc.createElement("hr");
+          const p = doc.createElement("p");
+          p.textContent = trackingText;
+          const metaBlock = WebImporter.Blocks.createBlock(doc, {
+            name: "Section Metadata",
+            cells: { style: "approve-no" }
+          });
+          element.appendChild(hr);
+          element.appendChild(p);
+          element.appendChild(metaBlock);
+        }
+      }
       WebImporter.DOMUtils.remove(element, [".cmp-experiencefragment--site-header"]);
       WebImporter.DOMUtils.remove(element, [".cmp-experiencefragment--site-footer"]);
-      WebImporter.DOMUtils.remove(element, [".ace-breadcrumb"]);
       WebImporter.DOMUtils.remove(element, ["iframe", "link", "noscript"]);
       element.querySelectorAll("img").forEach((img) => {
         const src = img.getAttribute("src") || "";
@@ -329,12 +416,14 @@ var CustomImportScript = (() => {
 
   // tools/importer/import-category-landing.js
   var parsers = {
-    "hero-category": parse,
-    "columns-product-nav": parse2,
-    "columns-showcase": parse3,
-    "cards-link-grid": parse4,
-    "columns-cta": parse5,
-    "columns-info-panel": parse6
+    "breadcrumb": parse,
+    "hero-category": parse2,
+    "columns-product-nav": parse3,
+    "columns-showcase": parse4,
+    "cards-teaser": parse5,
+    "cards-link-grid": parse6,
+    "columns-cta": parse7,
+    "columns-info-panel": parse8
   };
   var PAGE_TEMPLATE = {
     name: "category-landing",
@@ -351,6 +440,10 @@ var CustomImportScript = (() => {
     ],
     blocks: [
       {
+        name: "breadcrumb",
+        instances: [".ace-breadcrumb"]
+      },
+      {
         name: "hero-category",
         instances: [".ace-heroimage.cmp-heroimage--width-full"]
       },
@@ -361,6 +454,10 @@ var CustomImportScript = (() => {
       {
         name: "columns-showcase",
         instances: [".ace-section.cmp-section--light-gray:not(.cmp-section--primary) .cmp-columncontainer"]
+      },
+      {
+        name: "cards-teaser",
+        instances: [".cmp-section--primary:not(.cmp-section--light-gray) .cmp-columncontainer:has(.ace-teaser)"]
       },
       {
         name: "cards-link-grid",
@@ -410,6 +507,30 @@ var CustomImportScript = (() => {
         style: null,
         blocks: ["columns-showcase"],
         defaultContent: [".cmp-section-header__title"]
+      },
+      {
+        id: "section-4a-global-solutions",
+        name: "Global Solutions",
+        selector: '[data-section-name="\u6D77\u5916\u5411\u3051\u30BD\u30EA\u30E5\u30FC\u30B7\u30E7\u30F3"]',
+        style: null,
+        blocks: ["cards-teaser"],
+        defaultContent: [".cmp-section-header__title", ".ace-image"]
+      },
+      {
+        id: "section-4b-domestic-solutions",
+        name: "Domestic Solutions",
+        selector: '[data-section-name="\u56FD\u5185\u5411\u3051\u30BD\u30EA\u30E5\u30FC\u30B7\u30E7\u30F3"]',
+        style: null,
+        blocks: [],
+        defaultContent: [".cmp-section-header__title", ".cmp-button"]
+      },
+      {
+        id: "section-4c-association-products",
+        name: "Association Products",
+        selector: '[data-section-name="\u6CD5\u4EBA\u4F1A\u30FB\u7D0D\u7A0E\u5354\u4F1A\u5236\u5EA6\u5546\u54C1"]',
+        style: null,
+        blocks: [],
+        defaultContent: [".cmp-section-header__title", ".cmp-columncontainer"]
       },
       {
         id: "section-5-contract-info",

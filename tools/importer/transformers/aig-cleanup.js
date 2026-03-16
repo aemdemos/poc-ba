@@ -48,9 +48,36 @@ export default function transform(hookName, element, payload) {
         img.remove();
       }
     });
+
+    // Tag sections with heading text for reliable section matching (survives parser execution)
+    element.querySelectorAll('.ace-section .cmp-section-header__title').forEach((heading) => {
+      const section = heading.closest('.ace-section');
+      if (section) {
+        section.setAttribute('data-section-name', heading.textContent.trim());
+      }
+    });
   }
 
   if (hookName === H.after) {
+    // Extract tracking number from footer BEFORE removing footer XF
+    const footerApproveNo = element.querySelector('.cmp-experiencefragment--site-footer .cmp-footer-approve-no');
+    if (footerApproveNo) {
+      const trackingText = footerApproveNo.textContent.trim();
+      if (trackingText) {
+        const doc = element.ownerDocument || element.getRootNode();
+        const hr = doc.createElement('hr');
+        const p = doc.createElement('p');
+        p.textContent = trackingText;
+        const metaBlock = WebImporter.Blocks.createBlock(doc, {
+          name: 'Section Metadata',
+          cells: { style: 'approve-no' },
+        });
+        element.appendChild(hr);
+        element.appendChild(p);
+        element.appendChild(metaBlock);
+      }
+    }
+
     // Remove site header experience fragment (non-authorable)
     // Found: div.cmp-experiencefragment--site-header (line 6 in cleaned.html)
     WebImporter.DOMUtils.remove(element, ['.cmp-experiencefragment--site-header']);
@@ -59,9 +86,7 @@ export default function transform(hookName, element, payload) {
     // Found: div.cmp-experiencefragment--site-footer (line 2365 in cleaned.html)
     WebImporter.DOMUtils.remove(element, ['.cmp-experiencefragment--site-footer']);
 
-    // Remove breadcrumb navigation (non-authorable)
-    // Found: div.ace-breadcrumb > nav.cmp-breadcrumb (line 1648 in cleaned.html)
-    WebImporter.DOMUtils.remove(element, ['.ace-breadcrumb']);
+    // Breadcrumb is now handled by the breadcrumb parser — no removal needed
 
     // Remove iframes, link elements, noscript
     WebImporter.DOMUtils.remove(element, ['iframe', 'link', 'noscript']);

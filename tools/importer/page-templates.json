@@ -15,6 +15,12 @@
       "description": "Category landing page for insurance product categories (personal, business). Features hero banner, product listings, promotional banners, CTA sections, and category navigation. Broadened selectors to match both personal and business XF variants.",
       "blocks": [
         {
+          "name": "breadcrumb",
+          "instances": [
+            ".ace-breadcrumb"
+          ]
+        },
+        {
           "name": "hero-category",
           "instances": [
             ".ace-heroimage.cmp-heroimage--width-full"
@@ -30,6 +36,12 @@
           "name": "columns-showcase",
           "instances": [
             ".ace-section.cmp-section--light-gray:not(.cmp-section--primary) .cmp-columncontainer"
+          ]
+        },
+        {
+          "name": "cards-teaser",
+          "instances": [
+            ".cmp-section--primary:not(.cmp-section--light-gray) .cmp-columncontainer:has(.ace-teaser)"
           ]
         },
         {
@@ -94,6 +106,41 @@
           ],
           "defaultContent": [
             ".cmp-section-header__title"
+          ]
+        },
+        {
+          "id": "section-4a-global-solutions",
+          "name": "Global Solutions",
+          "selector": "[data-section-name=\"海外向けソリューション\"]",
+          "style": null,
+          "blocks": [
+            "cards-teaser"
+          ],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            ".ace-image"
+          ]
+        },
+        {
+          "id": "section-4b-domestic-solutions",
+          "name": "Domestic Solutions",
+          "selector": "[data-section-name=\"国内向けソリューション\"]",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            ".cmp-button"
+          ]
+        },
+        {
+          "id": "section-4c-association-products",
+          "name": "Association Products",
+          "selector": "[data-section-name=\"法人会・納税協会制度商品\"]",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            ".cmp-columncontainer"
           ]
         },
         {

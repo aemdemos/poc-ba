@@ -2,9 +2,11 @@
 /* global WebImporter */
 
 // PARSER IMPORTS
+import breadcrumbParser from './parsers/breadcrumb.js';
 import heroCategoryParser from './parsers/hero-category.js';
 import columnsProductNavParser from './parsers/columns-product-nav.js';
 import columnsShowcaseParser from './parsers/columns-showcase.js';
+import cardsTeaserParser from './parsers/cards-teaser.js';
 import cardsLinkGridParser from './parsers/cards-link-grid.js';
 import columnsCtaParser from './parsers/columns-cta.js';
 import columnsInfoPanelParser from './parsers/columns-info-panel.js';
@@ -15,9 +17,11 @@ import aigSectionsTransformer from './transformers/aig-sections.js';
 
 // PARSER REGISTRY
 const parsers = {
+  'breadcrumb': breadcrumbParser,
   'hero-category': heroCategoryParser,
   'columns-product-nav': columnsProductNavParser,
   'columns-showcase': columnsShowcaseParser,
+  'cards-teaser': cardsTeaserParser,
   'cards-link-grid': cardsLinkGridParser,
   'columns-cta': columnsCtaParser,
   'columns-info-panel': columnsInfoPanelParser,
@@ -39,6 +43,10 @@ const PAGE_TEMPLATE = {
   ],
   blocks: [
     {
+      name: 'breadcrumb',
+      instances: ['.ace-breadcrumb']
+    },
+    {
       name: 'hero-category',
       instances: ['.ace-heroimage.cmp-heroimage--width-full']
     },
@@ -49,6 +57,10 @@ const PAGE_TEMPLATE = {
     {
       name: 'columns-showcase',
       instances: ['.ace-section.cmp-section--light-gray:not(.cmp-section--primary) .cmp-columncontainer']
+    },
+    {
+      name: 'cards-teaser',
+      instances: ['.cmp-section--primary:not(.cmp-section--light-gray) .cmp-columncontainer:has(.ace-teaser)']
     },
     {
       name: 'cards-link-grid',
@@ -98,6 +110,30 @@ const PAGE_TEMPLATE = {
       style: null,
       blocks: ['columns-showcase'],
       defaultContent: ['.cmp-section-header__title']
+    },
+    {
+      id: 'section-4a-global-solutions',
+      name: 'Global Solutions',
+      selector: '[data-section-name="海外向けソリューション"]',
+      style: null,
+      blocks: ['cards-teaser'],
+      defaultContent: ['.cmp-section-header__title', '.ace-image']
+    },
+    {
+      id: 'section-4b-domestic-solutions',
+      name: 'Domestic Solutions',
+      selector: '[data-section-name="国内向けソリューション"]',
+      style: null,
+      blocks: [],
+      defaultContent: ['.cmp-section-header__title', '.cmp-button']
+    },
+    {
+      id: 'section-4c-association-products',
+      name: 'Association Products',
+      selector: '[data-section-name="法人会・納税協会制度商品"]',
+      style: null,
+      blocks: [],
+      defaultContent: ['.cmp-section-header__title', '.cmp-columncontainer']
     },
     {
       id: 'section-5-contract-info',
