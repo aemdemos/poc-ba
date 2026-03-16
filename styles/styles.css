@@ -53,7 +53,6 @@
 
   /* nav heights */
   --nav-height: 44px;
-  --breadcrumbs-height: 34px;
   --header-height: var(--nav-height);
   --nav-height-desktop: 160px;
 
@@ -129,10 +128,6 @@ footer .footer[data-block-status="loaded"] {
 @media (width >= 769px) {
   :root {
     --nav-height: var(--nav-height-desktop);
-  }
-
-  body[data-breadcrumbs] {
-    --header-height: calc(var(--nav-height) + var(--breadcrumbs-height));
   }
 }
 

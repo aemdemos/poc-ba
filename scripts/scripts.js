@@ -6,7 +6,6 @@ import {
   decorateSections,
   decorateBlocks,
   decorateTemplateAndTheme,
-  getMetadata,
   waitForFirstImage,
   loadSection,
   loadSections,
@@ -314,13 +313,7 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
-  // Breadcrumbs are shown by default; authors opt out with breadcrumbs: false
-  // Only reserve header space when auto-breadcrumbs will render (no manual block)
   const main = doc.querySelector('main');
-  if (getMetadata('breadcrumbs').toLowerCase() !== 'false'
-    && !main?.querySelector('.breadcrumb')) {
-    doc.body.dataset.breadcrumbs = true;
-  }
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');

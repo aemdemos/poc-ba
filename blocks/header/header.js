@@ -524,8 +524,27 @@ export default async function decorate(block) {
   });
 
   // Breadcrumbs are shown by default; authors opt out with breadcrumbs: false
+  // Placed at the top of <main> so they scroll naturally with page content
   if (getMetadata('breadcrumbs').toLowerCase() !== 'false') {
     const bc = await buildBreadcrumbs();
-    if (bc) navWrapper.append(bc);
+    if (bc) {
+      const main = document.querySelector('main');
+      if (main) {
+        const section = document.createElement('div');
+        section.className = 'section breadcrumb-container';
+        const wrapper = document.createElement('div');
+        const blockDiv = document.createElement('div');
+        blockDiv.className = 'breadcrumb';
+        blockDiv.append(bc);
+        wrapper.append(blockDiv);
+        section.append(wrapper);
+        main.prepend(section);
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/blocks/breadcrumb/breadcrumb.css';
+        document.head.append(link);
+      }
+    }
   }
 }
