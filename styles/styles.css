@@ -1126,14 +1126,6 @@ main .section > .default-content-wrapper:has(> h3 + ul) > ul li a:hover {
   text-decoration: underline;
 }
 
-/* When archives row is inside the CTA gray section, break it out visually */
-main .section.light-gray.columns-cta-container > .default-content-wrapper:has(> h3 + ul) {
-  background: var(--background-color);
-  margin-top: 0;
-  padding-top: var(--spacing-s);
-  padding-bottom: 54px;
-  margin-bottom: -54px;
-}
 
 @media (width <= 768px) {
   main .section > .default-content-wrapper:has(> h3 + ul) {

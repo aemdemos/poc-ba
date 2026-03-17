@@ -172,12 +172,20 @@ const PAGE_TEMPLATE = {
       defaultContent: []
     },
     {
+      id: 'section-6b-archives',
+      name: 'Archives Links',
+      selector: '[class*="cmp-experiencefragment--link-to-archives"]',
+      style: null,
+      blocks: [],
+      defaultContent: ['.cmp-title__text', '.ace-list']
+    },
+    {
       id: 'section-7-contractors',
       name: 'For Policyholders',
       selector: '.ace-section.cmp-section--primary.cmp-section--light-gray.cmp-section--background-full',
       style: 'light-gray',
       blocks: ['columns-info-panel'],
-      defaultContent: ['.cmp-section-header__title', '[class*="cmp-experiencefragment--link-to-archives"]']
+      defaultContent: ['.cmp-section-header__title']
     },
     {
       id: 'section-8-content',
@@ -187,9 +195,6 @@ const PAGE_TEMPLATE = {
       blocks: [],
       defaultContent: ['.cmp-section-header__title', '.cmp-columncontainer', '.cmp-text', '.cmp-image']
     },
-    // section-9-localnav and section-10-archives REMOVED:
-    // Archive links (旧AIU) are defaultContent of section-7-contractors (For Policyholders)
-    // and must NOT be in a separate section. Local nav is handled by EDS navigation.
   ]
 };
 

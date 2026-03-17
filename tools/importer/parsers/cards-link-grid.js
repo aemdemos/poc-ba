@@ -16,15 +16,27 @@
  * Each button: a.cmp-button > .cmp-button-main > .cmp-button-main__text
  */
 export default function parse(element, { document }) {
-  // Collect all button links from all .cmp-columncontainer--3 containers
+  // Collect all button links from all containers
   const buttons = element.querySelectorAll('a.cmp-button');
 
   const cells = [];
   buttons.forEach((btn) => {
     const text = btn.querySelector('.cmp-button-main__text');
+    const linkText = text ? text.textContent.trim() : btn.textContent.trim();
+
+    // Check for icon image (e.g. icon_hjk.png → :hjk:)
+    const iconImg = btn.querySelector('.cmp-button-main__icon-image img');
+    let iconPrefix = '';
+    if (iconImg) {
+      const src = iconImg.getAttribute('src') || '';
+      const filename = src.split('/').pop().replace(/\.[^.]+$/, ''); // e.g. icon_hjk
+      const iconName = filename.replace(/^icon_/, ''); // e.g. hjk
+      if (iconName) iconPrefix = `:${iconName}: `;
+    }
+
     const link = document.createElement('a');
     link.href = btn.href || btn.getAttribute('href');
-    link.textContent = text ? text.textContent.trim() : btn.textContent.trim();
+    link.textContent = `${iconPrefix}${linkText}`;
 
     const p = document.createElement('p');
     p.append(link);

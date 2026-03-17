@@ -24,9 +24,22 @@ export default function parse(element, { document }) {
     const btn = colItem.querySelector('a.cmp-button');
     if (btn) {
       const text = btn.querySelector('.cmp-button-main__text');
+      const linkText = text ? text.textContent.trim() : btn.textContent.trim();
+
+      // Extract icon class (e.g. "icon-office-location" → :office-location:)
+      const iconSpan = btn.querySelector('.cmp-button-main__icon');
+      let iconPrefix = '';
+      if (iconSpan) {
+        const iconClass = [...iconSpan.classList].find((c) => c.startsWith('icon-'));
+        if (iconClass) {
+          const iconName = iconClass.replace(/^icon-/, '');
+          iconPrefix = `:${iconName}: `;
+        }
+      }
+
       const link = document.createElement('a');
       link.href = btn.href || btn.getAttribute('href');
-      link.textContent = text ? text.textContent.trim() : btn.textContent.trim();
+      link.textContent = `${iconPrefix}${linkText}`;
 
       const p = document.createElement('p');
       p.append(link);

@@ -1,8 +1,25 @@
 var CustomImportScript = (() => {
   var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   var __export = (target, all) => {
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
@@ -114,9 +131,10 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/columns-product-detail.js
   function parse4(element, { document }) {
+    var _a;
     const columnItems = element.querySelectorAll(":scope > .cmp-columncontainer-item");
     const col1 = document.createElement("div");
-    const heading = columnItems[0]?.querySelector("h2.cmp-title__text, h2, h3");
+    const heading = (_a = columnItems[0]) == null ? void 0 : _a.querySelector("h2.cmp-title__text, h2, h3");
     if (heading) col1.append(heading);
     const col2 = document.createElement("div");
     if (columnItems[1]) {
@@ -150,7 +168,7 @@ var CustomImportScript = (() => {
     const cells = [[col1, col2]];
     const block = WebImporter.Blocks.createBlock(document, { name: "columns-product-detail", cells });
     const parentSection = element.closest(".ace-section");
-    const isBlue = parentSection?.classList.contains("cmp-section--blue");
+    const isBlue = parentSection == null ? void 0 : parentSection.classList.contains("cmp-section--blue");
     const sectionStyle = isBlue ? "blue-background" : "light-gray";
     const sectionMeta = WebImporter.Blocks.createBlock(document, {
       name: "Section Metadata",
@@ -168,9 +186,10 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/columns-product-nav.js
   function parse5(element, { document }) {
+    var _a;
     const columnItems = element.querySelectorAll(":scope > .cmp-columncontainer-item");
     const col1 = document.createElement("div");
-    const heading = columnItems[0]?.querySelector("h2.cmp-title__text, h2, h3");
+    const heading = (_a = columnItems[0]) == null ? void 0 : _a.querySelector("h2.cmp-title__text, h2, h3");
     if (heading) col1.append(heading);
     const col2 = document.createElement("div");
     if (columnItems[1]) {
@@ -533,6 +552,34 @@ var CustomImportScript = (() => {
       }
       if (!sectionEl) continue;
       if (sectionEl.getAttribute("data-section-handled")) continue;
+      if (section.id === "section-6b-archives") {
+        const titleEl = sectionEl.querySelector(".cmp-title__text") || sectionEl.querySelector("h3");
+        const listEl = sectionEl.querySelector("ul");
+        console.log("[archives-debug] Found sectionEl:", !!sectionEl, "titleEl:", !!titleEl, "listEl:", !!listEl);
+        if (!titleEl || !listEl) continue;
+        const h3 = document.createElement("h3");
+        h3.textContent = titleEl.textContent;
+        const ul = listEl.cloneNode(true);
+        const bodyChildren = [...element.children];
+        const approveHr = bodyChildren.find((c) => c.tagName === "HR");
+        const hr = document.createElement("hr");
+        if (approveHr) {
+          console.log("[archives-debug] Inserting before approve-no <hr> at body level");
+          approveHr.before(hr, h3, ul);
+        } else {
+          console.log("[archives-debug] Appending to body (no approve-no <hr> found)");
+          element.append(hr, h3, ul);
+        }
+        if (section.style) {
+          const metaBlock = WebImporter.Blocks.createBlock(document, {
+            name: "Section Metadata",
+            cells: { style: section.style }
+          });
+          ul.after(metaBlock);
+        }
+        sectionEl.remove();
+        continue;
+      }
       if (section.style) {
         const metaBlock = WebImporter.Blocks.createBlock(document, {
           name: "Section Metadata",
@@ -700,12 +747,20 @@ var CustomImportScript = (() => {
         defaultContent: []
       },
       {
+        id: "section-6b-archives",
+        name: "Archives Links",
+        selector: '[class*="cmp-experiencefragment--link-to-archives"]',
+        style: null,
+        blocks: [],
+        defaultContent: [".cmp-title__text", ".ace-list"]
+      },
+      {
         id: "section-7-contractors",
         name: "For Policyholders",
         selector: ".ace-section.cmp-section--primary.cmp-section--light-gray.cmp-section--background-full",
         style: "light-gray",
         blocks: ["columns-info-panel"],
-        defaultContent: [".cmp-section-header__title", '[class*="cmp-experiencefragment--link-to-archives"]']
+        defaultContent: [".cmp-section-header__title"]
       },
       {
         id: "section-8-content",
@@ -715,9 +770,6 @@ var CustomImportScript = (() => {
         blocks: [],
         defaultContent: [".cmp-section-header__title", ".cmp-columncontainer", ".cmp-text", ".cmp-image"]
       }
-      // section-9-localnav and section-10-archives REMOVED:
-      // Archive links (旧AIU) are defaultContent of section-7-contractors (For Policyholders)
-      // and must NOT be in a separate section. Local nav is handled by EDS navigation.
     ]
   };
   var transformers = [
@@ -725,10 +777,9 @@ var CustomImportScript = (() => {
     ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform2] : []
   ];
   function executeTransformers(hookName, element, payload) {
-    const enhancedPayload = {
-      ...payload,
+    const enhancedPayload = __spreadProps(__spreadValues({}, payload), {
       template: PAGE_TEMPLATE
-    };
+    });
     transformers.forEach((transformerFn) => {
       try {
         transformerFn.call(null, hookName, element, enhancedPayload);
