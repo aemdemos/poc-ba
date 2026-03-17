@@ -53,7 +53,6 @@
 
   /* nav heights */
   --nav-height: 44px;
-  --breadcrumbs-height: 34px;
   --header-height: var(--nav-height);
   --nav-height-desktop: 160px;
 
@@ -129,10 +128,6 @@ footer .footer[data-block-status="loaded"] {
 @media (width >= 769px) {
   :root {
     --nav-height: var(--nav-height-desktop);
-  }
-
-  body[data-breadcrumbs] {
-    --header-height: calc(var(--nav-height) + var(--breadcrumbs-height));
   }
 }
 
@@ -500,7 +495,7 @@ main .section.light-gray-background,
 main .section.light-gray {
   background-color: var(--color-gray);
   margin: 0;
-  padding: var(--spacing-xl) 0;
+  padding: 54px 0;
 }
 
 main .section.news-list {
@@ -1064,6 +1059,86 @@ main .section.navy-background {
 .section.recruitment .columns > div > div:not(.columns-img-col) p {
   text-align: left;
 }
+
+/* 旧AIU / 旧富士火災 archives row — horizontal h3 + link list */
+/* stylelint-disable no-descending-specificity */
+main .section > .default-content-wrapper:has(> h3 + ul) {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-s);
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > h3 {
+  flex: 0 0 auto;
+  position: relative;
+  margin: 0;
+  padding: var(--spacing-s);
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  color: var(--color-black);
+  line-height: normal;
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > h3::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 9px;
+  width: 1px;
+  height: 43px;
+  background-color: var(--color-border);
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > ul {
+  list-style: none;
+  margin: 0;
+  padding: var(--spacing-s);
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > ul li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > ul li::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background: var(--arrow-circle-gray) no-repeat center/contain;
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > ul li a {
+  color: var(--color-black);
+  font-size: var(--body-font-size-s);
+  font-weight: 400;
+  text-decoration: none;
+}
+
+main .section > .default-content-wrapper:has(> h3 + ul) > ul li a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+
+@media (width <= 768px) {
+  main .section > .default-content-wrapper:has(> h3 + ul) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  main .section > .default-content-wrapper:has(> h3 + ul) > h3::after {
+    display: none;
+  }
+}
+
+/* stylelint-enable no-descending-specificity */
 
 /* Tracking / approval number section (author-editable per page) */
 main .section.approve-no {

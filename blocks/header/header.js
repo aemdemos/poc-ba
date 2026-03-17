@@ -124,22 +124,34 @@ function getDirectTextContent(menuItem) {
 
 async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
   const crumbs = [];
+  const placeholders = await fetchPlaceholders();
+  const homePlaceholder = placeholders.breadcrumbsHomeLabel || 'Home';
+  const homeUrl = placeholders.breadcrumbsHomeUrl
+    || document.querySelector('.nav-brand a[href]')?.href
+    || '/';
 
-  const homeUrl = document.querySelector('.nav-brand a[href]').href;
+  // Normalize pathname: strip trailing slash and /content prefix (local dev)
+  // so breadcrumbs work across domains and local preview
+  const normalizePath = (p) => p.replace(/\/$/, '').replace(/^\/content/, '');
+  const currentPath = normalizePath(new URL(currentUrl).pathname);
+  const homePath = normalizePath(new URL(homeUrl, document.location.origin).pathname);
 
-  let menuItem = Array.from(nav.querySelectorAll('a')).find((a) => a.href === currentUrl);
+  let menuItem = Array.from(nav.querySelectorAll('a')).find((a) => {
+    try {
+      return normalizePath(new URL(a.href).pathname) === currentPath;
+    } catch { return false; }
+  });
+
   if (menuItem) {
     do {
       const link = menuItem.querySelector(':scope > a');
       crumbs.unshift({ title: getDirectTextContent(menuItem), url: link ? link.href : null });
       menuItem = menuItem.closest('ul')?.closest('li');
     } while (menuItem);
-  } else if (currentUrl !== homeUrl) {
+  } else if (currentPath !== homePath && currentPath.startsWith(homePath)) {
+    // Only add fallback crumb for pages within the home path hierarchy
     crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
   }
-
-  const placeholders = await fetchPlaceholders();
-  const homePlaceholder = placeholders.breadcrumbsHomeLabel || 'Home';
 
   crumbs.unshift({ title: homePlaceholder, url: homeUrl });
 
@@ -155,11 +167,14 @@ async function buildBreadcrumbs() {
   // Skip auto-generated breadcrumbs if a manual breadcrumb block exists on the page
   if (document.querySelector('main .breadcrumb')) return null;
 
+  const crumbs = await buildBreadcrumbsFromNavTree(document.querySelector('.nav-sections'), document.location.href);
+
+  // Skip breadcrumbs on root/home pages (single crumb has no trail to show)
+  if (crumbs.length <= 1) return null;
+
   const breadcrumbs = document.createElement('nav');
   breadcrumbs.className = 'breadcrumbs';
   breadcrumbs.setAttribute('aria-label', 'パンくず');
-
-  const crumbs = await buildBreadcrumbsFromNavTree(document.querySelector('.nav-sections'), document.location.href);
 
   const ol = document.createElement('ol');
   ol.setAttribute('itemscope', '');
@@ -508,8 +523,28 @@ export default async function decorate(block) {
     }
   });
 
-  if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
+  // Breadcrumbs are shown by default; authors opt out with breadcrumbs: false
+  // Placed at the top of <main> so they scroll naturally with page content
+  if (getMetadata('breadcrumbs').toLowerCase() !== 'false') {
     const bc = await buildBreadcrumbs();
-    if (bc) navWrapper.append(bc);
+    if (bc) {
+      const main = document.querySelector('main');
+      if (main) {
+        const section = document.createElement('div');
+        section.className = 'section breadcrumb-container';
+        const wrapper = document.createElement('div');
+        const blockDiv = document.createElement('div');
+        blockDiv.className = 'breadcrumb';
+        blockDiv.append(bc);
+        wrapper.append(blockDiv);
+        section.append(wrapper);
+        main.prepend(section);
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/blocks/breadcrumb/breadcrumb.css';
+        document.head.append(link);
+      }
+    }
   }
 }

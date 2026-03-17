@@ -2,8 +2,8 @@ export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-info-panel-${cols.length}-cols`);
 
-  // Merge short caption paragraphs into the preceding button
-  const MAX_CAPTION_LENGTH = 25;
+  // Merge caption paragraphs into the preceding button
+  const MAX_CAPTION_LENGTH = 80;
   block.querySelectorAll('.button-container').forEach((bc) => {
     const next = bc.nextElementSibling;
     if (

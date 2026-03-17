@@ -1,0 +1,21 @@
+{
+  "status": "success",
+  "url": "https://www.aig.co.jp/sonpo/business",
+  "path": "sonpo/business",
+  "timestamp": "2026-03-17T10:39:44.950Z",
+  "title": "法人向け保険 | AIG損保",
+  "template": "category-landing",
+  "blocks": [
+    "breadcrumb",
+    "hero-category",
+    "columns-product-nav",
+    "columns-showcase",
+    "cards-teaser",
+    "cards-teaser",
+    "cards-link-grid",
+    "cards-link-grid",
+    "cards-link-grid",
+    "columns-cta",
+    "columns-info-panel"
+  ]
+}

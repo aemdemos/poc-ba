@@ -1,0 +1,173 @@
+/* columns-product-detail: two-column layout with heading left, product card buttons right */
+
+/* Section-level: remove full-width background, keep gap between sections */
+main .section.columns-product-detail-container {
+  margin-bottom: 36px;
+  padding: 0;
+}
+
+/* Override global section backgrounds — move color to wrapper for boxed look */
+main .section.blue-background.columns-product-detail-container {
+  background-color: transparent;
+}
+
+main .section.light-gray.columns-product-detail-container {
+  background-color: transparent;
+}
+
+/* Boxed wrapper: background color + padding inside the constrained width */
+.blue-background.columns-product-detail-container .columns-product-detail-wrapper {
+  background-color: var(--color-light-blue);
+  box-sizing: border-box;
+  padding: 54px 36px;
+}
+
+.light-gray.columns-product-detail-container .columns-product-detail-wrapper {
+  background-color: var(--color-gray);
+  box-sizing: border-box;
+  padding: 54px 36px;
+}
+
+/* Main layout: stacked on mobile, side-by-side on desktop */
+.columns-product-detail > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Heading column: two-tone underline */
+.columns-product-detail > div > div:first-child h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.4;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #c0c0c0;
+  position: relative;
+}
+
+.columns-product-detail > div > div:first-child h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  background-color: #001871;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+}
+
+/* Product cards column */
+.columns-product-detail > div > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Product card container */
+.columns-product-detail .product-card {
+  margin: 0;
+}
+
+.columns-product-detail .product-card p {
+  margin: 0;
+}
+
+/* Product card link — base style is white (for blue-background sections) */
+.columns-product-detail .product-card a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 36px 18px 18px;
+  background-color: #fff;
+  color: #000;
+  text-decoration: none;
+  border: 1px solid #c0c0c0;
+  border-radius: 6px;
+  min-height: 80px;
+  position: relative;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  transition: opacity 0.2s;
+  overflow: visible;
+  white-space: normal;
+}
+
+.columns-product-detail .product-card a:hover {
+  opacity: 0.85;
+}
+
+/* Arrow circle on the right */
+.columns-product-detail .product-card a::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: var(--arrow-circle-gray);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Caption (description text below title) */
+.columns-product-detail .product-card-caption {
+  display: block;
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: normal;
+  overflow: visible;
+}
+
+/* Footnote lists inside the right column */
+.columns-product-detail > div > div:last-child ul {
+  margin: 0;
+  padding: 0 0 0 18px;
+  font-size: 14px;
+  color: #575757;
+}
+
+/* ---- Gray variant: navy buttons with white text ---- */
+
+/* Applied when the section has light-gray style */
+.light-gray .columns-product-detail .product-card a {
+  background-color: #001871;
+  color: #fff;
+}
+
+.light-gray .columns-product-detail .product-card a::after {
+  background-image: var(--arrow-circle-white);
+}
+
+.light-gray .columns-product-detail .product-card a:hover {
+  opacity: 0.85;
+}
+
+/* ---- Desktop layout ---- */
+@media (width >= 900px) {
+  .columns-product-detail > div {
+    flex-direction: row;
+    align-items: start;
+    gap: 0;
+  }
+
+  .columns-product-detail > div > div:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-right: 18px;
+  }
+
+  .columns-product-detail > div > div:last-child {
+    flex: 3 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: 18px;
+  }
+}

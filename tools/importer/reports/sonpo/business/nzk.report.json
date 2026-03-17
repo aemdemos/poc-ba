@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "url": "https://www.aig.co.jp/sonpo/business/nzk",
+  "path": "sonpo/business/nzk",
+  "timestamp": "2026-03-13T20:56:33.275Z",
+  "title": "納税協会会員企業のための福祉制度 | 法人向け保険 | AIG損保",
+  "template": "category-landing",
+  "blocks": [
+    "breadcrumb",
+    "hero-category",
+    "cards-link-grid",
+    "columns-cta"
+  ]
+}

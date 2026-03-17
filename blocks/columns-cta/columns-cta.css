@@ -19,6 +19,7 @@
 .columns-cta a.button {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   box-sizing: border-box;
   padding: 18px 27px 18px 9px;
