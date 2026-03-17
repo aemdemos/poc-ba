@@ -184,6 +184,17 @@
           "defaultContent": []
         },
         {
+          "id": "section-6b-archives",
+          "name": "Archives Links",
+          "selector": "[class*=\"cmp-experiencefragment--link-to-archives\"]",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-section-header__title",
+            ".ace-list"
+          ]
+        },
+        {
           "id": "section-7-contractors",
           "name": "For Policyholders",
           "selector": ".ace-section.cmp-section--primary.cmp-section--light-gray.cmp-section--background-full",
@@ -192,8 +203,7 @@
             "columns-info-panel"
           ],
           "defaultContent": [
-            ".cmp-section-header__title",
-            "[class*=\"cmp-experiencefragment--link-to-archives\"]"
+            ".cmp-section-header__title"
           ]
         },
         {
